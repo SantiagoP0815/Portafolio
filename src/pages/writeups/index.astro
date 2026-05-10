@@ -1,0 +1,203 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import WriteupCard from '../../components/WriteupCard.astro';
+
+const allWriteups = await getCollection('writeups');
+const writeups = allWriteups.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+
+const dificultades = ['todos', 'easy', 'medium', 'hard', 'insane'];
+const plataformas = ['todas', ...new Set(writeups.map(w => w.data.plataforma))];
+
+const diffCount = {
+  easy: writeups.filter(w => w.data.dificultad === 'easy').length,
+  medium: writeups.filter(w => w.data.dificultad === 'medium').length,
+  hard: writeups.filter(w => w.data.dificultad === 'hard').length,
+  insane: writeups.filter(w => w.data.dificultad === 'insane').length,
+};
+---
+
+<Layout
+  title="Writeups | SecPortfolio"
+  description="Writeups de HackTheBox, TryHackMe y CTFs — documentación detallada de técnicas de pentesting y resolución de máquinas."
+>
+  <div class="max-w-5xl mx-auto px-6 py-16">
+    <!-- Page Header -->
+    <div class="mb-12">
+      <div class="font-mono text-xs mb-3" style="color: var(--color-text-muted)">
+        <span style="color: var(--color-neon-green)">~/writeups</span> $ ls -la | sort -r
+      </div>
+      <h1 class="font-mono text-3xl font-bold" style="color: var(--color-text-primary)">
+        Writeups<span class="neon-green">.</span>
+      </h1>
+      <p class="font-mono text-sm mt-3" style="color: var(--color-text-secondary); max-width: 60ch">
+        Documentación detallada de mis resoluciones en plataformas de entrenamiento.
+        Cada writeup explica el proceso completo: reconocimiento, explotación y post-explotación.
+      </p>
+    </div>
+
+    <!-- Difficulty Stats -->
+    <div class="diff-stats mb-10">
+      <div class="diff-stat">
+        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-green)">{diffCount.easy}</span>
+        <span class="tag-badge diff-easy mt-1">easy</span>
+      </div>
+      <div class="diff-stat">
+        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-orange)">{diffCount.medium}</span>
+        <span class="tag-badge diff-medium mt-1">medium</span>
+      </div>
+      <div class="diff-stat">
+        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-pink)">{diffCount.hard}</span>
+        <span class="tag-badge diff-hard mt-1">hard</span>
+      </div>
+      <div class="diff-stat">
+        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-purple)">{diffCount.insane}</span>
+        <span class="tag-badge diff-insane mt-1">insane</span>
+      </div>
+    </div>
+
+    <!-- Filter Row -->
+    <div class="flex flex-wrap items-center gap-4 mb-8">
+      <!-- Difficulty Filter -->
+      <div>
+        <p class="font-mono text-xs mb-2" style="color: var(--color-text-muted)">Dificultad:</p>
+        <div class="filter-bar" id="diff-filter" role="group" aria-label="Filtrar por dificultad">
+          {dificultades.map(d => (
+            <button
+              class={`filter-btn font-mono text-xs ${d === 'todos' ? 'filter-btn-active' : ''}`}
+              data-diff={d}
+              id={`diff-${d}`}
+            >
+              {d}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Platform Filter -->
+      <div>
+        <p class="font-mono text-xs mb-2" style="color: var(--color-text-muted)">Plataforma:</p>
+        <div class="filter-bar" id="plat-filter" role="group" aria-label="Filtrar por plataforma">
+          {plataformas.map(p => (
+            <button
+              class={`filter-btn font-mono text-xs ${p === 'todas' ? 'filter-btn-plat-active' : ''}`}
+              data-plat={p}
+              id={`plat-${p.replace(/\s/g, '-')}`}
+            >
+              {p}
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <!-- Writeups Grid -->
+    <div class="grid md:grid-cols-2 gap-5" id="writeups-grid">
+      {writeups.map((w, i) => (
+        <div
+          class="writeup-item animate-fade-in-up"
+          data-dificultad={w.data.dificultad}
+          data-plataforma={w.data.plataforma}
+          style={`animation-delay: ${i * 0.1}s; opacity: 0`}
+        >
+          <WriteupCard
+            titulo={w.data.titulo}
+            descripcion={w.data.descripcion}
+            dificultad={w.data.dificultad}
+            herramientas={w.data.herramientas}
+            categoria={w.data.categoria}
+            plataforma={w.data.plataforma}
+            fecha={w.data.fecha}
+            slug={w.id}
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Empty state -->
+    <div id="empty-writeup" class="hidden text-center py-16">
+      <div class="font-mono text-4xl mb-4">🏴</div>
+      <p class="font-mono text-sm" style="color: var(--color-text-muted)">
+        No hay writeups que coincidan con los filtros seleccionados.
+      </p>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .diff-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.5rem;
+  }
+  .diff-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    min-width: 60px;
+  }
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .filter-btn {
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-muted);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .filter-btn:hover, .filter-btn-active, .filter-btn-plat-active {
+    border-color: var(--color-neon-cyan);
+    color: var(--color-neon-cyan);
+    background: rgba(0, 245, 255, 0.08);
+  }
+</style>
+
+<script>
+  const items = document.querySelectorAll<HTMLElement>('.writeup-item');
+  const emptyState = document.getElementById('empty-writeup');
+
+  let activeDiff = 'todos';
+  let activePlat = 'todas';
+
+  function applyFilters() {
+    let visible = 0;
+    items.forEach(item => {
+      const matchDiff = activeDiff === 'todos' || item.dataset.dificultad === activeDiff;
+      const matchPlat = activePlat === 'todas' || item.dataset.plataforma === activePlat;
+      const show = matchDiff && matchPlat;
+      item.style.display = show ? 'block' : 'none';
+      if (show) visible++;
+    });
+    if (emptyState) emptyState.classList.toggle('hidden', visible > 0);
+  }
+
+  document.getElementById('diff-filter')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+    if (!btn?.dataset.diff) return;
+    activeDiff = btn.dataset.diff;
+    document.querySelectorAll<HTMLElement>('[data-diff]').forEach(b => b.classList.remove('filter-btn-active'));
+    btn.classList.add('filter-btn-active');
+    applyFilters();
+  });
+
+  document.getElementById('plat-filter')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+    if (!btn?.dataset.plat) return;
+    activePlat = btn.dataset.plat;
+    document.querySelectorAll<HTMLElement>('[data-plat]').forEach(b => b.classList.remove('filter-btn-plat-active'));
+    btn.classList.add('filter-btn-plat-active');
+    applyFilters();
+  });
+</script>
