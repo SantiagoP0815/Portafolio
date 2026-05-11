@@ -5,7 +5,7 @@ fecha: 2024-11-15
 herramientas: ["Node.js", "Express", "MySQL", "bcrypt", "JWT", "Helmet.js", "Sequelize"]
 categoria: desarrollo
 destacado: true
-github: "https://github.com/serpachen/cv-manager"
+github: "https://github.com/santiagop0815/hojadevida"
 estado: completado
 ---
 

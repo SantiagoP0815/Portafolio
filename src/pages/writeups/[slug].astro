@@ -1,10 +1,10 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
   const writeups = await getCollection('writeups');
-  return writeups.map(w => ({
+  return writeups.map((w: CollectionEntry<'writeups'>) => ({
     params: { slug: w.id },
     props: { writeup: w },
   }));
@@ -13,7 +13,7 @@ export async function getStaticPaths() {
 const { writeup } = Astro.props;
 const { Content } = await render(writeup);
 const { titulo, descripcion, dificultad, herramientas, plataforma, fecha, puntos } = writeup.data;
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const base = (import.meta.env.BASE_URL as string).replace(/\/$/, '');
 
 const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
 
@@ -69,7 +69,7 @@ const platformIcon: Record<string, string> = {
       <div class="mt-5">
         <p class="font-mono text-xs mb-2" style="color: var(--color-text-muted)">Herramientas utilizadas:</p>
         <div class="flex flex-wrap gap-2">
-          {herramientas.map(tool => (
+          {herramientas.map((tool: string) => (
             <span class="font-mono text-xs px-2.5 py-1 rounded" style="background: var(--color-bg-secondary); color: var(--color-neon-cyan); border: 1px solid var(--color-border-subtle)">
               {tool}
             </span>

@@ -4,16 +4,16 @@ import Layout from '../../layouts/Layout.astro';
 import WriteupCard from '../../components/WriteupCard.astro';
 
 const allWriteups = await getCollection('writeups');
-const writeups = allWriteups.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const writeups = allWriteups.sort((a: CollectionEntry<'writeups'>, b: CollectionEntry<'writeups'>) => b.data.fecha.getTime() - a.data.fecha.getTime());
 
 const dificultades = ['todos', 'easy', 'medium', 'hard', 'insane'];
-const plataformas = ['todas', ...new Set(writeups.map(w => w.data.plataforma))];
+const plataformas: string[] = ['todas', ...new Set<string>(writeups.map((w: CollectionEntry<'writeups'>) => w.data.plataforma))];
 
 const diffCount = {
-  easy: writeups.filter(w => w.data.dificultad === 'easy').length,
-  medium: writeups.filter(w => w.data.dificultad === 'medium').length,
-  hard: writeups.filter(w => w.data.dificultad === 'hard').length,
-  insane: writeups.filter(w => w.data.dificultad === 'insane').length,
+  easy: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'easy').length,
+  medium: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'medium').length,
+  hard: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'hard').length,
+  insane: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'insane').length,
 };
 ---
 
@@ -78,7 +78,7 @@ const diffCount = {
       <div>
         <p class="font-mono text-xs mb-2" style="color: var(--color-text-muted)">Plataforma:</p>
         <div class="filter-bar" id="plat-filter" role="group" aria-label="Filtrar por plataforma">
-          {plataformas.map(p => (
+          {plataformas.map((p: string) => (
             <button
               class={`filter-btn font-mono text-xs ${p === 'todas' ? 'filter-btn-plat-active' : ''}`}
               data-plat={p}
@@ -93,7 +93,7 @@ const diffCount = {
 
     <!-- Writeups Grid -->
     <div class="grid md:grid-cols-2 gap-5" id="writeups-grid">
-      {writeups.map((w, i) => (
+      {writeups.map((w: CollectionEntry<'writeups'>, i: number) => (
         <div
           class="writeup-item animate-fade-in-up"
           data-dificultad={w.data.dificultad}
