@@ -2,7 +2,6 @@
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import CVManagerCard from '../../components/CVManagerCard.astro';
 
 const allProyectos = await getCollection('proyectos');
 const proyectos = allProyectos.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
@@ -15,9 +14,9 @@ const proyectosNormales = proyectos.filter(p => !p.data.destacado);
   title="Proyectos | SecPortfolio"
   description="Proyectos de ciberseguridad: herramientas de pentesting, honeypots, scanners de vulnerabilidades y desarrollo seguro."
 >
-  <div class="max-w-5xl mx-auto px-6 py-16">
+  <div class="mx-auto px-6 py-16">
     <!-- Page Header -->
-    <div class="page-header mb-12">
+    <div class="page-header mb-12 ">
       <div class="font-mono text-xs mb-3" style="color: var(--color-text-muted)">
         <span style="color: var(--color-neon-cyan)">~/proyectos</span> $ ls -la
       </div>
@@ -28,16 +27,6 @@ const proyectosNormales = proyectos.filter(p => !p.data.destacado);
         Herramientas, scripts y aplicaciones desarrolladas durante mi camino en ciberseguridad.
         Cada proyecto incluye documentación técnica y el razonamiento de seguridad detrás.
       </p>
-    </div>
-
-    <!-- Featured project -->
-    <div class="mb-14">
-      <div class="section-header">
-        <h2 class="font-mono text-sm font-bold uppercase tracking-widest" style="color: var(--color-neon-cyan)">
-          // destacado
-        </h2>
-      </div>
-      <CVManagerCard />
     </div>
 
     <!-- Filter Tabs -->
@@ -93,10 +82,15 @@ const proyectosNormales = proyectos.filter(p => !p.data.destacado);
 </Layout>
 
 <style>
+    .page-header {
+    margin-bottom: 2rem;
+  }
+
   .filter-bar {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    padding-bottom: 2rem;
   }
   .filter-btn {
     padding: 0.4rem 0.9rem;

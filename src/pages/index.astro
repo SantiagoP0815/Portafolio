@@ -12,12 +12,72 @@ const allWriteups  = await getCollection('writeups');
 
 const proyectosRecientes = allProyectos
   .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
-  .filter(p => p.data.titulo !== 'Sistema de Gestión de CVs')
   .slice(0, 3);
 
 const writeupsRecientes = allWriteups
   .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
   .slice(0, 2);
+
+// ── Tarjetas de información personal (escalable) ──────────────
+const infocards = [
+  {
+    icon: '🎓',
+    label: 'Educación',
+    value: 'Ing. de Sistemas e Informática',
+    sub: 'UPB — Seccional Bucaramanga',
+    color: 'cyan',
+  },
+  {
+    icon: '📍',
+    label: 'Ubicación',
+    value: 'Bucaramanga, Colombia',
+    sub: 'Disponible remotamente',
+    color: 'green',
+  },
+  {
+    icon: '🏅',
+    label: 'Certificación',
+    value: 'CompTIA Security+',
+    sub: 'En preparación activa',
+    color: 'orange',
+  },
+  {
+    icon: '⚔️',
+    label: 'CTF & Hacking',
+    value: `${allWriteups.length} WRITEUPS PUBLICADOS`,
+    sub: 'HackTheBox · TryHackMe',
+    color: 'purple',
+  },
+  {
+    icon: '🛠️',
+    label: 'Proyectos',
+    value: `${allProyectos.length} PROYECTOS ACTIVOS`,
+    sub: 'Seguridad & Desarrollo',
+    color: 'cyan',
+  },
+  {
+    icon: '💼',
+    label: 'Estado',
+    value: 'DISPONIBLE',
+    sub: 'Abierto a oportunidades',
+    color: 'green',
+  },
+];
+
+const skills = [
+  { label: 'Ethical Hacking', color: 'cyan' },
+  { label: 'Pentesting', color: 'cyan' },
+  { label: 'CTF Challenges', color: 'green' },
+  { label: 'OSINT', color: 'green' },
+  { label: 'Web Hacking', color: 'cyan' },
+  { label: 'Análisis de Malware', color: 'purple' },
+  { label: 'Desarrollo Seguro', color: 'purple' },
+  { label: 'Python', color: 'green' },
+  { label: 'Linux', color: 'orange' },
+  { label: 'Redes & TCP/IP', color: 'orange' },
+  { label: 'Criptografía', color: 'pink' },
+  { label: 'CompTIA Sec+', color: 'pink' },
+];
 ---
 
 <Layout
@@ -25,189 +85,95 @@ const writeupsRecientes = allWriteups
   description="Portafolio de Carlos Santiago Patiño Reyes, Ingeniero de Sistemas especializado en Ciberseguridad, Ethical Hacking y CTF."
 >
 
-  <!-- ── Hero ── -->
+  <!-- ══════════════════════════════════════════════════════════
+       HERO + WHOAMI (centrado, primer view)
+  ══════════════════════════════════════════════════════════ -->
   <section class="hero-section grid-bg">
-    <div class="max-w-5xl mx-auto px-6 py-24 md:py-32">
-      <div class="hero-inner">
+    <div class="hero-container">
 
-        <!-- Left: Text -->
-        <div class="hero-text">
-          <!-- Terminal chip -->
-          <div class="terminal-chip animate-fade-in-up">
-            <span class="chip-dot"></span>
-            <span class="chip-label font-mono">whoami</span>
-          </div>
-
-          <h1 class="hero-name animate-fade-in-up animate-delay-100">
-            Carlos Santiago<br />
-            <span class="neon-cyan">Patiño Reyes</span>
-          </h1>
-
-          <p class="hero-role animate-fade-in-up animate-delay-200">
-            Ingeniero de Sistemas &amp; Ciberseguridad
-          </p>
-
-          <p class="hero-desc animate-fade-in-up animate-delay-300">
-            Graduado de la <strong>Universidad Pontificia Bolivariana — Seccional Bucaramanga</strong>.
-            Apasionado por la seguridad ofensiva, el Ethical Hacking y el desarrollo de herramientas seguras.
-            Actualmente preparándome para la certificación <span class="cert-badge">CompTIA Security+</span>.
-          </p>
-
-          <!-- CTA -->
-          <div class="hero-cta animate-fade-in-up animate-delay-400">
-            <a href={`${base}/proyectos`} class="btn-primary">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/>
-              </svg>
-              Ver Proyectos
-            </a>
-            <a href={`${base}/writeups`} class="btn-ghost">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-              </svg>
-              Writeups CTF
-            </a>
-          </div>
-        </div>
-
-        <!-- Right: Stats card -->
-        <div class="hero-card animate-fade-in-up animate-delay-300 animate-float">
-          <div class="card-cyber stat-card">
-            <div class="stat-card-header">
-              <span class="font-mono text-xs" style="color: var(--color-text-muted)"># estadísticas</span>
-            </div>
-            <div class="stat-grid">
-              <div class="stat-block">
-                <span class="stat-num neon-cyan">{allProyectos.length}</span>
-                <span class="stat-lbl">Proyectos</span>
-              </div>
-              <div class="stat-block">
-                <span class="stat-num neon-green">{allWriteups.length}</span>
-                <span class="stat-lbl">Writeups</span>
-              </div>
-              <div class="stat-block">
-                <span class="stat-num neon-purple">HTB</span>
-                <span class="stat-lbl">HackTheBox</span>
-              </div>
-              <div class="stat-block">
-                <span class="stat-num" style="color: var(--color-neon-orange)">Sec+</span>
-                <span class="stat-lbl">En curso</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <!-- whoami chip -->
+      <div class="whoami-chip animate-fade-in-up">
+        <span class="chip-dot"></span>
+        <span class="font-mono text-xs" style="color:var(--color-text-muted)">whoami</span>
       </div>
+
+      <!-- Nombre -->
+      <h1 class="hero-name animate-fade-in-up animate-delay-100">
+        Carlos Santiago<br />
+        <span class="neon-cyan">Patiño Reyes</span>
+      </h1>
+
+      <!-- Rol -->
+      <p class="hero-role animate-fade-in-up animate-delay-200">
+        Ingeniero de Sistemas &amp; Ciberseguridad
+      </p>
+
+      <!-- Descripción breve -->
+      <p class="hero-desc animate-fade-in-up animate-delay-200">
+        Graduado de la <strong>Universidad Pontificia Bolivariana — Seccional Bucaramanga</strong>.
+        Apasionado por la seguridad ofensiva, el Ethical Hacking y el desarrollo de herramientas seguras.
+      </p>
+
+      <!-- CTAs -->
+      <div class="hero-cta animate-fade-in-up animate-delay-300">
+        <a href={`${base}/proyectos`} class="btn-primary">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/>
+          </svg>
+          Ver Proyectos
+        </a>
+        <a href={`${base}/writeups`} class="btn-ghost">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+          </svg>
+          Writeups CTF
+        </a>
+        <a href="https://github.com/SantiagoP0815" target="_blank" rel="noopener noreferrer" class="btn-ghost">
+          <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+          </svg>
+          GitHub
+        </a>
+      </div>
+
+      <!-- ── Info Cards (escalables, en grid) ── -->
+      <div class="info-grid animate-fade-in-up animate-delay-400">
+        {infocards.map((card) => (
+          <div class={`info-card card-cyber info-card--${card.color}`}>
+            <span class="info-card-icon">{card.icon}</span>
+            <div class="info-card-body">
+              <span class="info-card-label font-mono">{card.label}</span>
+              <span class="info-card-value">{card.value}</span>
+              <span class="info-card-sub font-mono">{card.sub}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- ── Skills ── -->
+      <div class="skills-wrap animate-fade-in-up animate-delay-500">
+        {skills.map((s) => (
+          <span class={`tag-badge tag-${s.color}`}>{s.label}</span>
+        ))}
+      </div>
+
     </div>
   </section>
 
-  <!-- ── Sobre mí / Logros ── -->
-  <section class="max-w-5xl mx-auto px-6 py-16">
-    <div class="section-header">
-      <h2 class="section-title font-mono">sobre_mí</h2>
-    </div>
-
-    <div class="about-grid">
-      <!-- Info personal -->
-      <div class="card-cyber about-card">
-        <div class="about-card-icon">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
-          </svg>
-        </div>
-        <h3 class="about-card-title">Perfil Personal</h3>
-        <ul class="about-list">
-          <li>
-            <span class="about-dot cyan"></span>
-            <span><strong>Carlos Santiago Patiño Reyes</strong></span>
-          </li>
-          <li>
-            <span class="about-dot cyan"></span>
-            <span>Ingeniero de Sistemas e Informática</span>
-          </li>
-          <li>
-            <span class="about-dot cyan"></span>
-            <span>UPB — Seccional Bucaramanga</span>
-          </li>
-          <li>
-            <span class="about-dot cyan"></span>
-            <span>Bucaramanga, Colombia</span>
-          </li>
-          <li>
-            <span class="about-dot green"></span>
-            <span>Disponible para oportunidades</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Logros -->
-      <div class="card-cyber about-card">
-        <div class="about-card-icon" style="color: var(--color-neon-green)">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0"/>
-          </svg>
-        </div>
-        <h3 class="about-card-title">Logros y Formación</h3>
-        <ul class="about-list">
-          <li>
-            <span class="about-dot green"></span>
-            <span>🎓 Graduado en Ing. de Sistemas e Informática — UPB Bucaramanga</span>
-          </li>
-          <li>
-            <span class="about-dot green"></span>
-            <span>📚 Estudiando <strong>CompTIA Security+</strong> (en proceso)</span>
-          </li>
-          <li>
-            <span class="about-dot green"></span>
-            <span>🔐 CTF Player — HackTheBox, TryHackMe</span>
-          </li>
-          <li>
-            <span class="about-dot green"></span>
-            <span>🛠️ {allProyectos.length} proyectos de seguridad desarrollados</span>
-          </li>
-          <li>
-            <span class="about-dot green"></span>
-            <span>📝 {allWriteups.length} writeups técnicos publicados</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- Skills -->
-      <div class="card-cyber about-card about-card-wide">
-        <div class="about-card-icon" style="color: var(--color-neon-purple)">
-          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/>
-          </svg>
-        </div>
-        <h3 class="about-card-title">Áreas de Expertise</h3>
-        <div class="skills-grid">
-          <span class="tag-badge tag-cyan">Ethical Hacking</span>
-          <span class="tag-badge tag-cyan">Pentesting</span>
-          <span class="tag-badge tag-green">CTF Challenges</span>
-          <span class="tag-badge tag-green">OSINT</span>
-          <span class="tag-badge tag-purple">Desarrollo Seguro</span>
-          <span class="tag-badge tag-purple">Python</span>
-          <span class="tag-badge tag-orange">Linux</span>
-          <span class="tag-badge tag-orange">Redes</span>
-          <span class="tag-badge tag-pink">CompTIA Sec+</span>
-          <span class="tag-badge tag-pink">Criptografía</span>
-          <span class="tag-badge tag-cyan">Análisis de Malware</span>
-          <span class="tag-badge tag-green">Web Hacking</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Proyecto Destacado ── -->
-  <section class="max-w-5xl mx-auto px-6 py-12">
+  <!-- ══════════════════════════════════════════════════════════
+       PROYECTO DESTACADO
+  ══════════════════════════════════════════════════════════ 
+  <section class="content-section">
     <div class="section-header">
       <h2 class="section-title font-mono">proyecto_destacado</h2>
     </div>
     <CVManagerCard />
   </section>
 
-  <!-- ── Proyectos Recientes ── -->
-  <section class="max-w-5xl mx-auto px-6 py-12">
+  <!-- ══════════════════════════════════════════════════════════
+       PROYECTOS RECIENTES
+  ══════════════════════════════════════════════════════════ -->
+  <section class="content-section">
     <div class="section-header">
       <h2 class="section-title font-mono">proyectos_recientes</h2>
     </div>
@@ -230,13 +196,15 @@ const writeupsRecientes = allWriteups
       ))}
     </div>
 
-    <div class="text-center mt-8">
+    <div class="section-more">
       <a href={`${base}/proyectos`} class="btn-ghost">Ver todos los proyectos →</a>
     </div>
   </section>
 
-  <!-- ── Writeups Recientes ── -->
-  <section class="max-w-5xl mx-auto px-6 py-12">
+  <!-- ══════════════════════════════════════════════════════════
+       WRITEUPS RECIENTES
+  ══════════════════════════════════════════════════════════ -->
+  <section class="content-section">
     <div class="section-header">
       <h2 class="section-title font-mono">writeups_recientes</h2>
     </div>
@@ -258,7 +226,7 @@ const writeupsRecientes = allWriteups
       ))}
     </div>
 
-    <div class="text-center mt-8">
+    <div class="section-more">
       <a href={`${base}/writeups`} class="btn-ghost">Ver todos los writeups →</a>
     </div>
   </section>
@@ -266,171 +234,188 @@ const writeupsRecientes = allWriteups
 </Layout>
 
 <style>
-  /* ── Hero ─────────────────────────────────────────────────── */
+  /* ── Layout helpers ──────────────────────────────────────── */
+
+  
+  .content-section {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem;
+  }
+  .section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-neon-cyan);
+  }
+  .section-more {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  /* ── Hero ────────────────────────────────────────────────── */
   .hero-section {
-    min-height: 85vh;
-    display: flex; align-items: center;
-    position: relative; overflow: hidden;
+    position: relative;
+    overflow: hidden;
+    padding: 5rem 1.5rem 4rem;
   }
   .hero-section::before {
     content: '';
-    position: absolute; top: -30%; right: -10%;
-    width: 500px; height: 500px;
-    background: radial-gradient(circle, rgba(34,211,238,0.06) 0%, transparent 65%);
+    position: absolute;
+    top: -20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 700px;
+    height: 700px;
+    background: radial-gradient(circle, rgba(34,211,238,0.07) 0%, transparent 65%);
     pointer-events: none;
   }
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
+
+  .hero-container {
+    max-width: 56rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-  }
-  @media (max-width: 768px) {
-    .hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-    .hero-card  { display: none; }
+    text-align: center;
+    gap: 1.25rem;
   }
 
-  /* Terminal chip */
-  .terminal-chip {
-    display: inline-flex; align-items: center; gap: 0.5rem;
+  /* whoami chip */
+  .whoami-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 6px; padding: 0.35rem 0.85rem;
-    width: fit-content; margin-bottom: 1.5rem;
+    border-radius: 9999px;
+    padding: 0.3rem 1rem;
   }
   .chip-dot {
-    width: 7px; height: 7px; border-radius: 50%;
+    width: 7px; height: 7px;
+    border-radius: 50%;
     background: var(--color-neon-cyan);
     box-shadow: 0 0 8px var(--color-neon-cyan);
-    animation: pulse-dot 2s ease-in-out infinite;
+    animation: blink 2s ease-in-out infinite;
   }
-  @keyframes pulse-dot {
+  @keyframes blink {
     0%, 100% { opacity: 1; }
-    50%       { opacity: 0.4; }
+    50%       { opacity: 0.35; }
   }
-  .chip-label { font-size: 0.78rem; color: var(--color-text-muted); }
 
   /* Name */
   .hero-name {
     font-family: var(--font-sans);
-    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-size: clamp(2.2rem, 6vw, 3.75rem);
     font-weight: 700;
     line-height: 1.15;
-    color: var(--color-text-primary);
     letter-spacing: -0.02em;
-    margin-bottom: 0.75rem;
+    color: var(--color-text-primary);
   }
+
+  /* Role */
   .hero-role {
     font-family: var(--font-mono);
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     color: var(--color-text-muted);
-    letter-spacing: 0.05em;
-    margin-bottom: 1.25rem;
+    letter-spacing: 0.06em;
   }
+
+  /* Description */
   .hero-desc {
     font-family: var(--font-sans);
-    font-size: 0.95rem;
+    font-size: 0.96rem;
     color: var(--color-text-secondary);
     line-height: 1.8;
-    max-width: 48ch;
-    margin-bottom: 0;
+    max-width: 52ch;
   }
-  .hero-desc strong { color: var(--color-text-primary); font-weight: 600; }
-
-  .cert-badge {
-    display: inline-block;
-    font-family: var(--font-mono);
-    font-size: 0.78rem; font-weight: 600;
-    color: var(--color-neon-orange);
-    background: rgba(251,146,60,0.08);
-    border: 1px solid rgba(251,146,60,0.3);
-    padding: 0.05rem 0.45rem; border-radius: 4px;
+  .hero-desc strong {
+    color: var(--color-text-primary);
+    font-weight: 600;
   }
 
+  /* CTA row */
   .hero-cta {
-    display: flex; flex-wrap: wrap; gap: 0.75rem;
-    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.65rem;
+    margin-top: 0.5rem;
   }
 
-  /* Stat card */
-  .stat-card { padding: 1.5rem; }
-  .stat-card-header { margin-bottom: 1rem; }
-  .stat-grid {
-    display: grid; grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-  .stat-block {
-    display: flex; flex-direction: column;
-    align-items: center; text-align: center;
-    padding: 0.75rem;
-    background: var(--color-bg-secondary);
-    border-radius: 0.5rem;
-    border: 1px solid var(--color-border-subtle);
-  }
-  .stat-num {
-    font-family: var(--font-mono);
-    font-size: 1.4rem; font-weight: 700;
-  }
-  .stat-lbl {
-    font-family: var(--font-mono);
-    font-size: 0.6rem; text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-muted);
-    margin-top: 0.2rem;
-  }
-
-  /* ── Section title ── */
-  .section-title {
-    font-size: 0.78rem; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 0.12em;
-    color: var(--color-neon-cyan);
-  }
-
-  /* ── About grid ── */
-  .about-grid {
+  /* ── Info Cards Grid ─────────────────────────────────────── */
+  .info-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.875rem;
+    width: 100%;
+    margin-top: 1rem;
   }
   @media (max-width: 768px) {
-    .about-grid { grid-template-columns: 1fr; }
+    .info-grid { grid-template-columns: repeat(2, 1fr); }
   }
-  .about-card-wide {
-    grid-column: 1 / -1;
+  @media (max-width: 480px) {
+    .info-grid { grid-template-columns: 1fr; }
   }
-  .about-card {
-    padding: 1.5rem;
-    display: flex; flex-direction: column; gap: 1rem;
-  }
-  .about-card-icon {
-    color: var(--color-neon-cyan);
-    opacity: 0.8;
-  }
-  .about-card-title {
-    font-family: var(--font-sans);
-    font-size: 0.95rem; font-weight: 600;
-    color: var(--color-text-primary);
-  }
-  .about-list {
-    list-style: none; padding: 0;
-    display: flex; flex-direction: column; gap: 0.6rem;
-  }
-  .about-list li {
-    display: flex; align-items: flex-start; gap: 0.65rem;
-    font-family: var(--font-sans);
-    font-size: 0.87rem;
-    color: var(--color-text-secondary);
-    line-height: 1.5;
-  }
-  .about-list li strong { color: var(--color-text-primary); font-weight: 600; }
-  .about-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    flex-shrink: 0; margin-top: 0.45rem;
-  }
-  .about-dot.cyan  { background: var(--color-neon-cyan);  box-shadow: 0 0 6px var(--color-neon-cyan); }
-  .about-dot.green { background: var(--color-neon-green); box-shadow: 0 0 6px var(--color-neon-green); }
 
-  .skills-grid {
-    display: flex; flex-wrap: wrap; gap: 0.5rem;
+  .info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1rem 1.1rem;
+    text-align: left;
+    border-radius: 0.75rem;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+  }
+  .info-card:hover { transform: translateY(-2px); }
+
+  /* Color variants */
+  .info-card--cyan   { border-color: rgba(34,211,238,0.2);  }
+  .info-card--cyan:hover   { border-color: rgba(34,211,238,0.5);  box-shadow: 0 4px 20px rgba(34,211,238,0.08); }
+  .info-card--green  { border-color: rgba(74,222,128,0.2);  }
+  .info-card--green:hover  { border-color: rgba(74,222,128,0.5);  box-shadow: 0 4px 20px rgba(74,222,128,0.08); }
+  .info-card--orange { border-color: rgba(251,146,60,0.2);  }
+  .info-card--orange:hover { border-color: rgba(251,146,60,0.5);  box-shadow: 0 4px 20px rgba(251,146,60,0.08); }
+  .info-card--purple { border-color: rgba(167,139,250,0.2); }
+  .info-card--purple:hover { border-color: rgba(167,139,250,0.5); box-shadow: 0 4px 20px rgba(167,139,250,0.08); }
+
+  .info-card-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .info-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+  .info-card-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+  }
+  .info-card-value {
+    font-family: var(--font-sans);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+  }
+  .info-card-sub {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Skills ─────────────────────────────────────────────── */
+  .skills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.45rem;
+    margin-top: 0.5rem;
+    padding: 0 1rem;
   }
 </style>
