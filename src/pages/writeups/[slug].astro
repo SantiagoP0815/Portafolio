@@ -12,123 +12,528 @@ export async function getStaticPaths() {
 
 const { writeup } = Astro.props;
 const { Content } = await render(writeup);
-const { titulo, descripcion, dificultad, herramientas, plataforma, fecha, puntos } = writeup.data;
+const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha, puntos } = writeup.data;
 const base = (import.meta.env.BASE_URL as string).replace(/\/$/, '');
 
 const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
 
-const diffClass: Record<string, string> = {
-  easy: 'diff-easy',
-  medium: 'diff-medium',
-  hard: 'diff-hard',
-  insane: 'diff-insane',
+const diffConfig: Record<string, { cls: string; color: string; label: string }> = {
+  easy:   { cls: 'diff-easy',   color: '#4ade80', label: 'EASY'   },
+  medium: { cls: 'diff-medium', color: '#fb923c', label: 'MEDIUM' },
+  hard:   { cls: 'diff-hard',   color: '#f472b6', label: 'HARD'   },
+  insane: { cls: 'diff-insane', color: '#a78bfa', label: 'INSANE' },
 };
 
-const platformIcon: Record<string, string> = {
-  HackTheBox: '🟢',
-  TryHackMe: '🔴',
-  CTF: '🏴',
-  VulnHub: '🟡',
+const platformMeta: Record<string, { icon: string; color: string; accentColor: string }> = {
+  HackTheBox: { icon: '⬡', color: '#9fef00', accentColor: '#4ade80' },
+  TryHackMe:  { icon: '◈', color: '#ff3f3f', accentColor: '#f472b6' },
+  CTF:        { icon: '⚑', color: '#22d3ee', accentColor: '#22d3ee' },
+  VulnHub:    { icon: '◉', color: '#fb923c', accentColor: '#fb923c' },
 };
+
+const diff = diffConfig[dificultad] ?? diffConfig.easy;
+const plat = platformMeta[plataforma] ?? { icon: '⚡', color: '#22d3ee', accentColor: '#22d3ee' };
+
+// Attack chain phases
+const phases = ['Reconocimiento', 'Explotación', 'PrivEsc'];
 ---
 
-<Layout title={`${titulo} | SecPortfolio`} description={descripcion}>
-  <div class="max-w-3xl mx-auto px-6 py-16">
-    <!-- Breadcrumb -->
-    <nav class="breadcrumb mb-8">
-      <a href={`${base}/`} class="breadcrumb-link">~/inicio</a>
-      <span class="breadcrumb-sep">/</span>
-      <a href={`${base}/writeups`} class="breadcrumb-link">writeups</a>
-      <span class="breadcrumb-sep">/</span>
-      <span style="color: var(--color-text-muted)">{writeup.slug}</span>
+<Layout title={`${titulo} | Carlos Santiago Patiño Reyes`} description={descripcion}>
+  <div class="detail-wrapper" style={`--accent: ${plat.accentColor}`}>
+
+    <!-- ── Breadcrumb ──────────────────────────────────────────── -->
+    <nav class="breadcrumb animate-fade-in-up" aria-label="Breadcrumb">
+      <a href={`${base}/`} class="bc-link font-mono">~/inicio</a>
+      <span class="bc-sep">/</span>
+      <a href={`${base}/writeups`} class="bc-link font-mono">writeups</a>
+      <span class="bc-sep">/</span>
+      <span class="bc-current font-mono">{writeup.id}</span>
     </nav>
 
-    <!-- Header -->
-    <header class="mb-10">
-      <!-- Meta row -->
-      <div class="flex flex-wrap items-center gap-3 mb-4">
-        <span class="text-base">{platformIcon[plataforma] ?? '⚡'}</span>
-        <span class="font-mono text-sm font-semibold" style="color: var(--color-text-secondary)">{plataforma}</span>
-        <span class={`tag-badge ${diffClass[dificultad] || 'diff-easy'}`}>{dificultad}</span>
-        {puntos && (
-          <span class="font-mono text-xs px-2 py-0.5 rounded" style="background: var(--color-bg-secondary); color: var(--color-neon-purple); border: 1px solid var(--color-border-subtle)">
-            {puntos} pts
+    <!-- ── Hero Header ────────────────────────────────────────── -->
+    <header class="detail-header animate-fade-in-up">
+      <div class="header-strip"></div>
+
+      <div class="header-body">
+        <!-- Chrome bar -->
+        <div class="header-chrome">
+          <div class="chrome-dots">
+            <span class="chrome-dot" style="background:#ff5f57"></span>
+            <span class="chrome-dot" style="background:#ffbd2e"></span>
+            <span class="chrome-dot" style="background:#28ca41"></span>
+          </div>
+          <span class="chrome-label font-mono">{plataforma} · {categoria}</span>
+          <div class="chrome-right">
+            <span class="font-mono text-xs" style="color:var(--color-text-muted)">{dateStr}</span>
+          </div>
+        </div>
+
+        <!-- Meta row -->
+        <div class="header-meta">
+          <div class="plat-badge">
+            <span class="plat-icon" style={`color: ${plat.color}`}>{plat.icon}</span>
+            <span class="plat-name font-mono">{plataforma}</span>
+          </div>
+          <span class={`tag-badge ${diff.cls}`}>
+            <span class="diff-led" style={`background:${diff.color}; box-shadow:0 0 6px ${diff.color}`}></span>
+            {diff.label}
           </span>
-        )}
-        <span class="font-mono text-xs" style="color: var(--color-text-muted)">{dateStr}</span>
-      </div>
-
-      <h1 class="font-mono text-3xl font-bold mb-4 leading-tight" style="color: var(--color-text-primary)">
-        {titulo}
-      </h1>
-      <p class="font-mono text-sm leading-relaxed" style="color: var(--color-text-secondary); max-width: 60ch">
-        {descripcion}
-      </p>
-
-      <!-- Tools used -->
-      <div class="mt-5">
-        <p class="font-mono text-xs mb-2" style="color: var(--color-text-muted)">Herramientas utilizadas:</p>
-        <div class="flex flex-wrap gap-2">
-          {herramientas.map((tool: string) => (
-            <span class="font-mono text-xs px-2.5 py-1 rounded" style="background: var(--color-bg-secondary); color: var(--color-neon-cyan); border: 1px solid var(--color-border-subtle)">
-              {tool}
+          {puntos && (
+            <span class="pts-badge font-mono">
+              <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+              </svg>
+              {puntos} pts
             </span>
-          ))}
+          )}
+        </div>
+
+        <!-- Title -->
+        <h1 class="detail-title font-mono">
+          <span class="title-prompt">$</span>
+          {titulo}
+        </h1>
+
+        <!-- Description -->
+        <p class="detail-desc">{descripcion}</p>
+
+        <!-- Attack chain pipeline -->
+        <div class="attack-pipeline">
+          <span class="pipeline-label font-mono">attack chain</span>
+          <div class="pipeline-steps">
+            {phases.map((phase, i) => (
+              <div class="pipeline-step">
+                <span class="step-num font-mono">{String(i + 1).padStart(2, '0')}</span>
+                <span class="step-label font-mono">{phase}</span>
+                {i < phases.length - 1 && (
+                  <svg class="step-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
+                  </svg>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </header>
 
-    <!-- Divider -->
-    <div class="h-px mb-10" style="background: linear-gradient(90deg, var(--color-neon-green)44, transparent)"></div>
+    <!-- ── Two-column layout ───────────────────────────────────── -->
+    <div class="content-layout">
 
-    <!-- Warning Box -->
-    <div class="warning-box mb-8">
-      <div class="flex items-start gap-3">
-        <span class="text-lg">⚠️</span>
-        <div>
-          <p class="font-mono text-xs font-bold mb-1" style="color: var(--color-neon-orange)">AVISO LEGAL</p>
-          <p class="font-mono text-xs" style="color: var(--color-text-muted)">
-            Este writeup es con fines educativos. Las técnicas documentadas fueron realizadas 
-            en entornos controlados y autorizados (plataformas CTF).
+      <!-- ── Sidebar ────────────────────────────────────────── -->
+      <aside class="sidebar animate-fade-in-up">
+
+        <!-- Tools used -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header font-mono">
+            <span class="sidebar-card-icon">›</span>
+            herramientas
+          </div>
+          <div class="tools-list">
+            {herramientas.map(tool => (
+              <div class="tool-item font-mono">
+                <span class="tool-hash" style={`color: ${plat.accentColor}`}>#</span>
+                {tool}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <!-- Metadata -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-header font-mono">
+            <span class="sidebar-card-icon">›</span>
+            metadata
+          </div>
+          <div class="meta-list">
+            <div class="meta-item">
+              <span class="meta-key font-mono">plataforma</span>
+              <span class="meta-val font-mono" style={`color: ${plat.color}`}>{plataforma}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-key font-mono">dificultad</span>
+              <span class={`tag-badge ${diff.cls}`} style="font-size:0.6rem">{diff.label}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-key font-mono">categoría</span>
+              <span class="meta-val font-mono">{categoria}</span>
+            </div>
+            {puntos && (
+              <div class="meta-item">
+                <span class="meta-key font-mono">puntos</span>
+                <span class="meta-val font-mono" style="color:var(--color-neon-purple)">{puntos} pts</span>
+              </div>
+            )}
+            <div class="meta-item">
+              <span class="meta-key font-mono">fecha</span>
+              <span class="meta-val font-mono">{dateStr}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legal disclaimer (compact) -->
+        <div class="disclaimer-card">
+          <div class="disclaimer-icon">⚠</div>
+          <p class="disclaimer-text font-mono">
+            Realizado en entorno controlado y autorizado (plataforma CTF). Solo con fines educativos.
           </p>
         </div>
-      </div>
+
+        <!-- Back button -->
+        <a href={`${base}/writeups`} class="btn-ghost back-btn">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
+          </svg>
+          Volver a writeups
+        </a>
+      </aside>
+
+      <!-- ── Main content ───────────────────────────────────── -->
+      <main class="main-content animate-fade-in-up">
+        <div class="content-chrome">
+          <div class="chrome-dots-inline">
+            <span class="chrome-dot-s" style="background:#ff5f57"></span>
+            <span class="chrome-dot-s" style="background:#ffbd2e"></span>
+            <span class="chrome-dot-s" style="background:#28ca41"></span>
+          </div>
+          <span class="chrome-file font-mono">{writeup.id}.md</span>
+          <div class="chrome-right-tag">
+            <span class={`tag-badge ${diff.cls}`} style="font-size:0.58rem">{diff.label}</span>
+          </div>
+        </div>
+
+        <article class="prose-cyber content-body">
+          <Content />
+        </article>
+      </main>
     </div>
 
-    <!-- Markdown Content -->
-    <article class="prose-cyber">
-      <Content />
-    </article>
-
-    <!-- Back link -->
-    <div class="mt-12 pt-8 border-t" style="border-color: var(--color-border-subtle)">
-      <a href={`${base}/writeups`} class="btn-ghost">
-        ← Volver a writeups
-      </a>
-    </div>
   </div>
 </Layout>
 
 <style>
+  /* ── Wrapper ─────────────────────────────────────────────────── */
+  .detail-wrapper {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  /* ── Breadcrumb ──────────────────────────────────────────────── */
   .breadcrumb {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
+    gap: 0.4rem;
+    font-size: 0.78rem;
   }
-  .breadcrumb-link {
+  .bc-link {
     color: var(--color-text-muted);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.2s;
   }
-  .breadcrumb-link:hover { color: var(--color-neon-green); }
-  .breadcrumb-sep { color: var(--color-border-subtle); }
+  .bc-link:hover { color: var(--color-neon-green); }
+  .bc-sep { color: var(--color-border-subtle); }
+  .bc-current { color: var(--accent); }
 
-  .warning-box {
-    background: rgba(255, 107, 0, 0.06);
-    border: 1px solid rgba(255, 107, 0, 0.25);
-    border-radius: 0.5rem;
-    padding: 0.875rem 1rem;
+  /* ── Hero Header ─────────────────────────────────────────────── */
+  .detail-header {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.875rem;
+    overflow: hidden;
+  }
+  .header-strip {
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent), transparent 60%);
+  }
+  .header-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  /* Chrome bar inside header */
+  .header-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .chrome-dots { display: flex; gap: 0.35rem; }
+  .chrome-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .chrome-label {
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-left: 0.3rem;
+  }
+  .chrome-right { margin-left: auto; }
+
+  /* Meta row */
+  .header-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem 0;
+  }
+  .plat-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .plat-icon { font-size: 1rem; }
+  .plat-name {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    letter-spacing: 0.03em;
+  }
+  .diff-led {
+    display: inline-block;
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .pts-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.55rem;
+    background: rgba(167,139,250,0.08);
+    border: 1px solid rgba(167,139,250,0.25);
+    border-radius: 9999px;
+    color: var(--color-neon-purple);
+  }
+
+  /* Title */
+  .detail-title {
+    font-size: clamp(1.3rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.3;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0 1.5rem;
+  }
+  .title-prompt {
+    color: var(--color-neon-green);
+    font-size: 1.1em;
+    flex-shrink: 0;
+  }
+
+  /* Description */
+  .detail-desc {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    line-height: 1.75;
+    max-width: 70ch;
+    padding: 0.75rem 1rem;
+    margin: 0 1.5rem;
+    border-left: 2px solid rgba(74,222,128,0.25);
+    background: rgba(74,222,128,0.03);
+    border-radius: 0 0.35rem 0.35rem 0;
+  }
+
+  /* Attack pipeline */
+  .attack-pipeline {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.85rem 1.5rem 1.5rem;
+  }
+  .pipeline-label {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+  .pipeline-steps {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  .pipeline-step {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+  .step-num {
+    font-size: 0.58rem;
+    color: var(--color-text-muted);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .step-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 0.2rem 0.55rem;
+    background: rgba(34,211,238,0.06);
+    border: 1px solid rgba(34,211,238,0.18);
+    border-radius: 0.35rem;
+  }
+  .step-arrow {
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+  }
+
+  /* ── Two-column layout ───────────────────────────────────────── */
+  .content-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .content-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+  }
+
+  /* ── Sidebar ─────────────────────────────────────────────────── */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: sticky;
+    top: 5rem;
+  }
+  .sidebar-card {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .sidebar-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .sidebar-card-icon { color: var(--accent); font-size: 0.85rem; }
+
+  /* Tools list */
+  .tools-list {
+    padding: 0.75rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .tool-item {
+    font-size: 0.78rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.2s;
+  }
+  .tool-item:hover { color: var(--color-text-primary); }
+  .tool-hash { font-size: 0.8rem; flex-shrink: 0; font-weight: 700; }
+
+  /* Meta list */
+  .meta-list {
+    padding: 0.75rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .meta-key {
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    flex-shrink: 0;
+  }
+  .meta-val {
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+    text-align: right;
+  }
+
+  /* Disclaimer */
+  .disclaimer-card {
+    display: flex;
+    gap: 0.65rem;
+    align-items: flex-start;
+    padding: 0.85rem;
+    background: rgba(251, 146, 60, 0.05);
+    border: 1px solid rgba(251, 146, 60, 0.2);
+    border-radius: 0.65rem;
+  }
+  .disclaimer-icon {
+    color: var(--color-neon-orange);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    margin-top: 0.05rem;
+  }
+  .disclaimer-text {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+  }
+
+  .back-btn {
+    width: 100%;
+    justify-content: center;
+    font-size: 0.78rem;
+  }
+
+  /* ── Main content ────────────────────────────────────────────── */
+  .main-content {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.875rem;
+    overflow: hidden;
+  }
+  .content-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .chrome-dots-inline { display: flex; gap: 0.3rem; }
+  .chrome-dot-s {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+  }
+  .chrome-file {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.04em;
+    margin-left: 0.3rem;
+  }
+  .chrome-right-tag { margin-left: auto; }
+  .content-body {
+    padding: 2rem 2.25rem 2.5rem;
   }
 </style>

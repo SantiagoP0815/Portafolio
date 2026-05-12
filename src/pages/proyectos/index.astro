@@ -1,60 +1,136 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
 const allProyectos = await getCollection('proyectos');
-const proyectos = allProyectos.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const proyectos = allProyectos.sort(
+  (a: CollectionEntry<'proyectos'>, b: CollectionEntry<'proyectos'>) =>
+    b.data.fecha.getTime() - a.data.fecha.getTime()
+);
 
-const categorias = ['todos', ...new Set(proyectos.map(p => p.data.categoria))];
-const proyectosNormales = proyectos.filter(p => !p.data.destacado);
+const categorias = ['todas', ...new Set<string>(proyectos.map((p: CollectionEntry<'proyectos'>) => p.data.categoria))];
+const estados    = ['todos', ...new Set<string>(proyectos.map((p: CollectionEntry<'proyectos'>) => p.data.estado))];
+
+// Stats
+const statCompletados = proyectos.filter((p: CollectionEntry<'proyectos'>) => p.data.estado === 'completado').length;
+const statEnProgreso  = proyectos.filter((p: CollectionEntry<'proyectos'>) => p.data.estado === 'en-progreso').length;
+const statDestacados  = proyectos.filter((p: CollectionEntry<'proyectos'>) => p.data.destacado).length;
+const allTools        = [...new Set(proyectos.flatMap((p: CollectionEntry<'proyectos'>) => p.data.herramientas))];
 ---
 
-<Layout 
-  title="Proyectos | SecPortfolio"
-  description="Proyectos de ciberseguridad: herramientas de pentesting, honeypots, scanners de vulnerabilidades y desarrollo seguro."
+<Layout
+  title="Proyectos | Carlos Santiago Patiño Reyes"
+  description="Proyectos de ciberseguridad y desarrollo: honeypots, herramientas ofensivas, aplicaciones seguras y más."
 >
-  <div class="mx-auto px-6 py-16">
-    <!-- Page Header -->
-    <div class="page-header mb-12 ">
-      <div class="font-mono text-xs mb-3" style="color: var(--color-text-muted)">
-        <span style="color: var(--color-neon-cyan)">~/proyectos</span> $ ls -la
+  <div class="page-wrapper">
+
+    <!-- ── Page Header ─────────────────────────────────────── -->
+    <header class="page-header">
+      <div class="header-terminal font-mono">
+        <span class="hl-cyan">~/proyectos</span>
+        <span class="hl-muted"> $ ls -la --sort=date</span>
+        <span class="cursor-blink"></span>
       </div>
-      <h1 class="font-mono text-3xl font-bold" style="color: var(--color-text-primary)">
+      <h1 class="page-title font-mono">
         Proyectos<span class="neon-cyan">.</span>
       </h1>
-      <p class="font-mono text-sm mt-3" style="color: var(--color-text-secondary); max-width: 60ch">
-        Herramientas, scripts y aplicaciones desarrolladas durante mi camino en ciberseguridad.
-        Cada proyecto incluye documentación técnica y el razonamiento de seguridad detrás.
+      <p class="page-subtitle">
+        Herramientas de seguridad, aplicaciones y scripts desarrollados con
+        seguridad como principio central — desde honeypots hasta plataformas full-stack seguras.
       </p>
+    </header>
+
+    <!-- ── Stats Row ───────────────────────────────────────── -->
+    <div class="stats-row">
+      <div class="stat-block">
+        <span class="stat-num neon-cyan">{proyectos.length}</span>
+        <span class="stat-label font-mono">TOTAL</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-block">
+        <span class="stat-num" style="color:var(--color-neon-green)">{statCompletados}</span>
+        <span class="stat-label font-mono">COMPLETADOS</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-block">
+        <span class="stat-num" style="color:var(--color-neon-orange)">{statEnProgreso}</span>
+        <span class="stat-label font-mono">EN PROGRESO</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-block">
+        <span class="stat-num" style="color:var(--color-neon-purple)">{statDestacados}</span>
+        <span class="stat-label font-mono">DESTACADOS</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-block">
+        <span class="stat-num" style="color:var(--color-neon-pink)">{allTools.length}</span>
+        <span class="stat-label font-mono">TECNOLOGÍAS</span>
+      </div>
     </div>
 
-    <!-- Filter Tabs -->
-    <div class="section-header mb-6">
-      <h2 class="font-mono text-sm font-bold uppercase tracking-widest" style="color: var(--color-neon-cyan)">
-        // todos los proyectos
-      </h2>
+    <!-- ── Filters ─────────────────────────────────────────── -->
+    <div class="filters-row">
+      <!-- Categoría -->
+      <div class="filter-group">
+        <span class="filter-group-label font-mono">categoria</span>
+        <div class="filter-bar" id="cat-filter" role="group" aria-label="Filtrar por categoría">
+          {categorias.map(c => (
+            <button
+              class={`filter-btn font-mono ${c === 'todas' ? 'filter-btn-active' : ''}`}
+              data-cat={c}
+              id={`cat-${c}`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Estado -->
+      <div class="filter-group">
+        <span class="filter-group-label font-mono">estado</span>
+        <div class="filter-bar" id="est-filter" role="group" aria-label="Filtrar por estado">
+          {estados.map(e => (
+            <button
+              class={`filter-btn font-mono ${e === 'todos' ? 'filter-btn-est-active' : ''}`}
+              data-est={e}
+              id={`est-${e}`}
+            >
+              {e}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="filter-group search-group">
+        <span class="filter-group-label font-mono">buscar</span>
+        <div class="search-wrap">
+          <svg class="search-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+          </svg>
+          <input
+            type="text"
+            id="proy-search"
+            placeholder="nmap, python, JWT..."
+            class="search-input font-mono"
+            aria-label="Buscar por herramienta o título"
+          />
+        </div>
+      </div>
     </div>
 
-    <div class="filter-bar mb-8" id="filter-bar" role="group" aria-label="Filtrar por categoría">
-      {categorias.map(cat => (
-        <button
-          class={`filter-btn font-mono text-xs ${cat === 'todos' ? 'filter-btn-active' : ''}`}
-          data-filter={cat}
-          id={`filter-${cat}`}
-        >
-          {cat}
-        </button>
-      ))}
-    </div>
-
-    <!-- Projects Grid -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5" id="projects-grid">
-      {proyectosNormales.map((p, i) => (
+    <!-- ── Projects Grid ───────────────────────────────────── -->
+    <div class="projects-grid" id="proyectos-grid">
+      {proyectos.map((p: CollectionEntry<'proyectos'>, i: number) => (
         <div
-          class="project-item animate-fade-in-up"
-          data-categoria={p.data.categoria}
-          style={`animation-delay: ${i * 0.1}s; opacity: 0`}
+          class="proy-item animate-fade-in-up"
+          data-cat={p.data.categoria}
+          data-est={p.data.estado}
+          data-tools={p.data.herramientas.join(' ').toLowerCase()}
+          data-titulo={p.data.titulo.toLowerCase()}
+          style={`animation-delay: ${i * 0.08}s`}
         >
           <ProjectCard
             titulo={p.data.titulo}
@@ -72,75 +148,227 @@ const proyectosNormales = proyectos.filter(p => !p.data.destacado);
     </div>
 
     <!-- Empty state -->
-    <div id="empty-state" class="hidden text-center py-16">
-      <div class="font-mono text-4xl mb-4">🔍</div>
-      <p class="font-mono text-sm" style="color: var(--color-text-muted)">
-        No hay proyectos en esta categoría todavía.
-      </p>
+    <div id="empty-proy" class="empty-state" style="display:none">
+      <div class="empty-icon">⬡</div>
+      <p class="font-mono empty-msg">No hay proyectos que coincidan con los filtros.</p>
     </div>
+
   </div>
 </Layout>
 
 <style>
-    .page-header {
-    margin-bottom: 2rem;
+  .page-wrapper {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
   }
 
+  /* ── Header ─────────────────────────────────────────────────── */
+  .page-header { display: flex; flex-direction: column; gap: 0.75rem; }
+  .header-terminal {
+    font-size: 0.78rem;
+    color: var(--color-text-muted);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+  }
+  .hl-cyan  { color: var(--color-neon-cyan); }
+  .hl-muted { color: var(--color-text-muted); }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+  }
+  .page-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    max-width: 65ch;
+    line-height: 1.7;
+  }
+
+  /* ── Stats ──────────────────────────────────────────────────── */
+  .stats-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .stat-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+    padding: 1rem 1.5rem;
+    flex: 1;
+    min-width: 80px;
+  }
+  .stat-num {
+    font-family: var(--font-mono);
+    font-size: 1.6rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+  .stat-divider {
+    width: 1px;
+    height: 2.5rem;
+    background: var(--color-border-subtle);
+    flex-shrink: 0;
+  }
+
+  /* ── Filters ────────────────────────────────────────────────── */
+  .filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    align-items: flex-end;
+    padding: 1.25rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .filter-group-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
   .filter-bar {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    padding-bottom: 2rem;
+    gap: 0.35rem;
   }
   .filter-btn {
-    padding: 0.4rem 0.9rem;
+    padding: 0.3rem 0.75rem;
     border-radius: 9999px;
     border: 1px solid var(--color-border-subtle);
     color: var(--color-text-muted);
     background: transparent;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .filter-btn:hover {
-    border-color: var(--color-neon-cyan)66;
+  .filter-btn:hover,
+  .filter-btn-active,
+  .filter-btn-est-active {
+    border-color: var(--color-neon-cyan);
     color: var(--color-neon-cyan);
+    background: rgba(34,211,238,0.07);
   }
-  .filter-btn-active {
-    border-color: var(--color-neon-cyan) !important;
-    color: var(--color-neon-cyan) !important;
-    background: rgba(0, 245, 255, 0.08) !important;
-    box-shadow: 0 0 10px rgba(0, 245, 255, 0.15);
+  .search-group { flex: 1; min-width: 180px; }
+  .search-wrap { position: relative; }
+  .search-icon {
+    position: absolute;
+    left: 0.65rem; top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
   }
+  .search-input {
+    width: 100%;
+    padding: 0.38rem 0.75rem 0.38rem 2rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.45rem;
+    color: var(--color-text-primary);
+    font-size: 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+    caret-color: var(--color-neon-cyan);
+  }
+  .search-input::placeholder { color: var(--color-text-muted); }
+  .search-input:focus { border-color: rgba(34,211,238,0.45); }
+
+  /* ── Grid ───────────────────────────────────────────────────── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 1024px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .projects-grid { grid-template-columns: 1fr; } }
+
+  /* ── Empty state ────────────────────────────────────────────── */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .empty-icon { font-size: 2.5rem; color: var(--color-text-muted); }
+  .empty-msg  { font-size: 0.82rem; color: var(--color-text-muted); }
 </style>
 
 <script>
-  const filterBar = document.getElementById('filter-bar');
-  const items = document.querySelectorAll<HTMLElement>('.project-item');
-  const emptyState = document.getElementById('empty-state');
+  const items = document.querySelectorAll<HTMLElement>('.proy-item');
+  const emptyState = document.getElementById('empty-proy');
 
-  filterBar?.addEventListener('click', (e) => {
-    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
-    if (!btn) return;
+  let activeCat = 'todas';
+  let activeEst = 'todos';
+  let searchVal = '';
 
-    const filter = btn.dataset.filter ?? 'todos';
-
-    // Update active button
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('filter-btn-active'));
-    btn.classList.add('filter-btn-active');
-
-    // Filter items
+  function applyFilters() {
     let visible = 0;
     items.forEach(item => {
-      const match = filter === 'todos' || item.dataset.categoria === filter;
-      item.style.display = match ? 'block' : 'none';
-      if (match) visible++;
+      const matchCat    = activeCat === 'todas' || item.dataset.cat === activeCat;
+      const matchEst    = activeEst === 'todos' || item.dataset.est === activeEst;
+      const q           = searchVal.toLowerCase();
+      const matchSearch = !q ||
+        (item.dataset.tools  ?? '').includes(q) ||
+        (item.dataset.titulo ?? '').includes(q);
+      const show = matchCat && matchEst && matchSearch;
+      item.style.display = show ? '' : 'none';
+      if (show) visible++;
     });
+    if (emptyState) emptyState.style.display = visible > 0 ? 'none' : 'flex';
+  }
 
-    // Empty state
-    if (emptyState) {
-      emptyState.classList.toggle('hidden', visible > 0);
-    }
+  document.getElementById('cat-filter')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+    if (!btn?.dataset.cat) return;
+    activeCat = btn.dataset.cat;
+    document.querySelectorAll<HTMLElement>('[data-cat]').forEach(b => b.classList.remove('filter-btn-active'));
+    btn.classList.add('filter-btn-active');
+    applyFilters();
   });
+
+  document.getElementById('est-filter')?.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
+    if (!btn?.dataset.est) return;
+    activeEst = btn.dataset.est;
+    document.querySelectorAll<HTMLElement>('[data-est]').forEach(b => b.classList.remove('filter-btn-est-active'));
+    btn.classList.add('filter-btn-est-active');
+    applyFilters();
+  });
+
+  document.getElementById('proy-search')?.addEventListener('input', (e) => {
+    searchVal = (e.target as HTMLInputElement).value;
+    applyFilters();
+  });
+
+  // Run once on load
+  applyFilters();
 </script>

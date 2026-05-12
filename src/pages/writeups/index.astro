@@ -4,67 +4,108 @@ import Layout from '../../layouts/Layout.astro';
 import WriteupCard from '../../components/WriteupCard.astro';
 
 const allWriteups = await getCollection('writeups');
-const writeups = allWriteups.sort((a: CollectionEntry<'writeups'>, b: CollectionEntry<'writeups'>) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const writeups = allWriteups.sort(
+  (a: CollectionEntry<'writeups'>, b: CollectionEntry<'writeups'>) =>
+    b.data.fecha.getTime() - a.data.fecha.getTime()
+);
 
 const dificultades = ['todos', 'easy', 'medium', 'hard', 'insane'];
 const plataformas: string[] = ['todas', ...new Set<string>(writeups.map((w: CollectionEntry<'writeups'>) => w.data.plataforma))];
 
 const diffCount = {
-  easy: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'easy').length,
+  easy:   writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'easy').length,
   medium: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'medium').length,
-  hard: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'hard').length,
+  hard:   writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'hard').length,
   insane: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'insane').length,
 };
+const totalPoints = writeups.reduce((acc: number, w: CollectionEntry<'writeups'>) => acc + (w.data.puntos ?? 0), 0);
+const total = writeups.length;
+
+// Completion percentage bars per difficulty (relative to total)
+const pctEasy   = total ? Math.round((diffCount.easy   / total) * 100) : 0;
+const pctMedium = total ? Math.round((diffCount.medium / total) * 100) : 0;
+const pctHard   = total ? Math.round((diffCount.hard   / total) * 100) : 0;
+const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
 ---
 
 <Layout
-  title="Writeups | SecPortfolio"
-  description="Writeups de HackTheBox, TryHackMe y CTFs — documentación detallada de técnicas de pentesting y resolución de máquinas."
+  title="Writeups CTF | Carlos Santiago Patiño Reyes"
+  description="Writeups de HackTheBox, TryHackMe y CTFs — documentación técnica de pentesting, reconocimiento, explotación y escalada de privilegios."
 >
-  <div class="max-w-5xl mx-auto px-6 py-16">
-    <!-- Page Header -->
-    <div class="mb-12" style="margin-bottom: 2rem;">
-      <div class="font-mono text-xs mb-3" style="color: var(--color-text-muted)">
-        <span style="color: var(--color-neon-green)">~/writeups</span> $ ls -la | sort -r
+  <div class="page-wrapper">
+
+    <!-- ── Page Header ─────────────────────────────────────── -->
+    <header class="page-header">
+      <div class="header-terminal font-mono">
+        <span class="hl-green">~/writeups</span>
+        <span class="hl-muted"> $ ls -la | sort -r</span>
+        <span class="cursor-blink"></span>
       </div>
-      <h1 class="font-mono text-3xl font-bold" style="color: var(--color-text-primary)">
+      <h1 class="page-title font-mono">
         Writeups<span class="neon-green">.</span>
       </h1>
-      <p class="font-mono text-sm mt-3" style="color: var(--color-text-secondary); max-width: 60ch">
-        Documentación detallada de mis resoluciones en plataformas de entrenamiento.
-        Cada writeup explica el proceso completo: reconocimiento, explotación y post-explotación.
+      <p class="page-subtitle">
+        Documentación técnica completa de máquinas y challenges: reconocimiento, explotación,
+        escalada de privilegios y notas de OSCP-style.
       </p>
+    </header>
+
+    <!-- ── Stats Dashboard ─────────────────────────────────── -->
+    <div class="stats-dashboard">
+      <!-- Left: big numbers -->
+      <div class="stats-overview">
+        <div class="stat-hero">
+          <span class="stat-hero-num neon-cyan">{total}</span>
+          <span class="stat-hero-label font-mono">WRITEUPS</span>
+        </div>
+        <div class="stat-hero">
+          <span class="stat-hero-num" style="color:var(--color-neon-purple)">{totalPoints}</span>
+          <span class="stat-hero-label font-mono">PUNTOS</span>
+        </div>
+      </div>
+
+      <!-- Right: difficulty breakdown with bars -->
+      <div class="diff-breakdown">
+        <div class="diff-bar-row">
+          <span class="diff-bar-label font-mono diff-easy">EASY</span>
+          <div class="diff-bar-track">
+            <div class="diff-bar-fill" style={`width:${pctEasy}%; background: var(--color-neon-green)`}></div>
+          </div>
+          <span class="diff-bar-count font-mono">{diffCount.easy}</span>
+        </div>
+        <div class="diff-bar-row">
+          <span class="diff-bar-label font-mono diff-medium">MEDIUM</span>
+          <div class="diff-bar-track">
+            <div class="diff-bar-fill" style={`width:${pctMedium}%; background: var(--color-neon-orange)`}></div>
+          </div>
+          <span class="diff-bar-count font-mono">{diffCount.medium}</span>
+        </div>
+        <div class="diff-bar-row">
+          <span class="diff-bar-label font-mono diff-hard">HARD</span>
+          <div class="diff-bar-track">
+            <div class="diff-bar-fill" style={`width:${pctHard}%; background: var(--color-neon-pink)`}></div>
+          </div>
+          <span class="diff-bar-count font-mono">{diffCount.hard}</span>
+        </div>
+        <div class="diff-bar-row">
+          <span class="diff-bar-label font-mono diff-insane">INSANE</span>
+          <div class="diff-bar-track">
+            <div class="diff-bar-fill" style={`width:${pctInsane}%; background: var(--color-neon-purple)`}></div>
+          </div>
+          <span class="diff-bar-count font-mono">{diffCount.insane}</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Difficulty Stats -->
-    <div class="diff-stats mb-10" style="margin-bottom: 2rem;">
-      <div class="diff-stat">
-        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-green)">{diffCount.easy}</span>
-        <span class="tag-badge diff-easy mt-1">easy</span>
-      </div>
-      <div class="diff-stat">
-        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-orange)">{diffCount.medium}</span>
-        <span class="tag-badge diff-medium mt-1">medium</span>
-      </div>
-      <div class="diff-stat">
-        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-pink)">{diffCount.hard}</span>
-        <span class="tag-badge diff-hard mt-1">hard</span>
-      </div>
-      <div class="diff-stat">
-        <span class="font-mono text-2xl font-bold" style="color: var(--color-neon-purple)">{diffCount.insane}</span>
-        <span class="tag-badge diff-insane mt-1">insane</span>
-      </div>
-    </div>
-
-    <!-- Filter Row -->
-    <div class="flex flex-wrap items-center gap-4 mb-8" style="margin-bottom: 2rem;">
+    <!-- ── Filters Row ─────────────────────────────────────── -->
+    <div class="filters-row">
       <!-- Difficulty Filter -->
-      <div>
-        <p class="font-mono text-xs mb-2" style="color: var(--color-text-muted)">Dificultad:</p>
+      <div class="filter-group">
+        <span class="filter-group-label font-mono">dificultad</span>
         <div class="filter-bar" id="diff-filter" role="group" aria-label="Filtrar por dificultad">
           {dificultades.map(d => (
             <button
-              class={`filter-btn font-mono text-xs ${d === 'todos' ? 'filter-btn-active' : ''}`}
+              class={`filter-btn font-mono ${d === 'todos' ? 'filter-btn-active' : ''}`}
               data-diff={d}
               id={`diff-${d}`}
             >
@@ -75,12 +116,12 @@ const diffCount = {
       </div>
 
       <!-- Platform Filter -->
-      <div>
-        <p class="font-mono text-xs mb-2" style="color: var(--color-text-muted)">Plataforma:</p>
+      <div class="filter-group">
+        <span class="filter-group-label font-mono">plataforma</span>
         <div class="filter-bar" id="plat-filter" role="group" aria-label="Filtrar por plataforma">
           {plataformas.map((p: string) => (
             <button
-              class={`filter-btn font-mono text-xs ${p === 'todas' ? 'filter-btn-plat-active' : ''}`}
+              class={`filter-btn font-mono ${p === 'todas' ? 'filter-btn-plat-active' : ''}`}
               data-plat={p}
               id={`plat-${p.replace(/\s/g, '-')}`}
             >
@@ -89,16 +130,35 @@ const diffCount = {
           ))}
         </div>
       </div>
+
+      <!-- Search -->
+      <div class="filter-group search-group">
+        <span class="filter-group-label font-mono">buscar</span>
+        <div class="search-wrap">
+          <svg class="search-icon" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+          </svg>
+          <input
+            type="text"
+            id="wu-search"
+            placeholder="nmap, burpsuite, CVE..."
+            class="search-input font-mono"
+            aria-label="Buscar por herramienta o título"
+          />
+        </div>
+      </div>
     </div>
 
-    <!-- Writeups Grid -->
-    <div class="grid md:grid-cols-2 gap-5" id="writeups-grid">
+    <!-- ── Writeups Grid ───────────────────────────────────── -->
+    <div class="writeups-grid" id="writeups-grid">
       {writeups.map((w: CollectionEntry<'writeups'>, i: number) => (
         <div
           class="writeup-item animate-fade-in-up"
           data-dificultad={w.data.dificultad}
           data-plataforma={w.data.plataforma}
-          style={`animation-delay: ${i * 0.1}s; opacity: 0`}
+          data-tools={w.data.herramientas.join(' ').toLowerCase()}
+          data-titulo={w.data.titulo.toLowerCase()}
+          style={`animation-delay: ${i * 0.1}s`}
         >
           <WriteupCard
             titulo={w.data.titulo}
@@ -115,53 +175,217 @@ const diffCount = {
     </div>
 
     <!-- Empty state -->
-    <div id="empty-writeup" class="hidden text-center py-16">
-      <div class="font-mono text-4xl mb-4">🏴</div>
-      <p class="font-mono text-sm" style="color: var(--color-text-muted)">
-        No hay writeups que coincidan con los filtros seleccionados.
-      </p>
+    <div id="empty-writeup" class="empty-state" style="display:none">
+      <div class="empty-icon">🏴</div>
+      <p class="font-mono empty-msg">No hay writeups que coincidan con los filtros.</p>
     </div>
+
   </div>
 </Layout>
 
 <style>
-  .diff-stats {
+  .page-wrapper {
+    max-width: 72rem;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  /* ── Header ─────────────────────────────────────────────────── */
+  .page-header { display: flex; flex-direction: column; gap: 0.75rem; }
+  .header-terminal {
+    font-size: 0.78rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.2rem;
+  }
+  .hl-green { color: var(--color-neon-green); }
+  .hl-muted { color: var(--color-text-muted); }
+  .page-title {
+    font-size: clamp(1.8rem, 4vw, 2.5rem);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+  }
+  .page-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    max-width: 65ch;
+    line-height: 1.7;
+  }
+
+  /* ── Stats Dashboard ────────────────────────────────────────── */
+  .stats-dashboard {
     display: flex;
     gap: 1.5rem;
     flex-wrap: wrap;
-    padding: 1.25rem 1.5rem;
+    padding: 1.5rem;
     background: var(--color-bg-card);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 0.5rem;
+    border-radius: 0.75rem;
   }
-  .diff-stat {
+  .stats-overview {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    padding-right: 1.5rem;
+    border-right: 1px solid var(--color-border-subtle);
+    flex-shrink: 0;
+  }
+  @media (max-width: 640px) {
+    .stats-overview { border-right: none; padding-right: 0; border-bottom: 1px solid var(--color-border-subtle); padding-bottom: 1rem; width: 100%; }
+  }
+  .stat-hero {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.2rem;
     min-width: 60px;
   }
-  .filter-bar {
+  .stat-hero-num {
+    font-family: var(--font-mono);
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .stat-hero-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+
+  /* ── Diff bars ──────────────────────────────────────────────── */
+  .diff-breakdown {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    justify-content: center;
+    min-width: 200px;
+  }
+  .diff-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .diff-bar-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    width: 52px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .diff-bar-track {
+    flex: 1;
+    height: 5px;
+    background: var(--color-bg-secondary);
+    border-radius: 9999px;
+    overflow: hidden;
+  }
+  .diff-bar-fill {
+    height: 100%;
+    border-radius: 9999px;
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    min-width: 2px;
+  }
+  .diff-bar-count {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    width: 18px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ── Filters ────────────────────────────────────────────────── */
+  .filters-row {
     display: flex;
     flex-wrap: wrap;
+    gap: 1.25rem;
+    align-items: flex-end;
+    padding: 1.25rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+  }
+  .filter-group {
+    display: flex;
+    flex-direction: column;
     gap: 0.4rem;
   }
+  .filter-group-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+  }
+  .filter-bar { display: flex; flex-wrap: wrap; gap: 0.35rem; }
   .filter-btn {
-    padding: 0.35rem 0.8rem;
+    padding: 0.3rem 0.75rem;
     border-radius: 9999px;
     border: 1px solid var(--color-border-subtle);
     color: var(--color-text-muted);
     background: transparent;
     cursor: pointer;
     transition: all 0.2s ease;
+    font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .filter-btn:hover, .filter-btn-active, .filter-btn-plat-active {
+  .filter-btn:hover,
+  .filter-btn-active,
+  .filter-btn-plat-active {
     border-color: var(--color-neon-cyan);
     color: var(--color-neon-cyan);
-    background: rgba(0, 245, 255, 0.08);
+    background: rgba(34,211,238,0.07);
   }
+  .search-group { flex: 1; min-width: 180px; }
+  .search-wrap { position: relative; }
+  .search-icon {
+    position: absolute;
+    left: 0.65rem; top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 0.38rem 0.75rem 0.38rem 2rem;
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.45rem;
+    color: var(--color-text-primary);
+    font-size: 0.75rem;
+    outline: none;
+    transition: border-color 0.2s;
+    caret-color: var(--color-neon-cyan);
+  }
+  .search-input::placeholder { color: var(--color-text-muted); }
+  .search-input:focus { border-color: rgba(34,211,238,0.45); }
+
+  /* ── Grid ───────────────────────────────────────────────────── */
+  .writeups-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 768px) { .writeups-grid { grid-template-columns: 1fr; } }
+
+  /* ── Empty state ────────────────────────────────────────────── */
+  .empty-state {
+    text-align: center;
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  .empty-icon { font-size: 2.5rem; }
+  .empty-msg  { font-size: 0.82rem; color: var(--color-text-muted); }
 </style>
 
 <script>
@@ -170,17 +394,22 @@ const diffCount = {
 
   let activeDiff = 'todos';
   let activePlat = 'todas';
+  let searchVal  = '';
 
   function applyFilters() {
     let visible = 0;
     items.forEach(item => {
-      const matchDiff = activeDiff === 'todos' || item.dataset.dificultad === activeDiff;
-      const matchPlat = activePlat === 'todas' || item.dataset.plataforma === activePlat;
-      const show = matchDiff && matchPlat;
-      item.style.display = show ? 'block' : 'none';
+      const matchDiff   = activeDiff === 'todos' || item.dataset.dificultad === activeDiff;
+      const matchPlat   = activePlat === 'todas' || item.dataset.plataforma  === activePlat;
+      const q           = searchVal.toLowerCase();
+      const matchSearch = !q ||
+        (item.dataset.tools  ?? '').includes(q) ||
+        (item.dataset.titulo ?? '').includes(q);
+      const show = matchDiff && matchPlat && matchSearch;
+      item.style.display = show ? '' : 'none';
       if (show) visible++;
     });
-    if (emptyState) emptyState.classList.toggle('hidden', visible > 0);
+    if (emptyState) emptyState.style.display = visible > 0 ? 'none' : 'flex';
   }
 
   document.getElementById('diff-filter')?.addEventListener('click', (e) => {
@@ -200,4 +429,12 @@ const diffCount = {
     btn.classList.add('filter-btn-plat-active');
     applyFilters();
   });
+
+  document.getElementById('wu-search')?.addEventListener('input', (e) => {
+    searchVal = (e.target as HTMLInputElement).value;
+    applyFilters();
+  });
+
+  // Run once on load
+  applyFilters();
 </script>

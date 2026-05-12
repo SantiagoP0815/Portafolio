@@ -1,5 +1,5 @@
 ---
-// ProjectCard.astro — Tarjeta de proyecto estándar
+// ProjectCard.astro — Premium project card with architecture preview
 interface Props {
   titulo: string;
   descripcion: string;
@@ -15,90 +15,287 @@ interface Props {
 const { titulo, descripcion, herramientas, categoria, fecha, estado, slug, github, demo } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const categoriaColors: Record<string, string> = {
-  web: 'tag-cyan',
-  red: 'tag-green',
-  forense: 'tag-purple',
-  malware: 'tag-pink',
-  ctf: 'tag-orange',
-  desarrollo: 'tag-cyan',
+const categoriaConfig: Record<string, { label: string; cls: string; accentColor: string; icon: string }> = {
+  web:        { label: 'Web',        cls: 'tag-cyan',   accentColor: '#22d3ee', icon: '◈' },
+  red:        { label: 'Red Team',   cls: 'tag-green',  accentColor: '#4ade80', icon: '⚔' },
+  forense:    { label: 'Forense',    cls: 'tag-purple', accentColor: '#a78bfa', icon: '🔬' },
+  malware:    { label: 'Malware',    cls: 'tag-pink',   accentColor: '#f472b6', icon: '☣' },
+  ctf:        { label: 'CTF',        cls: 'tag-orange', accentColor: '#fb923c', icon: '⚑' },
+  desarrollo: { label: 'Dev',        cls: 'tag-cyan',   accentColor: '#22d3ee', icon: '⬡' },
 };
 
-const estadoMap: Record<string, { label: string; color: string }> = {
-  completado: { label: '● completado', color: 'var(--color-neon-green)' },
-  'en-progreso': { label: '◐ en progreso', color: 'var(--color-neon-orange)' },
-  archivado: { label: '○ archivado', color: 'var(--color-text-muted)' },
+const estadoMap: Record<string, { label: string; color: string; pulse: boolean }> = {
+  completado:   { label: 'LIVE',       color: '#4ade80', pulse: false },
+  'en-progreso':{ label: 'IN PROGRESS',color: '#fb923c', pulse: true },
+  archivado:    { label: 'ARCHIVED',   color: '#475569', pulse: false },
 };
 
-const estadoInfo = estadoMap[estado] ?? estadoMap.completado;
+const cat = categoriaConfig[categoria] ?? categoriaConfig.desarrollo;
+const est = estadoMap[estado] ?? estadoMap.completado;
 const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short' });
+
+// Stack layers: group tools by category visually (max 3 layers shown)
+const MAX_TOOLS_DISPLAY = 6;
 ---
 
-<article class="card-cyber p-6 flex flex-col gap-4 animate-fade-in-up">
-  <!-- Top bar -->
-  <div class="flex items-start justify-between gap-3">
-    <div class="flex items-center gap-2">
-      <!-- Category icon -->
-      <div class="cat-icon">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.955 11.955 0 003 10c0 5.592 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.249-8.25-3.286z"/>
-        </svg>
+<article class="pcard" style={`--accent: ${cat.accentColor}`}>
+  <!-- Top accent strip -->
+  <div class="pcard-strip"></div>
+
+  <div class="pcard-body">
+    <!-- Header: category + status -->
+    <div class="pcard-header">
+      <div class="pcard-cat">
+        <span class="cat-icon">{cat.icon}</span>
+        <span class={`tag-badge ${cat.cls}`}>{cat.label}</span>
       </div>
-      <span class={`tag-badge ${categoriaColors[categoria] || 'tag-cyan'}`}>
-        {categoria}
-      </span>
+      <div class="pcard-status">
+        <span
+          class="status-indicator"
+          style={`background: ${est.color}; box-shadow: 0 0 7px ${est.color}`}
+          class:list={[{ 'pulse-anim': est.pulse }]}
+        ></span>
+        <span class="status-label font-mono">{est.label}</span>
+      </div>
     </div>
-    <span class="font-mono text-xs" style={`color: ${estadoInfo.color}`}>
-      {estadoInfo.label}
-    </span>
-  </div>
 
-  <!-- Title & Description -->
-  <div>
-    <h3 class="font-mono font-bold text-lg mb-2" style="color: var(--color-text-primary)">
-      {titulo}
-    </h3>
-    <p class="font-mono text-sm leading-relaxed" style="color: var(--color-text-secondary)">
-      {descripcion}
-    </p>
-  </div>
+    <!-- Title -->
+    <h3 class="pcard-title font-mono">{titulo}</h3>
 
-  <!-- Tools -->
-  <div class="flex flex-wrap gap-1.5">
-    {herramientas.slice(0, 5).map(tool => (
-      <span class="font-mono text-xs px-2 py-0.5 rounded" style="background: var(--color-bg-secondary); color: var(--color-neon-green); border: 1px solid var(--color-border-subtle)">
-        {tool}
+    <!-- Description -->
+    <p class="pcard-desc">{descripcion}</p>
+
+    <!-- Tech Stack Visualization -->
+    <div class="stack-section">
+      <div class="stack-header font-mono">
+        <span class="stack-prompt">›</span>
+        <span class="stack-label">tech_stack</span>
+      </div>
+      <div class="stack-pills">
+        {herramientas.slice(0, MAX_TOOLS_DISPLAY).map((tool, i) => (
+          <span
+            class="stack-pill font-mono"
+            style={`animation-delay: ${i * 0.05}s`}
+          >
+            {tool}
+          </span>
+        ))}
+        {herramientas.length > MAX_TOOLS_DISPLAY && (
+          <span class="stack-more font-mono">+{herramientas.length - MAX_TOOLS_DISPLAY} más</span>
+        )}
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="pcard-footer">
+      <span class="pcard-date font-mono">
+        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
+        </svg>
+        {dateStr}
       </span>
-    ))}
-    {herramientas.length > 5 && (
-      <span class="font-mono text-xs px-2 py-0.5 rounded" style="color: var(--color-text-muted)">
-        +{herramientas.length - 5} más
-      </span>
-    )}
-  </div>
-
-  <!-- Footer Actions -->
-  <div class="flex items-center justify-between pt-2 border-t" style="border-color: var(--color-border-subtle)">
-    <span class="font-mono text-xs" style="color: var(--color-text-muted)">{dateStr}</span>
-    <div class="flex items-center gap-2">
-      {github && (
-        <a href={github} target="_blank" rel="noopener noreferrer" class="btn-ghost text-xs py-1 px-2.5" aria-label="GitHub">
-          <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-          </svg>
-          Código
+      <div class="pcard-actions">
+        {github && (
+          <a href={github} target="_blank" rel="noopener noreferrer" class="action-btn action-ghost" aria-label="Ver código en GitHub">
+            <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+            </svg>
+            Code
+          </a>
+        )}
+        {demo && (
+          <a href={demo} target="_blank" rel="noopener noreferrer" class="action-btn action-ghost" aria-label="Ver demo">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+            </svg>
+            Demo
+          </a>
+        )}
+        <a href={`${base}/proyectos/${slug}`} class="action-btn action-primary" aria-label={`Ver detalles de ${titulo}`}>
+          Ver proyecto →
         </a>
-      )}
-      <a href={`${base}/proyectos/${slug}`} class="btn-primary text-xs py-1 px-3">
-        Ver más →
-      </a>
+      </div>
     </div>
   </div>
 </article>
 
 <style>
+  /* ── Card shell ─────────────────────────────────────────────── */
+  .pcard {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+  .pcard:hover {
+    border-color: var(--accent);
+    box-shadow: 0 8px 40px color-mix(in srgb, var(--accent) 12%, transparent);
+    transform: translateY(-3px);
+  }
+  /* Top accent strip */
+  .pcard-strip {
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent 70%);
+    opacity: 0.85;
+    transition: opacity 0.25s;
+  }
+  .pcard:hover .pcard-strip { opacity: 1; }
+
+  /* ── Body ───────────────────────────────────────────────────── */
+  .pcard-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    flex: 1;
+  }
+
+  /* ── Header ─────────────────────────────────────────────────── */
+  .pcard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+  .pcard-cat { display: flex; align-items: center; gap: 0.4rem; }
   .cat-icon {
+    font-size: 0.9rem;
+    color: var(--accent);
+  }
+  .pcard-status { display: flex; align-items: center; gap: 0.4rem; }
+  .status-indicator {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .pulse-anim {
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  @keyframes statusPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+  }
+  .status-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+  }
+
+  /* ── Title ──────────────────────────────────────────────────── */
+  .pcard-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.35;
+  }
+
+  /* ── Description ────────────────────────────────────────────── */
+  .pcard-desc {
+    font-family: var(--font-sans);
+    font-size: 0.84rem;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  /* ── Stack section ──────────────────────────────────────────── */
+  .stack-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .stack-header {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .stack-prompt {
+    color: var(--accent);
+    font-size: 0.85rem;
+  }
+  .stack-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .stack-pill {
+    font-size: 0.68rem;
+    padding: 0.18rem 0.55rem;
+    background: rgba(34,211,238,0.04);
+    border: 1px solid rgba(34,211,238,0.15);
+    border-radius: 0.35rem;
+    color: var(--accent);
+    white-space: nowrap;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .pcard:hover .stack-pill {
+    background: rgba(34,211,238,0.07);
+    border-color: rgba(34,211,238,0.25);
+  }
+  .stack-more {
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    padding: 0.18rem 0.4rem;
+    align-self: center;
+  }
+
+  /* ── Footer ─────────────────────────────────────────────────── */
+  .pcard-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding-top: 0.7rem;
+    border-top: 1px solid var(--color-border-subtle);
+  }
+  .pcard-date {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+  }
+  .pcard-actions { display: flex; align-items: center; gap: 0.4rem; }
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .action-ghost {
+    border: 1px solid var(--color-border-subtle);
+    color: var(--color-text-muted);
+    background: transparent;
+  }
+  .action-ghost:hover {
+    border-color: rgba(34,211,238,0.4);
     color: var(--color-neon-cyan);
-    opacity: 0.7;
+  }
+  .action-primary {
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+  }
+  .action-primary:hover {
+    background: var(--accent);
+    color: var(--color-bg-primary);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 35%, transparent);
   }
 </style>
