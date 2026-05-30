@@ -11,6 +11,7 @@ const allProyectos = await getCollection('proyectos');
 const allWriteups  = await getCollection('writeups');
 
 const proyectosRecientes = allProyectos
+  .filter(p => p.id !== 'gestion-cvs')
   .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
   .slice(0, 3);
 
@@ -162,7 +163,7 @@ const skills = [
 
   <!-- ══════════════════════════════════════════════════════════
        PROYECTO DESTACADO
-  ══════════════════════════════════════════════════════════ 
+  ══════════════════════════════════════════════════════════ -->
   <section class="content-section">
     <div class="section-header">
       <h2 class="section-title font-mono">proyecto_destacado</h2>

@@ -1,8 +1,8 @@
 ---
 titulo: "Sistema de Gestión de CVs"
-descripcion: "Plataforma web full-stack para gestión centralizada de currículums vitae con autenticación segura, panel de administración y arquitectura MVC sobre Node.js y MySQL."
+descripcion: "Plataforma web full-stack para gestión y generación de hojas de vida con autenticación segura, panel de administración, subida de documentos y exportación a PDF. Stack: Node.js, Express, MySQL, Passport.js."
 fecha: 2024-11-15
-herramientas: ["Node.js", "Express", "MySQL", "bcrypt", "JWT", "Helmet.js", "Sequelize"]
+herramientas: ["Node.js", "Express", "MySQL", "Passport.js", "bcrypt", "Helmet.js", "Multer", "pdfmake"]
 categoria: desarrollo
 destacado: true
 github: "https://github.com/santiagop0815/hojadevida"
@@ -11,32 +11,39 @@ estado: completado
 
 ## Overview
 
-Sistema web desarrollado con **Node.js + Express** siguiendo el patrón **MVC**, respaldado por **MySQL** como base de datos relacional. El proyecto fue diseñado desde el primer día con seguridad como prioridad central.
+Aplicación web desarrollada con **Node.js + Express** siguiendo arquitectura **MVC**, respaldada por **MySQL** como base de datos relacional. Permite a usuarios registrarse, diligenciar su hoja de vida y exportarla en PDF. Incluye panel de administrador para listar personas registradas.
 
 ## Arquitectura
 
-El sistema sigue un flujo MVC estricto:
-
 ```
-Routes → Controllers → Models (Sequelize ORM) → MySQL
+Routes → Controllers → Services → Repositories (SQL) → MySQL
                   ↓
-             Middleware (Auth, Validation, Rate-limit)
+             Middleware (Auth, Validation, Rate-limit, CSRF)
 ```
 
-## Medidas de Seguridad Implementadas
+## Funcionalidades
+
+- Registro con verificación por vereda y junta de presidentes
+- Diligenciamiento de datos personales, académicos, laborales e idiomas
+- Subida de documentos soporte (PDF/imagen) por sección con **Multer**
+- Generación y descarga de hoja de vida en **PDF** (pdfmake + pdf-lib)
+- Panel de administrador para listar y descargar CVs de todos los usuarios
+
+## Medidas de Seguridad
 
 ### Autenticación y Autorización
-- Passwords hasheadas con **bcrypt** (salt rounds: 12)
-- Sesiones manejadas con **JWT** firmados con clave secreta rotativa
+- Passwords hasheadas con **bcrypt**
+- Sesiones con **express-session** + almacenamiento en MySQL
+- Autenticación con **Passport.js** (local strategy)
 - Middleware de autenticación en todas las rutas protegidas
 
 ### Protección de la Aplicación
 - **Helmet.js** para cabeceras HTTP seguras (CSP, HSTS, X-Frame-Options)
-- **Rate limiting** con `express-rate-limit` (100 req/15min por IP)
-- Validación y sanitización de inputs con `express-validator`
-- Protección contra **SQL Injection** vía Sequelize ORM parametrizado
+- Protección **CSRF** en formularios
+- **Rate limiting** por IP
+- Validación y sanitización de inputs con `express-validator` + XSS clean
+- Queries SQL parametrizadas contra SQL Injection
 
 ### Gestión de Datos
 - Variables sensibles en `.env` (nunca en código fuente)
-- Conexiones MySQL con usuario de mínimos privilegios
-- Logs de acceso y errores separados para auditoría
+- `NODE_ENV=production` activa cookies seguras y `trust proxy`
