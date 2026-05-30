@@ -34,7 +34,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <span class="tag-badge tag-green">MySQL</span>
         <span class="tag-badge tag-purple">Express</span>
         <span class="tag-badge tag-pink">Passport.js</span>
-        <span class="tag-badge tag-orange">bcrypt</span>
+        <span class="tag-badge tag-orange">bcryptjs</span>
         <span class="tag-badge tag-cyan">Multer</span>
         <span class="tag-badge tag-green">pdfmake</span>
       </div>
@@ -167,7 +167,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
           <div class="security-icon">⏱️</div>
           <div>
             <div class="security-label">Rate Limiting</div>
-            <div class="security-detail">100 req / 15 min por IP — mitiga ataques de fuerza bruta y DoS</div>
+            <div class="security-detail">200 req / 15 min por IP — mitiga ataques de fuerza bruta y DoS</div>
           </div>
         </div>
 
@@ -182,8 +182,8 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <div class="security-item">
           <div class="security-icon">✅</div>
           <div>
-            <div class="security-label">Input Validation</div>
-            <div class="security-detail">express-validator sanitiza y valida todos los inputs del usuario</div>
+            <div class="security-label">Input Validation &amp; Sanitización</div>
+            <div class="security-detail">express-validator para validación, xss-clean contra XSS, express-mongo-sanitize contra NoSQL injection</div>
           </div>
         </div>
 

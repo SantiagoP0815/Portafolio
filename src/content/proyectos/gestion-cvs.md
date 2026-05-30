@@ -2,7 +2,7 @@
 titulo: "Sistema de Gestión de CVs"
 descripcion: "Plataforma web full-stack para gestión y generación de hojas de vida con autenticación segura, panel de administración, subida de documentos y exportación a PDF. Stack: Node.js, Express, MySQL, Passport.js."
 fecha: 2024-11-15
-herramientas: ["Node.js", "Express", "MySQL", "Passport.js", "bcrypt", "Helmet.js", "Multer", "pdfmake"]
+herramientas: ["Node.js", "Express", "MySQL", "Passport.js", "bcryptjs", "Helmet", "Multer", "pdfmake"]
 categoria: desarrollo
 destacado: true
 github: "https://github.com/santiagop0815/hojadevida"
@@ -32,7 +32,7 @@ Routes → Controllers → Services → Repositories (SQL) → MySQL
 ## Medidas de Seguridad
 
 ### Autenticación y Autorización
-- Passwords hasheadas con **bcrypt**
+- Passwords hasheadas con **bcryptjs**
 - Sesiones con **express-session** + almacenamiento en MySQL
 - Autenticación con **Passport.js** (local strategy)
 - Middleware de autenticación en todas las rutas protegidas
@@ -40,8 +40,8 @@ Routes → Controllers → Services → Repositories (SQL) → MySQL
 ### Protección de la Aplicación
 - **Helmet.js** para cabeceras HTTP seguras (CSP, HSTS, X-Frame-Options)
 - Protección **CSRF** en formularios
-- **Rate limiting** por IP
-- Validación y sanitización de inputs con `express-validator` + XSS clean
+- **Rate limiting** con `express-rate-limit` (200 req/15 min por IP)
+- Validación con `express-validator`, sanitización XSS con `xss-clean` y NoSQL injection con `express-mongo-sanitize`
 - Queries SQL parametrizadas contra SQL Injection
 
 ### Gestión de Datos
