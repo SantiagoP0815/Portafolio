@@ -1,5 +1,5 @@
 ---
-titulo: "HackTheBox – Maquina: Keeper"
+titulo: "Keeper"
 descripcion: "Explotación de credenciales por defecto en Request Tracker, acceso SSH y extracción de credenciales KeePass desde un volcado de memoria."
 fecha: 2024-10-05
 dificultad: easy

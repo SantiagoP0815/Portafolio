@@ -1,5 +1,5 @@
 ---
-titulo: "HackTheBox – Maquina: Codify"
+titulo: "Codify"
 descripcion: "Explotación de sandbox escape en vm2, abuso de script Bash con comparación de contraseñas vulnerable a wildcard brute-force para escalar a root."
 fecha: 2024-08-20
 dificultad: easy
