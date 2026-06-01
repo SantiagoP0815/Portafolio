@@ -401,11 +401,6 @@ const phases = ['Reconocimiento', 'Explotación', 'PrivEsc'];
     gap: 1.5rem;
     align-items: start;
   }
-  @media (max-width: 900px) {
-    .content-layout { grid-template-columns: 1fr; }
-    .sidebar { position: static; }
-  }
-
   /* ── Sidebar ─────────────────────────────────────────────────── */
   .sidebar {
     display: flex;
@@ -413,6 +408,11 @@ const phases = ['Reconocimiento', 'Explotación', 'PrivEsc'];
     gap: 1rem;
     position: sticky;
     top: 5rem;
+  }
+
+  @media (max-width: 900px) {
+    .content-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
   }
   .sidebar-card {
     background: var(--color-bg-card);

@@ -216,7 +216,6 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     border: 1px solid var(--color-border-subtle);
     border-radius: 0.875rem;
     overflow: hidden;
-    position: relative;
   }
   .header-strip {
     height: 3px;
@@ -305,10 +304,6 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     gap: 1.5rem;
     align-items: start;
   }
-  @media (max-width: 900px) {
-    .content-layout { grid-template-columns: 1fr; }
-  }
-
   /* ── Sidebar ─────────────────────────────────────────────────── */
   .sidebar {
     display: flex;
@@ -316,6 +311,11 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     gap: 1rem;
     position: sticky;
     top: 5rem;
+  }
+
+  @media (max-width: 900px) {
+    .content-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
   }
   .sidebar-card {
     background: var(--color-bg-card);
