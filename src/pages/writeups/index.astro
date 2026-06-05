@@ -18,7 +18,6 @@ const diffCount = {
   hard:   writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'hard').length,
   insane: writeups.filter((w: CollectionEntry<'writeups'>) => w.data.dificultad === 'insane').length,
 };
-const totalPoints = writeups.reduce((acc: number, w: CollectionEntry<'writeups'>) => acc + (w.data.puntos ?? 0), 0);
 const total = writeups.length;
 
 // Completion percentage bars per difficulty (relative to total)
@@ -57,10 +56,6 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
         <div class="stat-hero">
           <span class="stat-hero-num neon-cyan">{total}</span>
           <span class="stat-hero-label font-mono">WRITEUPS</span>
-        </div>
-        <div class="stat-hero">
-          <span class="stat-hero-num" style="color:var(--color-neon-purple)">{totalPoints}</span>
-          <span class="stat-hero-label font-mono">PUNTOS</span>
         </div>
       </div>
 

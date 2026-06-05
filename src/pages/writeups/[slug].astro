@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
 const { writeup } = Astro.props;
 const { Content } = await render(writeup);
-const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha, puntos } = writeup.data;
+const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha } = writeup.data;
 const base = (import.meta.env.BASE_URL as string).replace(/\/$/, '');
 
 const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -78,14 +78,6 @@ const phases = ['Reconocimiento', 'Explotación', 'PrivEsc'];
             <span class="diff-led" style={`background:${diff.color}; box-shadow:0 0 6px ${diff.color}`}></span>
             {diff.label}
           </span>
-          {puntos && (
-            <span class="pts-badge font-mono">
-              <svg width="10" height="10" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-              </svg>
-              {puntos} pts
-            </span>
-          )}
         </div>
 
         <!-- Title -->
@@ -158,12 +150,6 @@ const phases = ['Reconocimiento', 'Explotación', 'PrivEsc'];
               <span class="meta-key font-mono">categoría</span>
               <span class="meta-val font-mono">{categoria}</span>
             </div>
-            {puntos && (
-              <div class="meta-item">
-                <span class="meta-key font-mono">puntos</span>
-                <span class="meta-val font-mono" style="color:var(--color-neon-purple)">{puntos} pts</span>
-              </div>
-            )}
             <div class="meta-item">
               <span class="meta-key font-mono">fecha</span>
               <span class="meta-val font-mono">{dateStr}</span>
@@ -303,18 +289,6 @@ const phases = ['Reconocimiento', 'Explotación', 'PrivEsc'];
     border-radius: 50%;
     flex-shrink: 0;
   }
-  .pts-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-size: 0.7rem;
-    padding: 0.2rem 0.55rem;
-    background: rgba(167,139,250,0.08);
-    border: 1px solid rgba(167,139,250,0.25);
-    border-radius: 9999px;
-    color: var(--color-neon-purple);
-  }
-
   /* Title */
   .detail-title {
     font-size: clamp(1.3rem, 2.5vw, 1.75rem);

@@ -26,7 +26,6 @@ const writeups = defineCollection({
     herramientas: z.array(z.string()),
     categoria: z.enum(['htb', 'thm', 'ctf', 'vulnhub', 'otro']),
     plataforma: z.string(),
-    puntos: z.number().optional(),
     completado: z.boolean().default(true),
   }),
 });
