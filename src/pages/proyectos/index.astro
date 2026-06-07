@@ -158,9 +158,9 @@ const allTools        = [...new Set(proyectos.flatMap((p: CollectionEntry<'proye
 
 <style>
   .page-wrapper {
-    max-width: 72rem;
+    max-width: 90rem;
     margin: 0 auto;
-    padding: 4rem 1.5rem 6rem;
+    padding: 4rem 2rem 6rem;
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
@@ -302,12 +302,18 @@ const allTools        = [...new Set(proyectos.flatMap((p: CollectionEntry<'proye
 
   /* ── Grid ───────────────────────────────────────────────────── */
   .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.25rem;
   }
-  @media (max-width: 1024px) { .projects-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px)  { .projects-grid { grid-template-columns: 1fr; } }
+  .proy-item {
+    flex: 0 1 calc(33.333% - 0.834rem);
+    min-width: 260px;
+    display: flex;
+  }
+  .proy-item > * { width: 100%; }
+  @media (max-width: 640px) { .proy-item { flex: 1 1 100%; } }
 
   /* ── Empty state ────────────────────────────────────────────── */
   .empty-state {

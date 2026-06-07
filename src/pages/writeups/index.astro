@@ -184,9 +184,9 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
 
 <style>
   .page-wrapper {
-    max-width: 72rem;
+    max-width: 90rem;
     margin: 0 auto;
-    padding: 4rem 1.5rem 6rem;
+    padding: 4rem 2rem 6rem;
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
@@ -368,11 +368,18 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
 
   /* ── Grid ───────────────────────────────────────────────────── */
   .writeups-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 1.25rem;
   }
-  @media (max-width: 768px) { .writeups-grid { grid-template-columns: 1fr; } }
+  .writeup-item {
+    flex: 0 1 calc(25% - 0.938rem);
+    min-width: 240px;
+    display: flex;
+  }
+  .writeup-item > * { width: 100%; }
+  @media (max-width: 640px) { .writeup-item { flex: 1 1 100%; } }
 
   /* ── Empty state ────────────────────────────────────────────── */
   .empty-state {
