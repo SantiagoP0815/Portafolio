@@ -14,13 +14,13 @@ completado: true
 Fase 1 — descubrimiento de puertos:
 
 ```bash
-nmap -vvv -p- --open -sS --min-rate 5000 -n -Pn 10.129.x.x
+nmap -vvv -p- --open -sS --min-rate 5000 -n -Pn 10.129.19.218
 ```
 
 Fase 2 — detección de versiones y scripts sobre los puertos encontrados:
 
 ```bash
-nmap -p21,22,80 -sCV 10.129.x.x
+nmap -p21,22,80 -sCV 10.129.19.218
 ```
 
 Puertos abiertos:
@@ -35,14 +35,14 @@ Puertos abiertos:
 El dashboard permite generar y descargar capturas de red. La URL de cada captura sigue el patrón:
 
 ```
-http://10.129.x.x/data/0
+http://10.129.19.218/data/0
 ```
 
 El parámetro numérico no valida pertenencia — IDOR (Insecure Direct Object Reference). Accediendo a `/data/0` se obtiene una captura generada por otro usuario.
 
 ### Análisis del pcap
 
-Se descarga el archivo `.pcap` desde el botón de descarga y se abre con Wireshark.
+Se descarga el archivo `0.pcap` desde el botón de descarga y se abre con Wireshark.
 
 El tráfico FTP viaja en texto plano y expone credenciales en la sesión capturada:
 
