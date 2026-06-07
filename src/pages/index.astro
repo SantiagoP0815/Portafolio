@@ -15,8 +15,13 @@ const proyectosRecientes = allProyectos
   .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
   .slice(0, 3);
 
+const diffOrder: Record<string, number> = { insane: 4, hard: 3, medium: 2, easy: 1 };
 const writeupsRecientes = allWriteups
-  .sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime())
+  .sort((a, b) => {
+    const dateDiff = b.data.fecha.getTime() - a.data.fecha.getTime();
+    if (dateDiff !== 0) return dateDiff;
+    return (diffOrder[b.data.dificultad] ?? 0) - (diffOrder[a.data.dificultad] ?? 0);
+  })
   .slice(0, 2);
 
 // ── Tarjetas de información personal (escalable) ──────────────

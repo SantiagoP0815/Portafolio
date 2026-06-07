@@ -3,10 +3,14 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import WriteupCard from '../../components/WriteupCard.astro';
 
+const diffOrder: Record<string, number> = { insane: 4, hard: 3, medium: 2, easy: 1 };
 const allWriteups = await getCollection('writeups');
 const writeups = allWriteups.sort(
-  (a: CollectionEntry<'writeups'>, b: CollectionEntry<'writeups'>) =>
-    b.data.fecha.getTime() - a.data.fecha.getTime()
+  (a: CollectionEntry<'writeups'>, b: CollectionEntry<'writeups'>) => {
+    const dateDiff = b.data.fecha.getTime() - a.data.fecha.getTime();
+    if (dateDiff !== 0) return dateDiff;
+    return (diffOrder[b.data.dificultad] ?? 0) - (diffOrder[a.data.dificultad] ?? 0);
+  }
 );
 
 const dificultades = ['todos', 'easy', 'medium', 'hard', 'insane'];
