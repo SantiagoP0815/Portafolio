@@ -1,5 +1,5 @@
 ---
-titulo: "nmapscan — Wrapper de Nmap en 2 Fases"
+titulo: "NmapScan — Wrapper de Nmap en 2 Fases"
 descripcion: "Script Bash que automatiza el reconocimiento de red con Nmap: descubrimiento rápido de puertos abiertos seguido de escaneo detallado de servicios y versiones."
 fecha: 2026-06-07
 herramientas: ["Bash", "Nmap"]
