@@ -3,20 +3,20 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
-const allProyectos = await getCollection('proyectos');
-const proyectos = allProyectos.sort(
-  (a: CollectionEntry<'proyectos'>, b: CollectionEntry<'proyectos'>) =>
+const allProjects = await getCollection('projects');
+const projectsList = allProjects.sort(
+  (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) =>
     b.data.fecha.getTime() - a.data.fecha.getTime()
 );
 
-const categorias = ['todas', ...new Set<string>(proyectos.map((p: CollectionEntry<'proyectos'>) => p.data.categoria))];
-const estados    = ['todos', ...new Set<string>(proyectos.map((p: CollectionEntry<'proyectos'>) => p.data.estado))];
+const categorias = ['todas', ...new Set<string>(projectsList.map((p: CollectionEntry<'projects'>) => p.data.categoria))];
+const estados    = ['todos', ...new Set<string>(projectsList.map((p: CollectionEntry<'projects'>) => p.data.estado))];
 
 // Stats
-const statCompletados = proyectos.filter((p: CollectionEntry<'proyectos'>) => p.data.estado === 'completado').length;
-const statEnProgreso  = proyectos.filter((p: CollectionEntry<'proyectos'>) => p.data.estado === 'en-progreso').length;
-const statDestacados  = proyectos.filter((p: CollectionEntry<'proyectos'>) => p.data.destacado).length;
-const allTools        = [...new Set(proyectos.flatMap((p: CollectionEntry<'proyectos'>) => p.data.herramientas))];
+const statCompletados = projectsList.filter((p: CollectionEntry<'projects'>) => p.data.estado === 'completado').length;
+const statEnProgreso  = projectsList.filter((p: CollectionEntry<'projects'>) => p.data.estado === 'en-progreso').length;
+const statDestacados  = projectsList.filter((p: CollectionEntry<'projects'>) => p.data.destacado).length;
+const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'projects'>) => p.data.herramientas))];
 ---
 
 <Layout
@@ -28,7 +28,7 @@ const allTools        = [...new Set(proyectos.flatMap((p: CollectionEntry<'proye
     <!-- ── Page Header ─────────────────────────────────────── -->
     <header class="page-header">
       <div class="header-terminal font-mono">
-        <span class="hl-cyan">~/proyectos</span>
+        <span class="hl-cyan">~/projects</span>
         <span class="hl-muted"> $ ls -la --sort=date</span>
         <span class="cursor-blink"></span>
       </div>
@@ -44,7 +44,7 @@ const allTools        = [...new Set(proyectos.flatMap((p: CollectionEntry<'proye
     <!-- ── Stats Row ───────────────────────────────────────── -->
     <div class="stats-row">
       <div class="stat-block">
-        <span class="stat-num neon-cyan">{proyectos.length}</span>
+        <span class="stat-num neon-cyan">{projectsList.length}</span>
         <span class="stat-label font-mono">TOTAL</span>
       </div>
       <div class="stat-divider"></div>
@@ -122,8 +122,8 @@ const allTools        = [...new Set(proyectos.flatMap((p: CollectionEntry<'proye
     </div>
 
     <!-- ── Projects Grid ───────────────────────────────────── -->
-    <div class="projects-grid" id="proyectos-grid">
-      {proyectos.map((p: CollectionEntry<'proyectos'>, i: number) => (
+    <div class="projects-grid" id="projects-grid">
+      {projectsList.map((p: CollectionEntry<'projects'>, i: number) => (
         <div
           class="proy-item animate-fade-in-up"
           data-cat={p.data.categoria}

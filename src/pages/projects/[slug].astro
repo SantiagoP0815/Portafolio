@@ -3,8 +3,8 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  const proyectos = await getCollection('proyectos');
-  return proyectos.map(p => ({
+  const projects = await getCollection('projects');
+  return projects.map(p => ({
     params: { slug: p.id },
     props: { proyecto: p },
   }));
@@ -43,7 +43,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     <nav class="breadcrumb animate-fade-in-up" aria-label="Breadcrumb">
       <a href={`${base}/`} class="bc-link font-mono">~/inicio</a>
       <span class="bc-sep">/</span>
-      <a href={`${base}/proyectos`} class="bc-link font-mono">proyectos</a>
+      <a href={`${base}/projects`} class="bc-link font-mono">projects</a>
       <span class="bc-sep">/</span>
       <span class="bc-current font-mono">{proyecto.id}</span>
     </nav>
@@ -154,7 +154,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
         </div>
 
         <!-- Back button -->
-        <a href={`${base}/proyectos`} class="btn-ghost back-btn">
+        <a href={`${base}/projects`} class="btn-ghost back-btn">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
           </svg>

@@ -14,9 +14,9 @@ Portafolio personal de **Carlos Santiago Patiño Reyes** — Ingeniero de Sistem
 /
 ├── src/
 │   ├── components/    # ProjectCard, WriteupCard, Sidebar, Footer
-│   ├── content/       # Colecciones: proyectos/ + writeups/ (Markdown)
+│   ├── content/       # Colecciones: projects/ + writeups/ (Markdown)
 │   ├── layouts/       # Layout.astro (shell común)
-│   ├── pages/         # Rutas: index, /proyectos, /writeups, [slug]
+│   ├── pages/         # Rutas: index, /projects, /writeups, [slug]
 │   └── styles/        # global.css (tema cyberpunk + utilidades)
 ├── public/            # favicon.svg, og-image.png
 └── astro.config.mjs   # Config: site, base, Tailwind Vite plugin
@@ -39,7 +39,7 @@ El deploy se hace automáticamente con GitHub Actions al hacer push a `main`.
 
 ## Colecciones
 
-### Proyectos (`src/content/proyectos/`)
+### Projects (`src/content/projects/`)
 
 Herramientas y aplicaciones de ciberseguridad:
 - Scanner de Vulnerabilidades Web

@@ -4,7 +4,7 @@ import Layout from '../layouts/Layout.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
-const allProyectos = await getCollection('proyectos');
+const allProjects = await getCollection('projects');
 const allWriteups  = await getCollection('writeups');
 
 const skills = [
@@ -50,7 +50,7 @@ const objetivos = [
           </h1>
           <p class="profile-role font-mono">Ingeniero de Sistemas &amp; Ciberseguridad</p>
           <div class="profile-cta">
-            <a href={`${base}/proyectos`} class="btn-primary">
+            <a href={`${base}/projects`} class="btn-primary">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/>
               </svg>
@@ -106,7 +106,7 @@ const objetivos = [
               <span class="info-card-icon">🛠️</span>
               <div class="info-card-body">
                 <span class="info-card-label font-mono">Proyectos</span>
-                <span class="info-card-value">{allProyectos.length} ACTIVOS</span>
+                <span class="info-card-value">{allProjects.length} ACTIVOS</span>
                 <span class="info-card-sub font-mono">Seguridad & Desarrollo</span>
               </div>
             </div>
