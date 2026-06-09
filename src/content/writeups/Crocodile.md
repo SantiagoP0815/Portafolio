@@ -7,6 +7,7 @@ herramientas: ["nmap", "ftp", "gobuster"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+fases: ["Reconocimiento", "Foothold"]
 ---
 
 ## Reconocimiento

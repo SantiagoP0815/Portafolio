@@ -168,6 +168,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
             plataforma={w.data.plataforma}
             fecha={w.data.fecha}
             slug={w.id}
+            fases={w.data.fases ?? []}
           />
         </div>
       ))}

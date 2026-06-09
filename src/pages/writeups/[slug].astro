@@ -12,7 +12,7 @@ export async function getStaticPaths() {
 
 const { writeup } = Astro.props;
 const { Content } = await render(writeup);
-const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha } = writeup.data;
+const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha, fases } = writeup.data;
 const base = (import.meta.env.BASE_URL as string).replace(/\/$/, '');
 
 const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
@@ -34,8 +34,7 @@ const platformMeta: Record<string, { icon: string; color: string; accentColor: s
 const diff = diffConfig[dificultad] ?? diffConfig.easy;
 const plat = platformMeta[plataforma] ?? { icon: '⚡', color: '#22d3ee', accentColor: '#22d3ee' };
 
-// Attack chain phases
-const phases = ['Reconocimiento', 'Explotación', 'PrivEsc'];
+const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'PrivEsc'];
 ---
 
 <Layout title={`${titulo} | Carlos Santiago Patiño Reyes`} description={descripcion}>

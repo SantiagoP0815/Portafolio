@@ -7,6 +7,7 @@ herramientas: ["nmap", "wireshark", "ssh", "python3"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+fases: ["Reconocimiento", "Foothold", "Escalada de Privilegios"]
 ---
 
 ## Reconocimiento

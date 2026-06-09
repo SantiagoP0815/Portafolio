@@ -7,6 +7,7 @@ herramientas: ["nmap", "gobuster", "awscli", "nc"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+fases: ["Reconocimiento", "Foothold", "Explotación"]
 ---
 
 ## Reconocimiento

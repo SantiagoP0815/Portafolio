@@ -27,6 +27,7 @@ const writeups = defineCollection({
     categoria: z.enum(['htb', 'thm', 'ctf', 'vulnhub', 'otro']),
     plataforma: z.string(),
     completado: z.boolean().default(true),
+    fases: z.array(z.enum(['Reconocimiento', 'Foothold', 'Explotación', 'Escalada de Privilegios'])).optional(),
   }),
 });
 

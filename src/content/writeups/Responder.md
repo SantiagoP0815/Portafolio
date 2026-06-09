@@ -7,6 +7,7 @@ herramientas: ["nmap", "responder", "hashcat", "evil-winrm"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+fases: ["Reconocimiento", "Foothold", "Explotación"]
 ---
 
 ## Reconocimiento

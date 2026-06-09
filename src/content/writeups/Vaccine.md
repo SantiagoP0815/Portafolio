@@ -7,6 +7,7 @@ herramientas: ["nmap", "ftp", "john", "sqlmap", "ssh"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+fases: ["Reconocimiento", "Foothold", "Explotación", "Escalada de Privilegios"]
 ---
 
 ## Reconocimiento

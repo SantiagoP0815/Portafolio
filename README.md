@@ -1,43 +1,57 @@
-# Astro Starter Kit: Minimal
+# Portafolio de Ciberseguridad
 
-```sh
-npm create astro@latest -- --template minimal
+Portafolio personal de **Carlos Santiago Patiño Reyes** — Ingeniero de Sistemas especializado en Ciberseguridad, Ethical Hacking y CTF challenges.
+
+## Stack
+
+- [Astro 6](https://astro.build) — Static site generation
+- [Tailwind CSS v4](https://tailwindcss.com) — Estilos utilitarios
+- Tipado completo con TypeScript strict
+
+## Estructura
+
 ```
-
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
-
-## 🚀 Project Structure
-
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
 /
-├── public/
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/    # ProjectCard, WriteupCard, Sidebar, Footer
+│   ├── content/       # Colecciones: proyectos/ + writeups/ (Markdown)
+│   ├── layouts/       # Layout.astro (shell común)
+│   ├── pages/         # Rutas: index, /proyectos, /writeups, [slug]
+│   └── styles/        # global.css (tema cyberpunk + utilidades)
+├── public/            # favicon.svg, og-image.png
+└── astro.config.mjs   # Config: site, base, Tailwind Vite plugin
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Comandos
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Comando             | Acción                                  |
+| ------------------- | --------------------------------------- |
+| `npm install`       | Instalar dependencias                   |
+| `npm run dev`       | Servidor local en `localhost:4321`      |
+| `npm run build`     | Build de producción a `./dist/`         |
+| `npm run preview`   | Previsualizar build local               |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Despliegue
 
-## 🧞 Commands
+Hosteado en GitHub Pages: [SantiagoP0815.github.io/Portafolio](https://SantiagoP0815.github.io/Portafolio)
 
-All commands are run from the root of the project, from a terminal:
+El deploy se hace automáticamente con GitHub Actions al hacer push a `main`.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Colecciones
 
-## 👀 Want to learn more?
+### Proyectos (`src/content/proyectos/`)
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Herramientas y aplicaciones de ciberseguridad:
+- Scanner de Vulnerabilidades Web
+- NmapScan — Wrapper de Nmap en 2 fases
+- Content Discovery Toolkit
+- Gestor de CVs con seguridad integrada
+
+### Writeups (`src/content/writeups/`)
+
+Documentación técnica de máquinas resueltas en HackTheBox, TryHackMe y CTFs.
+Incluye reconocimiento, explotación y escalada de privilegios con enfoque OSCP-style.
+
+---
+
+Hecho con Astro + Tailwind · Tema cyberpunk/terminal
