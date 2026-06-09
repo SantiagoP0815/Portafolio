@@ -125,6 +125,25 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
       </a>
     </div>
 
+    <!-- Stats footer ─────────────────────────── -->
+    <div class="sidebar-stats">
+      <div class="sidebar-divider"></div>
+      <div class="stats-row-inner">
+        <span class="stat-badge">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/>
+          </svg>
+          {allProyectos.length} proyectos
+        </span>
+        <span class="stat-badge">
+          <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/>
+          </svg>
+          {allWriteups.length} writeups
+        </span>
+      </div>
+    </div>
+
   </nav>
 </aside>
 
@@ -135,13 +154,14 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     top: 0; left: 0;
     width: 240px;
     height: 100vh;
-    background: var(--color-bg-secondary);
+    background: linear-gradient(180deg, var(--color-bg-secondary) 0%, var(--color-bg-primary) 100%);
     border-right: 1px solid var(--color-border-subtle);
     display: flex;
     flex-direction: column;
     padding: 1.5rem 1rem;
     z-index: 100;
     overflow-y: auto;
+    box-shadow: inset 3px 0 14px rgba(34,211,238,0.05);
   }
 
   /* ── Avatar ──────────────────────────────────────────────── */
@@ -154,9 +174,31 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     border: 1.5px solid rgba(34,211,238,0.35);
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
-    transition: border-color 0.2s;
+    transition: border-color 0.3s;
   }
-  .avatar:hover { border-color: rgba(34,211,238,0.65); }
+  .avatar::before {
+    content: '';
+    position: absolute; inset: -3px;
+    border-radius: 50%;
+    padding: 2px;
+    background: conic-gradient(transparent 0deg, rgba(34,211,238,0.5) 120deg, rgba(167,139,250,0.5) 240deg, transparent 360deg);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .avatar:hover {
+    border-color: rgba(34,211,238,0.7);
+  }
+  .avatar:hover::before {
+    opacity: 1;
+    animation: avatar-spin 2s linear infinite;
+  }
+  @keyframes avatar-spin {
+    to { transform: rotate(360deg); }
+  }
   .avatar-initials {
     font-size: 0.8rem; font-weight: 700;
     color: var(--color-neon-cyan);
@@ -252,17 +294,41 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--color-text-secondary);
     text-decoration: none;
     font-size: 0.82rem;
-    transition: background 0.18s, color 0.18s;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sidebar-link::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--color-neon-cyan);
+    transform: scaleY(0);
+    transition: transform 0.2s ease;
+    border-radius: 0 2px 2px 0;
   }
   .sidebar-link:hover {
     background: rgba(255,255,255,0.04);
     color: var(--color-text-primary);
   }
+  .sidebar-link:hover::before {
+    transform: scaleY(0.5);
+  }
   .sidebar-link-active {
     color: var(--color-neon-cyan) !important;
     background: rgba(34,211,238,0.08) !important;
   }
-  .sidebar-link svg { flex-shrink: 0; opacity: 0.8; }
+  .sidebar-link-active::before {
+    transform: scaleY(1) !important;
+    box-shadow: 0 0 8px rgba(34,211,238,0.5);
+  }
+  .sidebar-link-active .nav-count {
+    background: rgba(34,211,238,0.14);
+    border-color: rgba(34,211,238,0.35);
+    color: var(--color-neon-cyan);
+  }
+  .sidebar-link svg { flex-shrink: 0; opacity: 0.8; transition: opacity 0.2s; }
+  .sidebar-link:hover svg { opacity: 1; }
   .sidebar-link-active svg { opacity: 1; }
   .nav-count {
     margin-left: auto;
@@ -273,11 +339,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     border: 1px solid rgba(34,211,238,0.18);
     color: var(--color-text-muted);
     flex-shrink: 0;
-  }
-  .sidebar-link-active .nav-count {
-    background: rgba(34,211,238,0.14);
-    border-color: rgba(34,211,238,0.35);
-    color: var(--color-neon-cyan);
   }
 
   /* ── Spacer + Social ──────────────────────────────────────── */
@@ -292,12 +353,35 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     color: var(--color-text-muted);
     text-decoration: none;
     font-size: 0.75rem;
-    transition: color 0.18s, background 0.18s;
+    transition: color 0.2s, background 0.2s, transform 0.2s;
   }
   .social-link:hover {
     color: var(--color-text-primary);
     background: rgba(255,255,255,0.04);
+    transform: translateX(2px);
   }
+  .social-link svg { transition: filter 0.2s; }
+  .social-link:hover svg {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+
+  /* ── Stats footer ─────────────────────────────────────────── */
+  .sidebar-stats { margin-top: auto; }
+  .stats-row-inner {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .stat-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    color: var(--color-text-muted);
+    padding: 0.2rem 0.5rem;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border-subtle);
+    background: rgba(255,255,255,0.02);
+    white-space: nowrap;
+  }
+  .stat-badge svg { opacity: 0.6; }
 
   /* ── Close button (mobile only, hidden on desktop) ────────── */
   .sidebar-close {

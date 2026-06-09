@@ -40,12 +40,13 @@ const objetivos = [
         <!-- Profile header -->
         <header class="profile-header animate-fade-in-up">
           <div class="whoami-chip">
-            <span class="chip-dot"></span>
-            <span class="font-mono text-xs" style="color:var(--color-text-muted)">whoami</span>
+            <span class="chip-prompt font-mono">$</span>
+            <span class="chip-cmd font-mono">whoami</span>
+            <span class="chip-cursor"></span>
           </div>
           <h1 class="profile-name">
-            Carlos Santiago<br />
-            <span class="neon-cyan">Patiño Reyes</span>
+            <span class="name-line">Carlos Santiago</span>
+            <span class="name-line neon-cyan name-line--last">Patiño Reyes</span>
           </h1>
           <p class="profile-role font-mono">Ingeniero de Sistemas &amp; Ciberseguridad</p>
           <div class="profile-cta">
@@ -78,7 +79,7 @@ const objetivos = [
 
         <!-- Sobre mí -->
         <section class="whoami-section animate-fade-in-up animate-delay-100">
-          <h2 class="subsection-title font-mono">sobre_mí</h2>
+          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> sobre_mí</h2>
           <p class="bio-text">
             Graduado de la <strong>Universidad Pontificia Bolivariana — Seccional Bucaramanga</strong>.
             Apasionado por la seguridad ofensiva, el Ethical Hacking y el desarrollo de herramientas seguras.
@@ -130,7 +131,7 @@ const objetivos = [
 
         <!-- Skills -->
         <section class="whoami-section animate-fade-in-up animate-delay-200">
-          <h2 class="subsection-title font-mono">skills</h2>
+          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> skills</h2>
           <div class="skills-wrap">
             {skills.map(s => (
               <span class={`tag-badge tag-${s.color}`}>{s.label}</span>
@@ -145,7 +146,7 @@ const objetivos = [
 
         <!-- Títulos -->
         <section class="whoami-section animate-fade-in-up animate-delay-100">
-          <h2 class="subsection-title font-mono">títulos</h2>
+          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> títulos</h2>
           <div class="card-list">
             <div class="item-card card-cyber">
               <div class="item-icon">🎓</div>
@@ -161,7 +162,7 @@ const objetivos = [
 
         <!-- Certificaciones -->
         <section class="whoami-section animate-fade-in-up animate-delay-200">
-          <h2 class="subsection-title font-mono">certificaciones</h2>
+          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> certificaciones</h2>
           <div class="card-list">
             <div class="item-card card-cyber">
               <div class="item-icon">🏅</div>
@@ -186,7 +187,7 @@ const objetivos = [
 
         <!-- Próximos objetivos -->
         <section class="whoami-section animate-fade-in-up animate-delay-300">
-          <h2 class="subsection-title font-mono">próximos_objetivos</h2>
+          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> próximos_objetivos</h2>
           <div class="card-list">
             {objetivos.map(obj => (
               <div class="item-card card-cyber">
@@ -236,24 +237,40 @@ const objetivos = [
     gap: 1rem;
     padding-bottom: 2.25rem;
     margin-bottom: 2.25rem;
+    position: relative;
+  }
+  .profile-header::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, rgba(34,211,238,0.2), transparent 70%);
   }
   .whoami-chip {
-    display: inline-flex; align-items: center; gap: 0.5rem;
+    display: inline-flex; align-items: center; gap: 0.4rem;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-subtle);
-    border-radius: 9999px;
-    padding: 0.28rem 0.9rem;
+    border-radius: 6px;
+    padding: 0.3rem 0.75rem;
     width: fit-content;
   }
-  .chip-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--color-neon-cyan);
-    box-shadow: 0 0 8px var(--color-neon-cyan);
-    animation: blink 2s ease-in-out infinite;
+  .chip-prompt {
+    font-size: 0.7rem;
+    color: var(--color-neon-green);
   }
-  @keyframes blink {
+  .chip-cmd {
+    font-size: 0.7rem;
+    color: var(--color-text-primary);
+    letter-spacing: 0.02em;
+  }
+  .chip-cursor {
+    width: 6px; height: 12px;
+    background: var(--color-neon-cyan);
+    animation: cursor-blink 1s step-end infinite;
+    border-radius: 1px;
+  }
+  @keyframes cursor-blink {
     0%, 100% { opacity: 1; }
-    50%       { opacity: 0.35; }
+    50%       { opacity: 0; }
   }
   .profile-name {
     font-family: var(--font-sans);
@@ -262,11 +279,18 @@ const objetivos = [
     line-height: 1.15;
     letter-spacing: -0.02em;
     color: var(--color-text-primary);
+    display: flex; flex-direction: column;
+  }
+  .name-line { display: block; }
+  .name-line--last {
+    text-shadow: 0 0 20px rgba(34,211,238,0.3);
   }
   .profile-role {
     font-size: 0.88rem;
     color: var(--color-text-secondary);
     letter-spacing: 0.05em;
+    border-left: 2px solid var(--color-neon-cyan);
+    padding-left: 0.75rem;
   }
   .profile-cta {
     display: flex; flex-wrap: wrap; gap: 0.55rem;
@@ -289,13 +313,32 @@ const objetivos = [
     flex: 1; height: 1px;
     background: linear-gradient(90deg, rgba(34,211,238,0.25), transparent);
   }
+  .title-cursor {
+    display: inline-block;
+    width: 0.55rem;
+    height: 0.75rem;
+    background: var(--color-neon-cyan);
+    animation: cursor-blink 1s step-end infinite;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
 
   /* ── Bio ─────────────────────────────────────────────────── */
   .bio-text {
     font-size: 0.93rem;
     color: var(--color-text-secondary);
     line-height: 1.8;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.5rem;
+    background: rgba(255,255,255,0.015);
+    position: relative;
+  }
+  .bio-text::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, rgba(34,211,238,0.2), transparent 60%);
   }
   .bio-text strong { color: var(--color-text-primary); font-weight: 600; }
 
@@ -312,15 +355,28 @@ const objetivos = [
     display: flex; align-items: flex-start; gap: 0.7rem;
     padding: 0.8rem 0.9rem; border-radius: 0.7rem;
     transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .info-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    opacity: 0;
+    transition: opacity 0.25s;
   }
   .info-card:hover { transform: translateY(-2px); }
+  .info-card:hover::before { opacity: 1; }
   .info-card--cyan   { border-color: rgba(34,211,238,0.2); }
+  .info-card--cyan::before   { background: linear-gradient(90deg, rgba(34,211,238,0.5), transparent 60%); }
   .info-card--cyan:hover   { border-color: rgba(34,211,238,0.5); box-shadow: 0 4px 20px rgba(34,211,238,0.08); }
   .info-card--green  { border-color: rgba(74,222,128,0.2); }
+  .info-card--green::before  { background: linear-gradient(90deg, rgba(74,222,128,0.5), transparent 60%); }
   .info-card--green:hover  { border-color: rgba(74,222,128,0.5); box-shadow: 0 4px 20px rgba(74,222,128,0.08); }
   .info-card--orange { border-color: rgba(251,146,60,0.2); }
+  .info-card--orange::before { background: linear-gradient(90deg, rgba(251,146,60,0.5), transparent 60%); }
   .info-card--orange:hover { border-color: rgba(251,146,60,0.5); box-shadow: 0 4px 20px rgba(251,146,60,0.08); }
   .info-card--purple { border-color: rgba(167,139,250,0.2); }
+  .info-card--purple::before { background: linear-gradient(90deg, rgba(167,139,250,0.5), transparent 60%); }
   .info-card--purple:hover { border-color: rgba(167,139,250,0.5); box-shadow: 0 4px 20px rgba(167,139,250,0.08); }
   .info-card-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
   .info-card-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
@@ -334,11 +390,25 @@ const objetivos = [
     display: flex; align-items: center; gap: 0.85rem;
     padding: 0.9rem 1rem; border-radius: 0.75rem;
     transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .item-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--color-neon-cyan);
+    opacity: 0;
+    transition: opacity 0.25s;
+    border-radius: 0 2px 2px 0;
   }
   .item-card:hover {
     transform: translateY(-2px);
     border-color: rgba(34,211,238,0.4);
     box-shadow: 0 4px 20px rgba(34,211,238,0.07);
+  }
+  .item-card:hover::before {
+    opacity: 0.6;
   }
   .item-icon { font-size: 1.5rem; flex-shrink: 0; }
   .item-body { flex: 1; min-width: 0; }

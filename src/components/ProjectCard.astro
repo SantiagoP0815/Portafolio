@@ -39,80 +39,68 @@ const MAX_TOOLS_DISPLAY = 6;
 ---
 
 <article class="pcard" style={`--accent: ${cat.accentColor}`}>
-  <!-- Top accent strip -->
-  <div class="pcard-strip"></div>
+  <!-- Terminal chrome bar -->
+  <div class="pcard-chrome">
+    <span class="chrome-dot" style="background:#ff5f57"></span>
+    <span class="chrome-dot" style="background:#ffbd2e"></span>
+    <span class="chrome-dot" style="background:#28ca41"></span>
+    <span class="chrome-title font-mono">{cat.label} · {est.label}</span>
+    <span class="chrome-right font-mono">
+      <span class="status-dot-terminal" style={`background: ${est.color}; box-shadow: 0 0 6px ${est.color}`} class:list={[{ 'pulse-anim': est.pulse }]}></span>
+    </span>
+  </div>
 
   <div class="pcard-body">
-    <!-- Header: category + status -->
-    <div class="pcard-header">
-      <div class="pcard-cat">
-        <span class="cat-icon">{cat.icon}</span>
-        <span class={`tag-badge ${cat.cls}`}>{cat.label}</span>
-      </div>
-      <div class="pcard-status">
-        <span
-          class="status-indicator"
-          style={`background: ${est.color}; box-shadow: 0 0 7px ${est.color}`}
-          class:list={[{ 'pulse-anim': est.pulse }]}
-        ></span>
-        <span class="status-label font-mono">{est.label}</span>
-      </div>
+    <!-- Shell prompt title -->
+    <div class="pcard-prompt">
+      <span class="prompt-symbol font-mono" style="color: var(--accent);">$</span>
+      <span class="prompt-cat font-mono" style="color: var(--color-text-muted);">cat</span>
+      <h3 class="pcard-title font-mono">{titulo}</h3>
     </div>
 
-    <!-- Title -->
-    <h3 class="pcard-title font-mono">{titulo}</h3>
+    <!-- Description as terminal output -->
+    <div class="pcard-desc-wrap">
+      <span class="desc-line font-mono desc-line--comment"># {cat.label.toLowerCase()} · {dateStr}</span>
+      <p class="pcard-desc">{descripcion}</p>
+    </div>
 
-    <!-- Description -->
-    <p class="pcard-desc">{descripcion}</p>
-
-    <!-- Tech Stack Visualization -->
+    <!-- Tech Stack as terminal packages -->
     <div class="stack-section">
       <div class="stack-header font-mono">
-        <span class="stack-prompt">›</span>
-        <span class="stack-label">tech_stack</span>
+        <span class="stack-prompt" style="color: var(--accent);">$</span>
+        <span class="stack-label">apt install</span>
       </div>
       <div class="stack-pills">
         {herramientas.slice(0, MAX_TOOLS_DISPLAY).map((tool, i) => (
-          <span
-            class="stack-pill font-mono"
-            style={`animation-delay: ${i * 0.05}s`}
-          >
-            {tool}
-          </span>
+          <span class="stack-pill font-mono">{tool}</span>
         ))}
         {herramientas.length > MAX_TOOLS_DISPLAY && (
-          <span class="stack-more font-mono">+{herramientas.length - MAX_TOOLS_DISPLAY} más</span>
+          <span class="stack-more font-mono">+{herramientas.length - MAX_TOOLS_DISPLAY}</span>
         )}
       </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer with terminal-style actions -->
     <div class="pcard-footer">
-      <span class="pcard-date font-mono">
-        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
-        </svg>
-        {dateStr}
-      </span>
       <div class="pcard-actions">
         {github && (
-          <a href={github} target="_blank" rel="noopener noreferrer" class="action-btn action-ghost" aria-label="Ver código en GitHub">
-            <svg width="13" height="13" fill="currentColor" viewBox="0 0 24 24">
+          <a href={github} target="_blank" rel="noopener noreferrer" class="action-btn" aria-label="Ver código en GitHub">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
               <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
             </svg>
-            Code
+            gh clone
           </a>
         )}
         {demo && (
-          <a href={demo} target="_blank" rel="noopener noreferrer" class="action-btn action-ghost" aria-label="Ver demo">
-            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <a href={demo} target="_blank" rel="noopener noreferrer" class="action-btn" aria-label="Ver demo">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
             </svg>
-            Demo
+            open demo
           </a>
         )}
         <a href={`${base}/proyectos/${slug}`} class="action-btn action-primary" aria-label={`Ver detalles de ${titulo}`}>
-          Ver proyecto →
+          ./details → 
         </a>
       </div>
     </div>
@@ -136,14 +124,52 @@ const MAX_TOOLS_DISPLAY = 6;
     box-shadow: 0 8px 40px color-mix(in srgb, var(--accent) 12%, transparent);
     transform: translateY(-3px);
   }
-  /* Top accent strip */
-  .pcard-strip {
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent 70%);
-    opacity: 0.85;
-    transition: opacity 0.25s;
+  .pcard::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.25s ease;
   }
-  .pcard:hover .pcard-strip { opacity: 1; }
+  .pcard:hover::before { opacity: 0.6; }
+
+  /* ── Chrome bar ─────────────────────────────────────────────── */
+  .pcard-chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.9rem;
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .chrome-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .chrome-title {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-left: 0.5rem;
+  }
+  .chrome-right {
+    margin-left: auto;
+    display: flex; align-items: center;
+  }
+  .status-dot-terminal {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .pulse-anim {
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+  @keyframes dotPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.3); }
+  }
 
   /* ── Body ───────────────────────────────────────────────────── */
   .pcard-body {
@@ -154,46 +180,41 @@ const MAX_TOOLS_DISPLAY = 6;
     flex: 1;
   }
 
-  /* ── Header ─────────────────────────────────────────────────── */
-  .pcard-header {
+  /* ── Shell prompt title ─────────────────────────────────────── */
+  .pcard-prompt {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
+    align-items: baseline;
+    gap: 0.45rem;
   }
-  .pcard-cat { display: flex; align-items: center; gap: 0.4rem; }
-  .cat-icon {
-    font-size: 0.9rem;
-    color: var(--accent);
+  .prompt-symbol {
+    font-size: 0.85rem;
+    font-weight: 700;
   }
-  .pcard-status { display: flex; align-items: center; gap: 0.4rem; }
-  .status-indicator {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .pulse-anim {
-    animation: statusPulse 2s ease-in-out infinite;
-  }
-  @keyframes statusPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.3); }
-  }
-  .status-label {
-    font-size: 0.62rem;
-    letter-spacing: 0.08em;
+  .prompt-cat {
+    font-size: 0.75rem;
     color: var(--color-text-muted);
   }
-
-  /* ── Title ──────────────────────────────────────────────────── */
   .pcard-title {
     font-size: 0.98rem;
     font-weight: 700;
     color: var(--color-text-primary);
     line-height: 1.35;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   /* ── Description ────────────────────────────────────────────── */
+  .pcard-desc-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .desc-line--comment {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    opacity: 0.6;
+  }
   .pcard-desc {
     font-family: var(--font-sans);
     font-size: 0.84rem;
@@ -215,11 +236,6 @@ const MAX_TOOLS_DISPLAY = 6;
     font-size: 0.72rem;
     color: var(--color-text-muted);
     letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .stack-prompt {
-    color: var(--accent);
-    font-size: 0.85rem;
   }
   .stack-pills {
     display: flex;
@@ -249,49 +265,41 @@ const MAX_TOOLS_DISPLAY = 6;
 
   /* ── Footer ─────────────────────────────────────────────────── */
   .pcard-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
     padding-top: 0.7rem;
     border-top: 1px solid var(--color-border-subtle);
   }
-  .pcard-date {
+  .pcard-actions {
     display: flex;
     align-items: center;
-    gap: 0.35rem;
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
+    gap: 0.4rem;
+    flex-wrap: wrap;
   }
-  .pcard-actions { display: flex; align-items: center; gap: 0.4rem; }
 
   .action-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    padding: 0.3rem 0.7rem;
-    border-radius: 0.4rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 0.35rem;
     font-family: var(--font-mono);
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: 0.7rem;
+    font-weight: 500;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.2s ease;
     white-space: nowrap;
-  }
-  .action-ghost {
     border: 1px solid var(--color-border-subtle);
     color: var(--color-text-muted);
     background: transparent;
   }
-  .action-ghost:hover {
+  .action-btn:hover {
     border-color: rgba(34,211,238,0.4);
     color: var(--color-neon-cyan);
   }
   .action-primary {
     border: 1px solid var(--accent);
     color: var(--accent);
-    background: transparent;
+    margin-left: auto;
   }
   .action-primary:hover {
     background: var(--accent);
