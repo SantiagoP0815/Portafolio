@@ -51,26 +51,33 @@ const base = import.meta.env.BASE_URL;
 
 <script>
 (function() {
-  const canvas = document.getElementById('particle-canvas');
+  const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement | null;
   if (!canvas) return;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext('2d')!;
 
-  let w, h, particles = [];
+  let w: number, h: number;
+  let particles: Particle[] = [];
   const COUNT = 120;
   const CONNECTION_DIST = 140;
 
   function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
+    w = canvas!.width = window.innerWidth;
+    h = canvas!.height = window.innerHeight;
   }
   window.addEventListener('resize', resize);
   resize();
 
   class Particle {
+    x = 0;
+    y = 0;
+    vx = 0;
+    vy = 0;
+    r = 0;
+    alpha = 0;
     constructor() {
       this.reset(true);
     }
-    reset(init) {
+    reset(init: boolean) {
       this.x = Math.random() * w;
       this.y = Math.random() * h;
       this.vx = (Math.random() - 0.5) * 0.5;
