@@ -57,15 +57,22 @@ const base = import.meta.env.BASE_URL;
 
   let w: number, h: number;
   let particles: Particle[] = [];
-  const COUNT = 120;
-  const CONNECTION_DIST = 140;
+  let COUNT = 200;
+  let CONNECTION_DIST = 200;
 
   function resize() {
     w = canvas!.width = window.innerWidth;
     h = canvas!.height = window.innerHeight;
+    const mobile = w < 768;
+    COUNT = mobile ? 100 : 200;
+    CONNECTION_DIST = mobile ? 100 : 200;
+    initParticles();
   }
-  window.addEventListener('resize', resize);
-  resize();
+
+  function initParticles() {
+    particles = [];
+    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+  }
 
   class Particle {
     x = 0;
@@ -99,8 +106,6 @@ const base = import.meta.env.BASE_URL;
     }
   }
 
-  for (let i = 0; i < COUNT; i++) particles.push(new Particle());
-
   function drawConnections() {
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
@@ -119,6 +124,9 @@ const base = import.meta.env.BASE_URL;
       }
     }
   }
+
+  window.addEventListener('resize', resize);
+  resize();
 
   function loop() {
     ctx.clearRect(0, 0, w, h);
