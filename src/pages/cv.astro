@@ -1,0 +1,536 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+const allWriteups = await getCollection('writeups');
+const allProjects = await getCollection('projects');
+const sortedWriteups = allWriteups.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
+const machineNames = sortedWriteups.map(w => w.data.titulo.replace(/\.md$/, '')).join(', ');
+const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
+---
+
+<Layout
+  title="CV | Carlos Santiago Patiño Reyes"
+  description="Curriculum Vitae de Carlos Santiago Patiño Reyes — Ingeniero de Sistemas especializado en Ciberseguridad."
+>
+  <div class="cv-page" id="cv-page">
+
+    <!-- ── Language toggle ───────────────────────────────────── -->
+    <div class="cv-lang-toggle no-print">
+      <button id="lang-es" class="lang-btn lang-btn-active font-mono">ES</button>
+      <span class="lang-sep">/</span>
+      <button id="lang-en" class="lang-btn font-mono">EN</button>
+      <button id="print-btn" class="print-btn font-mono">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"/>
+        </svg>
+        Imprimir / Print
+      </button>
+    </div>
+
+    <div class="cv-card">
+
+      <!-- ═══════════ CV SPANISH ════════════════════════════════ -->
+      <div id="cv-es" class="cv-lang-content">
+
+      <!-- Header -->
+      <header class="cv-header">
+        <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
+        <p class="cv-title font-mono">Ingeniero de Sistemas e Informática · Especialista en Ciberseguridad Ofensiva y Defensiva</p>
+        <div class="cv-contact font-mono">
+          <span>Bucaramanga, Colombia</span>
+          <span class="cv-contact-sep">|</span>
+          <span>github.com/SantiagoP0815</span>
+          <span class="cv-contact-sep">|</span>
+          <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+        </div>
+      </header>
+
+      <!-- Resumen Profesional -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Resumen Profesional</h2>
+        <p class="cv-text">
+          Ingeniero de Sistemas e Informática graduado de la Universidad Pontificia Bolivariana — Seccional Bucaramanga, con formación dual en ciberseguridad ofensiva y defensiva. Experiencia ofensiva: pentesting web (OWASP Top 10), resolución de {allWriteups.length} máquinas en HackTheBox con writeups técnicos detallados. Experiencia defensiva: hardening de aplicaciones web (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) y análisis de vulnerabilidades. Busco integrarme a un equipo Blue Team o de AppSec donde pueda aplicar ambos enfoques para proteger infraestructuras y aplicaciones.
+        </p>
+      </section>
+
+      <!-- Educación -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Educación</h2>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Ingeniería de Sistemas e Informática</span>
+            <span class="cv-item-date font-mono">Graduado</span>
+          </div>
+          <div class="cv-item-sub font-mono">Universidad Pontificia Bolivariana — Seccional Bucaramanga</div>
+          <div class="cv-item-desc">
+            Proyecto de grado: Sistema de Gestión de CVs con seguridad integrada (Node.js, Express, MySQL, Helmet.js, CSRF protection, rate limiting, XSS/SQLi prevention).
+          </div>
+        </div>
+      </section>
+
+      <!-- Certificaciones -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Certificaciones</h2>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Bootcamp Ciberseguridad Nivel Intermedio</span>
+            <span class="cv-item-date font-mono">2024</span>
+          </div>
+          <div class="cv-item-sub font-mono">MINTIC · Talento Tech — 159 horas</div>
+        </div>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">CompTIA Security+</span>
+            <span class="cv-item-date font-mono">En preparación · 2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Objetivo de certificación en curso</div>
+        </div>
+      </section>
+
+      <!-- Experiencia Práctica -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Experiencia Práctica</h2>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">HackTheBox — {allWriteups.length} Máquinas Resueltas</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Writeups técnicos con metodología OSCP-style</div>
+          <div class="cv-item-desc">
+            Máquinas completadas: {machineNames}. Documentación completa con fases de reconocimiento, foothold, explotación y escalada de privilegios.
+          </div>
+          <div class="cv-tags">
+            <span class="cv-tag">Nmap</span><span class="cv-tag">Gobuster</span><span class="cv-tag">SQLMap</span><span class="cv-tag">John/Hashcat</span><span class="cv-tag">Evil-WinRM</span><span class="cv-tag">Wireshark</span><span class="cv-tag">SMB</span><span class="cv-tag">FTP</span><span class="cv-tag">Redis</span><span class="cv-tag">AWS</span><span class="cv-tag">Responder</span>
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Sistema de Gestión de CVs — Hardening & Desarrollo Seguro</span>
+            <span class="cv-item-date font-mono">2024</span>
+          </div>
+          <div class="cv-item-sub font-mono">Node.js · Express · MySQL · Proyecto de Grado</div>
+          <div class="cv-item-desc">
+            Aplicación full-stack con seguridad defensiva integrada desde el diseño: prevención de XSS y SQL injection mediante consultas parametrizadas y sanitización de entrada, protección CSRF con tokens, rate limiting (200 req/15min), hardened HTTP headers con Helmet.js, autenticación con Passport.js y bcryptjs, sesiones seguras con express-session sobre MySQL.
+          </div>
+          <div class="cv-tags">
+            <span class="cv-tag">Helmet.js</span><span class="cv-tag">CSRF</span><span class="cv-tag">Rate Limiting</span><span class="cv-tag">XSS Prevention</span><span class="cv-tag">SQLi Prevention</span><span class="cv-tag">bcryptjs</span><span class="cv-tag">Passport.js</span>
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">NmapScan — Wrapper de Nmap en 2 Fases</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Bash · Nmap · Automatización de Red Team</div>
+          <div class="cv-item-desc">
+            Script en Bash que automatiza el escaneo de Nmap en 2 fases: descubrimiento rápido de puertos (-p- --min-rate 5000) seguido de escaneo detallado (-sCV) sobre los puertos encontrados. Soporta opciones de rate, puertos personalizados, modo lento, UDP, IPv6 y salida con timestamp.
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Scanner de Vulnerabilidades Web</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Python · OWASP Top 10 · Automatización</div>
+          <div class="cv-item-desc">
+            Herramienta CLI en Python con 5 módulos de detección automatizada: headers de seguridad (HSTS, CSP, X-Frame-Options), XSS reflejado, SQLi basado en errores (MySQL/PostgreSQL/Oracle/SQLite), open redirect y directory listing. Reporte en formato JSON.
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Content Discovery Toolkit</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Python · Reconocimiento Web · Multi-threading</div>
+          <div class="cv-item-desc">
+            Herramienta modular de descubrimiento de contenido web con 4 módulos: fuerza bruta de directorios, enumeración de subdominios, scraping de endpoints en JavaScript y crawler recursivo BFS multi-hilo. Arquitectura extensible con sistema de módulos independientes.
+          </div>
+        </div>
+      </section>
+
+      <!-- Habilidades Técnicas -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Habilidades Técnicas</h2>
+        <div class="cv-skills-grid">
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Ofensiva</h3>
+            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Hydra/Medusa, Metasploit (básico), Reverse Shells</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Reconocimiento</h3>
+            <p class="cv-text cv-text--sm">Gobuster/Dirbuster, Wireshark/TShark, SMB/FTP/Redis Enumeration, Subdomain Discovery, JS Scraping, Web Crawling</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Desarrollo</h3>
+            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (básico), REST APIs</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Defensiva</h3>
+            <p class="cv-text cv-text--sm">Hardening HTTP Headers, CSRF Protection, Rate Limiting, XSS/SQLi Prevention, Input Sanitization, Helmet.js, OWASP Top 10</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Idiomas -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Idiomas</h2>
+        <div class="cv-lang-row">
+          <span><strong>Español:</strong> Nativo</span>
+          <span class="cv-lang-sep">|</span>
+          <span><strong>Inglés:</strong> B2 — Lectura técnica fluida, comunicación intermedia</span>
+        </div>
+      </section>
+
+      <!-- Disponibilidad -->
+      <section class="cv-section cv-availability">
+        <p class="cv-text"><strong>Disponibilidad:</strong> Inmediata · Abierto a oportunidades presenciales y remotas en ciberseguridad.</p>
+      </section>
+
+    </div>
+
+    <!-- ═══════════ CV ENGLISH ════════════════════════════════ -->
+    <div id="cv-en" class="cv-lang-content" style="display:none">
+
+      <!-- Header -->
+      <header class="cv-header">
+        <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
+        <p class="cv-title font-mono">Systems Engineer · Offensive &amp; Defensive Cybersecurity Specialist</p>
+        <div class="cv-contact font-mono">
+          <span>Bucaramanga, Colombia</span>
+          <span class="cv-contact-sep">|</span>
+          <span>github.com/SantiagoP0815</span>
+          <span class="cv-contact-sep">|</span>
+          <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+        </div>
+      </header>
+
+      <!-- Professional Summary -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Professional Summary</h2>
+        <p class="cv-text">
+          Systems Engineer graduated from Universidad Pontificia Bolivariana — Bucaramanga, with dual expertise in offensive and defensive cybersecurity. Offensive experience: web pentesting (OWASP Top 10), solving {allWriteups.length} HackTheBox machines with detailed technical writeups. Defensive experience: web application hardening (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) and vulnerability assessment. Seeking to join a Blue Team or AppSec team where I can apply both offensive and defensive skills to protect infrastructure and applications.
+        </p>
+      </section>
+
+      <!-- Education -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Education</h2>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">B.Sc. Systems and Informatics Engineering</span>
+            <span class="cv-item-date font-mono">Graduated</span>
+          </div>
+          <div class="cv-item-sub font-mono">Universidad Pontificia Bolivariana — Bucaramanga, Colombia</div>
+          <div class="cv-item-desc">
+            Degree project: CV Management System with integrated security (Node.js, Express, MySQL, Helmet.js, CSRF protection, rate limiting, XSS/SQLi prevention).
+          </div>
+        </div>
+      </section>
+
+      <!-- Certifications -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Certifications</h2>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Intermediate Cybersecurity Bootcamp</span>
+            <span class="cv-item-date font-mono">2024</span>
+          </div>
+          <div class="cv-item-sub font-mono">MINTIC · Talento Tech — 159 hours</div>
+        </div>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">CompTIA Security+</span>
+            <span class="cv-item-date font-mono">In progress · 2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Certification objective in progress</div>
+        </div>
+      </section>
+
+      <!-- Practical Experience -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Practical Experience</h2>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">HackTheBox — {allWriteups.length} Machines Solved</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Technical writeups with OSCP-style methodology</div>
+          <div class="cv-item-desc">
+            Completed machines: {machineNames}. Full documentation covering reconnaissance, foothold, exploitation, and privilege escalation phases.
+          </div>
+          <div class="cv-tags">
+            <span class="cv-tag">Nmap</span><span class="cv-tag">Gobuster</span><span class="cv-tag">SQLMap</span><span class="cv-tag">John/Hashcat</span><span class="cv-tag">Evil-WinRM</span><span class="cv-tag">Wireshark</span><span class="cv-tag">SMB</span><span class="cv-tag">FTP</span><span class="cv-tag">Redis</span><span class="cv-tag">AWS</span><span class="cv-tag">Responder</span>
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">CV Management System — Hardening &amp; Secure Development</span>
+            <span class="cv-item-date font-mono">2024</span>
+          </div>
+          <div class="cv-item-sub font-mono">Node.js · Express · MySQL · Degree Project</div>
+          <div class="cv-item-desc">
+            Full-stack application with defensive security built-in from the design phase: XSS and SQL injection prevention via parameterized queries and input sanitization, CSRF protection with tokens, rate limiting (200 req/15min), hardened HTTP headers with Helmet.js, authentication with Passport.js and bcryptjs, secure sessions with express-session on MySQL.
+          </div>
+          <div class="cv-tags">
+            <span class="cv-tag">Helmet.js</span><span class="cv-tag">CSRF</span><span class="cv-tag">Rate Limiting</span><span class="cv-tag">XSS Prevention</span><span class="cv-tag">SQLi Prevention</span><span class="cv-tag">bcryptjs</span><span class="cv-tag">Passport.js</span>
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">NmapScan — 2-Phase Nmap Wrapper</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Bash · Nmap · Red Team Automation</div>
+          <div class="cv-item-desc">
+            Bash script automating 2-phase Nmap scanning: fast port discovery (-p- --min-rate 5000) followed by detailed scanning (-sCV) on discovered ports. Supports rate options, custom ports, slow mode, UDP, IPv6, and timestamped output.
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Web Vulnerability Scanner</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Python · OWASP Top 10 · Automation</div>
+          <div class="cv-item-desc">
+            Python CLI tool with 5 automated detection modules: security headers (HSTS, CSP, X-Frame-Options), reflected XSS, error-based SQLi (MySQL/PostgreSQL/Oracle/SQLite signatures), open redirect, and directory listing. JSON report output.
+          </div>
+        </div>
+
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Content Discovery Toolkit</span>
+            <span class="cv-item-date font-mono">2026</span>
+          </div>
+          <div class="cv-item-sub font-mono">Python · Web Recon · Multi-threading</div>
+          <div class="cv-item-desc">
+            Modular web content discovery tool with 4 modules: directory brute-force, subdomain enumeration, JavaScript endpoint scraping, and multi-threaded BFS recursive crawler. Extensible architecture with independent module system.
+          </div>
+        </div>
+      </section>
+
+      <!-- Technical Skills -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Technical Skills</h2>
+        <div class="cv-skills-grid">
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Offensive</h3>
+            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Hydra/Medusa, Metasploit (basic), Reverse Shells</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Reconnaissance</h3>
+            <p class="cv-text cv-text--sm">Gobuster/Dirbuster, Wireshark/TShark, SMB/FTP/Redis Enumeration, Subdomain Discovery, JS Scraping, Web Crawling</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Development</h3>
+            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (basic), REST APIs</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Defensive</h3>
+            <p class="cv-text cv-text--sm">HTTP Header Hardening, CSRF Protection, Rate Limiting, XSS/SQLi Prevention, Input Sanitization, Helmet.js, OWASP Top 10</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Languages -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Languages</h2>
+        <div class="cv-lang-row">
+          <span><strong>Spanish:</strong> Native</span>
+          <span class="cv-lang-sep">|</span>
+          <span><strong>English:</strong> B2 — Fluent technical reading, intermediate communication</span>
+        </div>
+      </section>
+
+      <!-- Availability -->
+      <section class="cv-section cv-availability">
+        <p class="cv-text"><strong>Availability:</strong> Immediate · Open to on-site and remote cybersecurity opportunities.</p>
+      </section>
+
+    </div>
+
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const btnEs = document.getElementById('lang-es')!;
+  const btnEn = document.getElementById('lang-en')!;
+  const btnPrint = document.getElementById('print-btn')!;
+  const cvEs  = document.getElementById('cv-es')!;
+  const cvEn  = document.getElementById('cv-en')!;
+
+  let currentLang: 'es' | 'en' = 'es';
+
+  function showLang(lang: 'es' | 'en') {
+    currentLang = lang;
+    const showEs = lang === 'es';
+    cvEs.style.display = showEs ? '' : 'none';
+    cvEn.style.display = showEs ? 'none' : '';
+    btnEs.classList.toggle('lang-btn-active', showEs);
+    btnEn.classList.toggle('lang-btn-active', !showEs);
+  }
+
+  btnEs.addEventListener('click', () => showLang('es'));
+  btnEn.addEventListener('click', () => showLang('en'));
+
+  function beforePrint() {
+    if (currentLang === 'es') {
+      cvEn.style.display = 'none';
+      cvEs.style.display = '';
+    } else {
+      cvEs.style.display = 'none';
+      cvEn.style.display = '';
+    }
+  }
+
+  function afterPrint() {
+    showLang(currentLang);
+  }
+
+  window.addEventListener('beforeprint', beforePrint);
+  window.addEventListener('afterprint', afterPrint);
+
+  btnPrint.addEventListener('click', () => window.print());
+</script>
+
+<style>
+  .cv-page { padding: 2rem; max-width: 60rem; margin: 0 auto; }
+
+  /* ── CV Card wrapper ──────────────────────────────────────── */
+  .cv-card {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+    padding: 2rem 2.5rem;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.3);
+  }
+
+  /* ── Language toggle ──────────────────────────────────────── */
+  .cv-lang-toggle {
+    display: flex; align-items: center; gap: 0.4rem;
+    margin-bottom: 1.5rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--color-border-subtle); border-radius: 0.5rem;
+    width: fit-content;
+    background: var(--color-bg-secondary);
+  }
+  .lang-btn {
+    background: transparent; border: none;
+    color: var(--color-text-muted); cursor: pointer;
+    font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 0.3rem;
+    transition: color 0.2s, background 0.2s;
+  }
+  .lang-btn:hover { color: var(--color-text-primary); }
+  .lang-btn-active { color: var(--color-neon-cyan) !important; background: rgba(34,211,238,0.1); }
+  .lang-sep { color: var(--color-text-muted); font-size: 0.7rem; }
+  .print-btn {
+    margin-left: auto;
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.25);
+    color: var(--color-neon-cyan); cursor: pointer;
+    font-size: 0.68rem; padding: 0.3rem 0.7rem; border-radius: 0.375rem;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .print-btn:hover { background: rgba(34,211,238,0.15); border-color: rgba(34,211,238,0.45); }
+
+  /* ── CV content ───────────────────────────────────────────── */
+  .cv-header { margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 2px solid var(--color-neon-cyan); }
+  .cv-name { font-family: var(--font-sans); font-size: 1.6rem; font-weight: 700; color: var(--color-text-primary); letter-spacing: -0.02em; }
+  .cv-title { font-size: 0.8rem; color: var(--color-neon-cyan); margin-top: 0.15rem; }
+  .cv-contact { margin-top: 0.5rem; font-size: 0.68rem; color: var(--color-text-muted); display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .cv-contact-sep { opacity: 0.3; }
+
+  .cv-section { margin-bottom: 1.5rem; }
+  .cv-section-title {
+    font-size: 0.72rem; font-weight: 700; color: var(--color-neon-cyan);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: 0.25rem; margin-bottom: 0.65rem;
+  }
+
+  .cv-text { font-size: 0.82rem; color: var(--color-text-secondary); line-height: 1.65; }
+  .cv-text--sm { font-size: 0.76rem; line-height: 1.55; }
+
+  .cv-item { margin-bottom: 0.85rem; page-break-inside: avoid; }
+  .cv-item-header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .cv-item-title { font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; color: var(--color-text-primary); }
+  .cv-item-date { font-size: 0.65rem; color: var(--color-text-muted); white-space: nowrap; flex-shrink: 0; }
+  .cv-item-sub { font-size: 0.72rem; color: var(--color-neon-cyan); margin-top: 0.1rem; opacity: 0.85; }
+  .cv-item-desc { font-size: 0.76rem; color: var(--color-text-secondary); margin-top: 0.2rem; line-height: 1.55; }
+
+  .cv-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.35rem; }
+  .cv-tag {
+    font-family: var(--font-mono); font-size: 0.6rem;
+    color: var(--color-text-muted); background: rgba(34,211,238,0.06);
+    border: 1px solid var(--color-border-subtle); border-radius: 0.25rem;
+    padding: 0.1rem 0.4rem;
+  }
+
+  .cv-skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .cv-skill-group { padding: 0.35rem 0; }
+  .cv-skill-cat { font-size: 0.68rem; font-weight: 700; color: var(--color-neon-cyan); margin-bottom: 0.15rem; }
+
+  .cv-lang-row { font-size: 0.82rem; color: var(--color-text-secondary); display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .cv-lang-sep { opacity: 0.3; }
+  .cv-lang-row strong { color: var(--color-text-primary); }
+
+  .cv-availability { margin-top: 1rem; padding: 0.7rem 0.9rem; border: 1px solid rgba(34,211,238,0.2); border-radius: 0.5rem; background: rgba(34,211,238,0.03); }
+  .cv-availability strong { color: var(--color-neon-cyan); }
+
+  @media (max-width: 600px) {
+    .cv-card { padding: 1.25rem; }
+    .cv-skills-grid { grid-template-columns: 1fr; }
+    .cv-page { padding: 1rem; }
+    .cv-name { font-size: 1.3rem; }
+    .cv-contact { flex-direction: column; gap: 0.15rem; }
+    .cv-contact-sep { display: none; }
+  }
+
+  @media print {
+    @page { margin: 1.5cm; size: A4; }
+
+    :global(body) { background: #fff !important; color: #000 !important; }
+    :global(#sidebar) { display: none !important; }
+    :global(#particle-canvas) { display: none !important; }
+    :global(.grid-bg) { background: none !important; }
+    :global(.page-content) { margin-left: 0 !important; padding: 0 !important; }
+
+    .no-print { display: none !important; }
+
+    .cv-page { padding: 0 !important; max-width: none !important; margin: 0 !important; }
+    .cv-card {
+      background: #fff !important;
+      border: none !important;
+      border-radius: 0 !important;
+      padding: 0 !important;
+      box-shadow: none !important;
+    }
+    .cv-header { border-bottom-color: #2563eb !important; }
+    .cv-name { color: #000 !important; font-size: 1.4rem !important; }
+    .cv-title { color: #2563eb !important; }
+    .cv-contact { color: #555 !important; }
+    .cv-section-title { color: #2563eb !important; border-bottom-color: #ddd !important; }
+    .cv-text, .cv-text--sm, .cv-item-desc, .cv-lang-row { color: #333 !important; }
+    .cv-item-title { color: #000 !important; }
+    .cv-item-sub { color: #2563eb !important; }
+    .cv-item-date { color: #666 !important; }
+    .cv-tag { color: #555 !important; border-color: #ccc !important; background: #f5f5f5 !important; }
+    .cv-skill-cat { color: #2563eb !important; }
+    .cv-availability { border-color: #2563eb !important; background: #f8faff !important; }
+    .cv-availability strong { color: #2563eb !important; }
+    .cv-lang-row strong { color: #000 !important; }
+  }
+</style>
+

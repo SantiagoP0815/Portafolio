@@ -264,3 +264,7 @@ body {
     padding-top: 56px;
   }
 }
+
+@media print {
+  .scanlines::after { display: none !important; }
+}
