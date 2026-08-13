@@ -2,7 +2,7 @@
 titulo: "Responder"
 descripcion: "Local File Inclusion expone servidor Apache. NTLM relay vía UNC path captura hash Administrator. Crackeo de hash NTLMv2 y acceso remoto vía WinRM."
 fecha: 2026-06-05
-dificultad: medium
+dificultad: easy
 herramientas: ["nmap", "responder", "hashcat", "evil-winrm"]
 categoria: htb
 plataforma: HackTheBox

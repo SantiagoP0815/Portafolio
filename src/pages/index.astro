@@ -11,7 +11,7 @@ const skillCategories = [
   {
     titulo: 'Ofensiva',
     color: 'cyan', icon: '⚔️',
-    skills: ['Nmap', 'SQLMap', 'John / Hashcat', 'Evil-WinRM', 'Netcat', 'Reverse Shells', 'Hydra / Medusa', 'Metasploit (básico)']
+    skills: ['Nmap', 'SQLMap', 'John / Hashcat', 'Evil-WinRM', 'Netcat', 'Reverse Shells']
   },
   {
     titulo: 'Reconocimiento',
@@ -39,7 +39,7 @@ const metodologia = [
 ];
 
 const objetivos = [
-  { icon: '🔐', titulo: 'CompTIA Security+',     desc: 'Certificación objetivo 2026',               color: 'orange', tag: 'pendiente'   },
+  { icon: '🔐', titulo: 'CompTIA Security+',     desc: 'Tras completar las certificaciones NSE',      color: 'orange', tag: 'pendiente'   },
   { icon: '⚔️', titulo: 'eJPT',                  desc: 'Siguiente paso en seguridad ofensiva',      color: 'purple', tag: 'pendiente'   },
   { icon: '🏆', titulo: 'HackTheBox Ranking',     desc: 'Mejorar ranking global activo',             color: 'orange', tag: 'en progreso' },
   { icon: '💻', titulo: 'Open Source',            desc: 'Contribuir a proyectos de ciberseguridad', color: 'cyan',   tag: 'pendiente'   },
@@ -67,7 +67,7 @@ const objetivos = [
             <span class="name-line">Carlos Santiago</span>
             <span class="name-line neon-cyan name-line--last">Patiño Reyes</span>
           </h1>
-          <p class="profile-role font-mono">Ingeniero de Sistemas &amp; Ciberseguridad — Red &amp; Blue Team</p>
+          <p class="profile-role font-mono">Ingeniero de Sistemas · Aspirante Junior en Ciberseguridad</p>
           <div class="profile-cta">
             <a href={`${base}/projects`} class="btn-primary">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
@@ -126,7 +126,7 @@ const objetivos = [
               <div class="info-card-body">
                 <span class="info-card-label font-mono">CTF & Hacking</span>
                 <span class="info-card-value">{allWriteups.length} WRITEUPS</span>
-                <span class="info-card-sub font-mono">HackTheBox · TryHackMe</span>
+                <span class="info-card-sub font-mono">HackTheBox · Starting Point</span>
               </div>
             </div>
             <div class="info-card card-cyber info-card--cyan">
@@ -235,11 +235,11 @@ const objetivos = [
               <span class="tag-badge tag-green item-tag">completado</span>
             </div>
             <div class="item-card card-cyber">
-              <div class="item-icon">🔐</div>
+              <div class="item-icon">🎓</div>
               <div class="item-body">
-                <div class="item-name">CompTIA Security+</div>
-                <div class="item-inst font-mono">CompTIA</div>
-                <div class="item-meta font-mono">En preparación · objetivo 2026</div>
+                <div class="item-name">Fortinet NSE 1 · 2 · 3</div>
+                <div class="item-inst font-mono">Fortinet Training Institute</div>
+                <div class="item-meta font-mono">En curso · certificación gratuita de fundamentos</div>
               </div>
               <span class="tag-badge tag-orange item-tag">en progreso</span>
             </div>

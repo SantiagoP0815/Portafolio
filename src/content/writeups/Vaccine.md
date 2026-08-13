@@ -2,7 +2,7 @@
 titulo: "Vaccine"
 descripcion: "FTP anónimo expone backup con hash MD5. SQLi en dashboard permite RCE como postgres. Credenciales en código fuente dan SSH. Privesc vía sudo vi (GTFOBins)."
 fecha: 2026-06-06
-dificultad: medium
+dificultad: easy
 herramientas: ["nmap", "ftp", "john", "sqlmap", "ssh"]
 categoria: htb
 plataforma: HackTheBox
