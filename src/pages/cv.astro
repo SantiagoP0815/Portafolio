@@ -37,24 +37,29 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
 
       <!-- Header -->
       <header class="cv-header">
-        <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
-        <p class="cv-title font-mono">Ingeniero de Sistemas e Informática · Ciberseguridad — enfoque Red &amp; Blue Team</p>
-        <div class="cv-contact font-mono">
-          <span>Bucaramanga, Colombia</span>
-          <span class="cv-contact-sep">|</span>
-          <span>santiago.p.0815@gmail.com</span>
-          <span class="cv-contact-sep">|</span>
-          <span>github.com/SantiagoP0815</span>
-          <span class="cv-contact-sep">|</span>
-          <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+        <div class="cv-header-info">
+          <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
+          <p class="cv-title font-mono">Ingeniero de Sistemas e Informática · Ciberseguridad — enfoque Red &amp; Blue Team</p>
+          <div class="cv-contact font-mono">
+            <span>Bucaramanga, Colombia</span>
+            <span class="cv-contact-sep">|</span>
+            <span>santiago.p.0815@gmail.com</span>
+            <span class="cv-contact-sep">|</span>
+            <span>github.com/SantiagoP0815</span>
+            <span class="cv-contact-sep">|</span>
+            <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+            <span class="cv-contact-sep">|</span>
+            <a class="cv-contact-link" href="https://SantiagoP0815.github.io/Portafolio" target="_blank" rel="noopener noreferrer">Portafolio: SantiagoP0815.github.io/Portafolio</a>
+          </div>
         </div>
+        <img class="cv-photo" src={`${base}/perfil.jpg`} alt="Foto de Carlos Santiago Patiño Reyes" />
       </header>
 
       <!-- Resumen Profesional -->
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Resumen Profesional</h2>
         <p class="cv-text">
-          Ingeniero de Sistemas e Informática graduado de la Universidad Pontificia Bolivariana — Seccional Bucaramanga, con formación dual en ciberseguridad ofensiva y defensiva. Experiencia ofensiva: {allWriteups.length} máquinas resueltas en HackTheBox —reconocimiento, explotación de servicios y escalada de privilegios— documentadas con writeups técnicos. Experiencia defensiva: desarrollo seguro de aplicaciones web (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) como proyecto de grado y análisis de vulnerabilidades con herramientas propias. Busco mi primera oportunidad profesional en un equipo Junior de Blue Team, SOC o AppSec donde pueda aplicar ambos enfoques y seguir creciendo.
+          Ingeniero de Sistemas e Informática graduado de la Universidad Pontificia Bolivariana — Seccional Bucaramanga, con formación dual en ciberseguridad ofensiva y defensiva y fundamentos sólidos en redes, sistemas operativos y soporte TI. Experiencia práctica: {allWriteups.length} máquinas resueltas en HackTheBox —reconocimiento, explotación de servicios y escalada de privilegios— documentadas con writeups técnicos, y desarrollo seguro de aplicaciones web (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) como proyecto de grado, además de herramientas propias de análisis de vulnerabilidades. Busco mi primera oportunidad profesional en un rol junior de TI o ciberseguridad —soporte técnico, SOC, Blue Team o AppSec— donde pueda aplicar mi base técnica, aprender de un equipo real y aportar desde el primer día.
         </p>
       </section>
 
@@ -79,7 +84,7 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
         <div class="cv-item">
           <div class="cv-item-header">
             <span class="cv-item-title">Bootcamp Ciberseguridad Nivel Intermedio</span>
-            <span class="cv-item-date font-mono">2024</span>
+            <span class="cv-item-date font-mono">2025</span>
           </div>
           <div class="cv-item-sub font-mono">MINTIC · Talento Tech — 159 horas</div>
         </div>
@@ -171,7 +176,11 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
         <div class="cv-skills-grid">
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Ofensiva</h3>
-            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Reverse Shells</p>
+            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Reverse Shells, Burp Suite, Metasploit</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Infraestructura y Redes</h3>
+            <p class="cv-text cv-text--sm">Fundamentos TCP/IP, DNS, DHCP, Subredes, Windows (soporte y administración básica), Linux (terminal), Virtualización (VirtualBox/VMware), Backups, VPN</p>
           </div>
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Reconocimiento</h3>
@@ -200,7 +209,7 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
 
       <!-- Disponibilidad -->
       <section class="cv-section cv-availability">
-        <p class="cv-text"><strong>Disponibilidad:</strong> Inmediata · Abierto a oportunidades presenciales y remotas en ciberseguridad.</p>
+        <p class="cv-text"><strong>Disponibilidad:</strong> Inmediata · Abierto a roles junior en TI y ciberseguridad, presenciales y remotos.</p>
       </section>
 
     </div>
@@ -210,24 +219,29 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
 
       <!-- Header -->
       <header class="cv-header">
-        <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
-        <p class="cv-title font-mono">Systems Engineer · Cybersecurity — Red &amp; Blue Team focus</p>
-        <div class="cv-contact font-mono">
-          <span>Bucaramanga, Colombia</span>
-          <span class="cv-contact-sep">|</span>
-          <span>santiago.p.0815@gmail.com</span>
-          <span class="cv-contact-sep">|</span>
-          <span>github.com/SantiagoP0815</span>
-          <span class="cv-contact-sep">|</span>
-          <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+        <div class="cv-header-info">
+          <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
+          <p class="cv-title font-mono">Systems Engineer · Cybersecurity — Red &amp; Blue Team focus</p>
+          <div class="cv-contact font-mono">
+            <span>Bucaramanga, Colombia</span>
+            <span class="cv-contact-sep">|</span>
+            <span>santiago.p.0815@gmail.com</span>
+            <span class="cv-contact-sep">|</span>
+            <span>github.com/SantiagoP0815</span>
+            <span class="cv-contact-sep">|</span>
+            <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+            <span class="cv-contact-sep">|</span>
+            <a class="cv-contact-link" href="https://SantiagoP0815.github.io/Portafolio" target="_blank" rel="noopener noreferrer">Portfolio: SantiagoP0815.github.io/Portafolio</a>
+          </div>
         </div>
+        <img class="cv-photo" src={`${base}/perfil.jpg`} alt="Carlos Santiago Patiño Reyes" />
       </header>
 
       <!-- Professional Summary -->
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Professional Summary</h2>
         <p class="cv-text">
-          Systems Engineer graduated from Universidad Pontificia Bolivariana — Bucaramanga, with dual training in offensive and defensive cybersecurity. Offensive experience: {allWriteups.length} HackTheBox machines solved —reconnaissance, service exploitation, and privilege escalation— documented with technical writeups. Defensive experience: secure web development (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) as a degree project and vulnerability assessment with custom-built tools. Seeking my first junior opportunity on a Blue Team, SOC, or AppSec team where I can apply both skill sets and keep growing.
+          Systems Engineer graduated from Universidad Pontificia Bolivariana — Bucaramanga, with dual training in offensive and defensive cybersecurity and solid fundamentals in networking, operating systems, and IT support. Hands-on experience: {allWriteups.length} HackTheBox machines solved —reconnaissance, service exploitation, and privilege escalation— documented with technical writeups, plus secure web development (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) as a degree project and custom vulnerability assessment tools. Seeking my first professional opportunity in a junior IT or cybersecurity role —technical support, SOC, Blue Team, or AppSec— where I can apply my technical foundation, learn from a real team, and contribute from day one.
         </p>
       </section>
 
@@ -252,7 +266,7 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
         <div class="cv-item">
           <div class="cv-item-header">
             <span class="cv-item-title">Intermediate Cybersecurity Bootcamp</span>
-            <span class="cv-item-date font-mono">2024</span>
+            <span class="cv-item-date font-mono">2025</span>
           </div>
           <div class="cv-item-sub font-mono">MINTIC · Talento Tech — 159 hours</div>
         </div>
@@ -344,7 +358,11 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
         <div class="cv-skills-grid">
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Offensive</h3>
-            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Reverse Shells</p>
+            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Reverse Shells, Burp Suite, Metasploit</p>
+          </div>
+          <div class="cv-skill-group">
+            <h3 class="cv-skill-cat font-mono">Infrastructure &amp; Networking</h3>
+            <p class="cv-text cv-text--sm">TCP/IP fundamentals, DNS, DHCP, Subnetting, Windows (basic support &amp; administration), Linux (terminal), Virtualization (VirtualBox/VMware), Backups, VPN</p>
           </div>
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Reconnaissance</h3>
@@ -373,7 +391,7 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
 
       <!-- Availability -->
       <section class="cv-section cv-availability">
-        <p class="cv-text"><strong>Availability:</strong> Immediate · Open to on-site and remote cybersecurity opportunities.</p>
+        <p class="cv-text"><strong>Availability:</strong> Immediate · Open to junior IT and cybersecurity roles, on-site and remote.</p>
       </section>
 
     </div>
@@ -464,10 +482,14 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
   .print-btn:hover { background: rgba(34,211,238,0.15); border-color: rgba(34,211,238,0.45); }
 
   /* ── CV content ───────────────────────────────────────────── */
-  .cv-header { margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 2px solid var(--color-neon-cyan); }
+  .cv-header { margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 2px solid var(--color-neon-cyan); display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
+  .cv-header-info { min-width: 0; }
+  .cv-photo { width: 130px; height: 130px; object-fit: cover; border-radius: 0.5rem; border: 2px solid var(--color-neon-cyan); box-shadow: 0 0 12px rgba(34,211,238,0.15); flex-shrink: 0; }
   .cv-name { font-family: var(--font-sans); font-size: 1.6rem; font-weight: 700; color: var(--color-text-primary); letter-spacing: -0.02em; }
   .cv-title { font-size: 0.8rem; color: var(--color-neon-cyan); margin-top: 0.15rem; }
   .cv-contact { margin-top: 0.5rem; font-size: 0.68rem; color: var(--color-text-muted); display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .cv-contact-link { color: inherit; text-decoration: none; border-bottom: 1px dashed rgba(34,211,238,0.4); transition: color 0.2s, border-color 0.2s; }
+  .cv-contact-link:hover { color: var(--color-neon-cyan); border-bottom-color: var(--color-neon-cyan); }
   .cv-contact-sep { opacity: 0.3; }
 
   .cv-section { margin-bottom: 1.5rem; }
@@ -512,6 +534,8 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
     .cv-skills-grid { grid-template-columns: 1fr; }
     .cv-page { padding: 1rem; }
     .cv-name { font-size: 1.3rem; }
+    .cv-header { gap: 1rem; align-items: flex-start; }
+    .cv-photo { width: 84px; height: 84px; }
     .cv-contact { flex-direction: column; gap: 0.15rem; }
     .cv-contact-sep { display: none; }
   }
@@ -538,7 +562,9 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
     .cv-header { border-bottom-color: #2563eb !important; }
     .cv-name { color: #000 !important; font-size: 1.4rem !important; }
     .cv-title { color: #2563eb !important; }
+    .cv-photo { border-color: #2563eb !important; box-shadow: none !important; }
     .cv-contact { color: #555 !important; }
+    .cv-contact-link { color: inherit !important; border-bottom: none !important; }
     .cv-section-title { color: #2563eb !important; border-bottom-color: #ddd !important; }
     .cv-text, .cv-text--sm, .cv-item-desc, .cv-lang-row { color: #333 !important; }
     .cv-item-title { color: #000 !important; }
