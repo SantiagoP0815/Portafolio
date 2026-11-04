@@ -33,7 +33,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
 
 <Layout
   title="Writeups CTF | Carlos Santiago Patiño Reyes"
-  description="Writeups de HackTheBox, TryHackMe y CTFs — documentación técnica de pentesting, reconocimiento, explotación y escalada de privilegios."
+  description="Writeups de HackTheBox — documentación técnica de reconocimiento, explotación y escalada de privilegios."
 >
   <div class="page-wrapper">
 
@@ -49,7 +49,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
       </h1>
       <p class="page-subtitle">
         Documentación técnica completa de máquinas y challenges: reconocimiento, explotación,
-        escalada de privilegios y notas de OSCP-style.
+        escalada de privilegios.
       </p>
     </header>
 
@@ -106,6 +106,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
             <button
               class={`filter-btn font-mono ${d === 'todos' ? 'filter-btn-active' : ''}`}
               data-diff={d}
+              aria-pressed={d === 'todos' ? 'true' : 'false'}
               id={`diff-${d}`}
             >
               {d}
@@ -122,6 +123,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
             <button
               class={`filter-btn font-mono ${p === 'todas' ? 'filter-btn-plat-active' : ''}`}
               data-plat={p}
+              aria-pressed={p === 'todas' ? 'true' : 'false'}
               id={`plat-${p.replace(/\s/g, '-')}`}
             >
               {p}
@@ -423,8 +425,12 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
     if (!btn?.dataset.diff) return;
     activeDiff = btn.dataset.diff;
-    document.querySelectorAll<HTMLElement>('[data-diff]').forEach(b => b.classList.remove('filter-btn-active'));
+    document.querySelectorAll<HTMLElement>('#diff-filter .filter-btn').forEach(b => {
+      b.classList.remove('filter-btn-active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('filter-btn-active');
+    btn.setAttribute('aria-pressed', 'true');
     applyFilters();
   });
 
@@ -432,8 +438,12 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
     if (!btn?.dataset.plat) return;
     activePlat = btn.dataset.plat;
-    document.querySelectorAll<HTMLElement>('[data-plat]').forEach(b => b.classList.remove('filter-btn-plat-active'));
+    document.querySelectorAll<HTMLElement>('#plat-filter .filter-btn').forEach(b => {
+      b.classList.remove('filter-btn-plat-active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('filter-btn-plat-active');
+    btn.setAttribute('aria-pressed', 'true');
     applyFilters();
   });
 

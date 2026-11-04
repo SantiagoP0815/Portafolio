@@ -5,7 +5,7 @@ fecha: 2024-11-15
 herramientas: ["Node.js", "Express", "MySQL", "Passport.js", "bcryptjs", "Helmet", "Multer", "pdfmake"]
 categoria: desarrollo
 destacado: true
-github: "https://github.com/santiagop0815/hojadevida"
+github: "https://github.com/SantiagoP0815/HojaDeVida"
 estado: completado
 ---
 
@@ -41,8 +41,8 @@ Routes → Controllers → Services → Repositories (SQL) → MySQL
 - **Helmet.js** para cabeceras HTTP seguras (CSP, HSTS, X-Frame-Options)
 - Protección **CSRF** en formularios
 - **Rate limiting** con `express-rate-limit` (200 req/15 min por IP)
-- Validación con `express-validator`, sanitización XSS con `xss-clean` y NoSQL injection con `express-mongo-sanitize`
-- Queries SQL parametrizadas contra SQL Injection
+- Validación de entrada con `express-validator` y sanitización contra XSS
+- Queries SQL parametrizadas (`mysql2`) contra SQL Injection
 
 ### Gestión de Datos
 - Variables sensibles en `.env` (nunca en código fuente)

@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'Fira Code', monospace;
+  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
 
   /* Backgrounds */
   --color-bg-primary:   #080d12;
@@ -21,7 +21,7 @@
   /* Text */
   --color-text-primary:   #e2e8f0;
   --color-text-secondary: #94a3b8;
-  --color-text-muted:     #475569;
+  --color-text-muted:     #8091a8; /* ≥4.5:1 sobre todos los fondos (WCAG AA) */
 
   /* Borders */
   --color-border-subtle: #1e3a5f;
@@ -32,6 +32,17 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; }
 
 html { scroll-behavior: smooth; }
+
+/* ─── Movimiento reducido ────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+  }
+}
 
 body {
   background-color: var(--color-bg-primary);

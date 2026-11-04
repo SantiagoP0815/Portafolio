@@ -1,0 +1,63 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Layout title="404 — Página no encontrada | Carlos Santiago Patiño Reyes" description="La página que buscas no existe.">
+  <div class="nf-page">
+    <div class="nf-terminal card-cyber">
+      <div class="nf-chrome">
+        <span class="nf-dot" style="background:#ff5f57"></span>
+        <span class="nf-dot" style="background:#ffbd2e"></span>
+        <span class="nf-dot" style="background:#28ca41"></span>
+        <span class="nf-chrome-title font-mono">bash</span>
+      </div>
+      <div class="nf-body font-mono">
+        <p><span class="nf-prompt">$</span> cd <span class="nf-path" id="nf-path">/ruta-solicitada</span></p>
+        <p class="nf-error">bash: cd: No such file or directory</p>
+        <h1 class="nf-code">404</h1>
+        <p class="nf-msg">La página que buscas no existe o fue movida.</p>
+        <div class="nf-actions">
+          <a href={`${base}/`} class="btn-primary">cd ~/inicio</a>
+          <a href={`${base}/projects`} class="btn-ghost">ls projects/</a>
+          <a href={`${base}/writeups`} class="btn-ghost">ls writeups/</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  const el = document.getElementById('nf-path');
+  if (el) el.textContent = window.location.pathname;
+</script>
+
+<style>
+  .nf-page {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .nf-terminal { width: 100%; max-width: 36rem; }
+  .nf-chrome {
+    display: flex; align-items: center; gap: 0.4rem;
+    padding: 0.55rem 0.9rem;
+    background: var(--color-bg-secondary);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+  .nf-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .nf-chrome-title { margin-left: 0.5rem; font-size: 0.72rem; color: var(--color-text-muted); }
+  .nf-body { padding: 1.5rem; font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  .nf-prompt { color: var(--color-neon-green); }
+  .nf-path { color: var(--color-neon-cyan); word-break: break-all; }
+  .nf-error { color: var(--color-neon-pink); }
+  .nf-code {
+    font-size: 4.5rem; font-weight: 700; line-height: 1;
+    color: var(--color-neon-cyan);
+    text-shadow: 0 0 24px rgba(34,211,238,0.35);
+    margin-top: 1rem;
+  }
+  .nf-msg { font-family: var(--font-sans); color: var(--color-text-secondary); }
+  .nf-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+</style>

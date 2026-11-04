@@ -1,4 +1,6 @@
 ---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
 import '../styles/global.css';
 import Sidebar from '../components/Sidebar.astro';
 
@@ -7,12 +9,15 @@ interface Props {
   description?: string;
 }
 
-const { 
+const {
   title = 'Carlos Santiago Patiño Reyes | Ciberseguridad',
   description = 'Portafolio de Carlos Santiago Patiño Reyes — Ciberseguridad, Ethical Hacking, CTF Writeups y proyectos de seguridad.'
 } = Astro.props;
 
-const base = import.meta.env.BASE_URL;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Open Graph / canonical requieren URLs absolutas
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+const ogImageUrl = new URL(`${base}/og-image.png`, Astro.site).href;
 ---
 <!DOCTYPE html>
 <html lang="es">
@@ -24,25 +29,27 @@ const base = import.meta.env.BASE_URL;
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content={`${base}/og-image.png`} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:locale" content="es_CO" />
+  <meta property="og:image" content={ogImageUrl} />
+  <meta property="og:image:alt" content="Carlos Santiago Patiño Reyes — Ciberseguridad" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={title} />
   <meta name="twitter:description" content={description} />
-  <meta name="twitter:image" content={`${base}/og-image.png`} />
-  <title>{title}</title>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="twitter:image" content={ogImageUrl} />
+  <link rel="canonical" href={canonicalUrl} />
+  <link rel="sitemap" href={`${base}/sitemap-index.xml`} />
   <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
+  <title>{title}</title>
 </head>
 <body class="scanlines app-shell">
+  <a href="#main" class="skip-link font-mono">Saltar al contenido</a>
   <canvas id="particle-canvas" aria-hidden="true"></canvas>
   <Sidebar />
   <div class="page-content">
-    <main class="grid-bg">
+    <main id="main" class="grid-bg" tabindex="-1">
       <slot />
     </main>
   </div>
@@ -50,99 +57,136 @@ const base = import.meta.env.BASE_URL;
 </html>
 
 <script>
-(function() {
+(function () {
   const canvas = document.getElementById('particle-canvas') as HTMLCanvasElement | null;
   if (!canvas) return;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
 
-  let w: number, h: number;
-  let particles: Particle[] = [];
-  let COUNT = 200;
-  let CONNECTION_DIST = 200;
-  let prevCount = 0;
-  let resizeTimer: ReturnType<typeof setTimeout>;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const COLOR = '34, 211, 238';
+  // Las líneas se agrupan en pocos niveles de opacidad para trazarlas en lote
+  // (un stroke() por nivel en vez de uno por línea).
+  const ALPHA_LEVELS = 4;
+
+  let w = 0, h = 0;
+  let count = 0;
+  let linkDist = 0;
+  let particles: { x: number; y: number; vx: number; vy: number; r: number; a: number }[] = [];
+  let rafId = 0;
+
+  function configure() {
+    const mobile = window.innerWidth < 768;
+    count = mobile ? 45 : 110;
+    linkDist = mobile ? 100 : 150;
+  }
 
   function resize() {
-    w = canvas!.width = window.innerWidth;
-    h = canvas!.height = window.innerHeight;
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      const mobile = w < 768;
-      COUNT = mobile ? 100 : 200;
-      CONNECTION_DIST = mobile ? 100 : 200;
-      if (COUNT !== prevCount) {
-        prevCount = COUNT;
-        initParticles();
-      }
-    }, 200);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const prevW = w, prevH = h;
+    w = window.innerWidth;
+    h = window.innerHeight;
+    canvas!.width = Math.round(w * dpr);
+    canvas!.height = Math.round(h * dpr);
+    canvas!.style.width = `${w}px`;
+    canvas!.style.height = `${h}px`;
+    ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const prevCount = count;
+    configure();
+    if (count !== prevCount || particles.length === 0) {
+      initParticles();
+    } else if (prevW && prevH) {
+      // Reescalar posiciones en vez de regenerar (p. ej. barra de URL en móvil)
+      for (const p of particles) { p.x *= w / prevW; p.y *= h / prevH; }
+    }
+    if (reducedMotion.matches) draw();
   }
 
   function initParticles() {
-    particles = [];
-    for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+    particles = Array.from({ length: count }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: (Math.random() - 0.5) * 0.5,
+      r: Math.random() * 1.6 + 0.8,
+      a: Math.random() * 0.4 + 0.2,
+    }));
   }
 
-  class Particle {
-    x = 0;
-    y = 0;
-    vx = 0;
-    vy = 0;
-    r = 0;
-    alpha = 0;
-    constructor() {
-      this.reset(true);
-    }
-    reset(init: boolean) {
-      this.x = Math.random() * w;
-      this.y = Math.random() * h;
-      this.vx = (Math.random() - 0.5) * 0.5;
-      this.vy = (Math.random() - 0.5) * 0.5;
-      this.r = Math.random() * 1.6 + 0.8;
-      this.alpha = Math.random() * 0.4 + 0.2;
-    }
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      if (this.x < 0 || this.x > w) { this.vx *= -1; this.x = Math.max(0, Math.min(w, this.x)); }
-      if (this.y < 0 || this.y > h) { this.vy *= -1; this.y = Math.max(0, Math.min(h, this.y)); }
-    }
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(34, 211, 238, ${this.alpha})`;
-      ctx.fill();
+  function update() {
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0 || p.x > w) { p.vx *= -1; p.x = Math.max(0, Math.min(w, p.x)); }
+      if (p.y < 0 || p.y > h) { p.vy *= -1; p.y = Math.max(0, Math.min(h, p.y)); }
     }
   }
 
-  function drawConnections() {
+  function draw() {
+    ctx!.clearRect(0, 0, w, h);
+
+    // Conexiones, agrupadas por nivel de opacidad
+    const maxD2 = linkDist * linkDist;
+    const buckets: number[][] = Array.from({ length: ALPHA_LEVELS }, () => []);
     for (let i = 0; i < particles.length; i++) {
+      const a = particles[i];
       for (let j = i + 1; j < particles.length; j++) {
-        const dx = particles[i].x - particles[j].x;
-        const dy = particles[i].y - particles[j].y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < CONNECTION_DIST) {
-          const alpha = (1 - dist / CONNECTION_DIST) * 0.15;
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x, particles[i].y);
-          ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(34, 211, 238, ${alpha})`;
-          ctx.lineWidth = 0.6;
-          ctx.stroke();
+        const b = particles[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < maxD2) {
+          const level = Math.min(ALPHA_LEVELS - 1, Math.floor((1 - Math.sqrt(d2) / linkDist) * ALPHA_LEVELS));
+          buckets[level].push(a.x, a.y, b.x, b.y);
         }
       }
     }
-  }
+    ctx!.lineWidth = 0.6;
+    buckets.forEach((segs, level) => {
+      if (!segs.length) return;
+      ctx!.strokeStyle = `rgba(${COLOR}, ${(((level + 1) / ALPHA_LEVELS) * 0.15).toFixed(3)})`;
+      ctx!.beginPath();
+      for (let k = 0; k < segs.length; k += 4) {
+        ctx!.moveTo(segs[k], segs[k + 1]);
+        ctx!.lineTo(segs[k + 2], segs[k + 3]);
+      }
+      ctx!.stroke();
+    });
 
-  window.addEventListener('resize', resize);
-  resize();
+    // Partículas
+    for (const p of particles) {
+      ctx!.beginPath();
+      ctx!.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx!.fillStyle = `rgba(${COLOR}, ${p.a})`;
+      ctx!.fill();
+    }
+  }
 
   function loop() {
-    ctx.clearRect(0, 0, w, h);
-    for (const p of particles) { p.update(); p.draw(); }
-    drawConnections();
-    requestAnimationFrame(loop);
+    update();
+    draw();
+    rafId = requestAnimationFrame(loop);
   }
-  loop();
+
+  function start() {
+    cancelAnimationFrame(rafId);
+    if (reducedMotion.matches) draw();   // fondo estático, sin animación
+    else loop();
+  }
+
+  let resizeTimer: ReturnType<typeof setTimeout>;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(resize, 150);
+  });
+  reducedMotion.addEventListener('change', start);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) cancelAnimationFrame(rafId);
+    else start();
+  });
+
+  resize();
+  start();
 })();
 </script>
 
@@ -154,4 +198,20 @@ const base = import.meta.env.BASE_URL;
     pointer-events: none;
   }
   .page-content { position: relative; z-index: 1; }
+  main:focus { outline: none; }
+
+  .skip-link {
+    position: fixed;
+    top: 0.75rem; left: 0.75rem;
+    z-index: 10000;
+    padding: 0.55rem 1rem;
+    border-radius: 0.5rem;
+    background: var(--color-neon-cyan);
+    color: var(--color-bg-primary);
+    font-size: 0.8rem; font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-200%);
+    transition: transform 0.2s ease;
+  }
+  .skip-link:focus { transform: translateY(0); }
 </style>

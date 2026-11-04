@@ -7,6 +7,7 @@ herramientas: ["nmap", "gobuster", "awscli", "nc"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold", "Explotación"]
 ---
 
@@ -133,6 +134,6 @@ cat /var/www/flag.txt
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `a980d99281a28d638ac68b9bf9453c2b` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |

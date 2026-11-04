@@ -1,5 +1,5 @@
 ---
-titulo: "Content Discovery Tool"
+titulo: "Content Discovery Toolkit"
 descripcion: "Herramienta CLI en Python para descubrimiento de contenido web: brute-force de rutas, enumeración de subdominios, extracción de endpoints en JS y crawling recursivo multihilo."
 fecha: 2026-05-29
 herramientas: ["Python", "requests", "BeautifulSoup", "argparse", "threading"]

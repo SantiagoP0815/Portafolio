@@ -7,6 +7,7 @@ herramientas: ["nmap", "ftp", "john", "sqlmap", "ssh"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold", "Explotación", "Escalada de Privilegios"]
 ---
 
@@ -131,7 +132,7 @@ cat /root/flag.txt
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| User | `ec9b13ca4d6229cd5cc1e09980965bf7` |
-| Root | `dd6e058e814260bc70e9bbdef2715849` |
+| Flag | Estado |
+|------|--------|
+| User | ✅ obtenida |
+| Root | ✅ obtenida |

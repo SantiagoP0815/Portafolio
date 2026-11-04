@@ -25,16 +25,15 @@ const categoriaConfig: Record<string, { label: string; cls: string; accentColor:
 };
 
 const estadoMap: Record<string, { label: string; color: string; pulse: boolean }> = {
-  completado:   { label: 'LIVE',       color: '#4ade80', pulse: false },
-  'en-progreso':{ label: 'IN PROGRESS',color: '#fb923c', pulse: true },
-  archivado:    { label: 'ARCHIVED',   color: '#475569', pulse: false },
+  completado:   { label: 'COMPLETADO', color: '#4ade80', pulse: false },
+  'en-progreso':{ label: 'EN PROGRESO',color: '#fb923c', pulse: true },
+  archivado:    { label: 'ARCHIVADO',  color: '#475569', pulse: false },
 };
 
 const cat = categoriaConfig[categoria] ?? categoriaConfig.desarrollo;
 const est = estadoMap[estado] ?? estadoMap.completado;
-const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short' });
+const dateStr = fecha.toLocaleDateString('es-CO', { timeZone: 'UTC', year: 'numeric', month: 'short' });
 
-// Stack layers: group tools by category visually (max 3 layers shown)
 const MAX_TOOLS_DISPLAY = 6;
 ---
 
@@ -71,7 +70,7 @@ const MAX_TOOLS_DISPLAY = 6;
         <span class="stack-label">apt install</span>
       </div>
       <div class="stack-pills">
-        {herramientas.slice(0, MAX_TOOLS_DISPLAY).map((tool, i) => (
+        {herramientas.slice(0, MAX_TOOLS_DISPLAY).map((tool) => (
           <span class="stack-pill font-mono">{tool}</span>
         ))}
         {herramientas.length > MAX_TOOLS_DISPLAY && (

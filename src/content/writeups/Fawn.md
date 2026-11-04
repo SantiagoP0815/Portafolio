@@ -7,6 +7,7 @@ herramientas: ["nmap", "ftp"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold"]
 ---
 
@@ -48,6 +49,6 @@ get flag.txt
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `035db21c881520061c53e0536e44f815` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |

@@ -7,6 +7,7 @@ herramientas: ["nmap", "ftp", "gobuster"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold"]
 ---
 
@@ -69,9 +70,9 @@ Credenciales alineadas por línea en ambos archivos. Login exitoso con:
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `c7110277ac44d78b6a9fff2232434d16` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |
 
 ## Lecciones
 
