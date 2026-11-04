@@ -12,40 +12,40 @@ const retiredLabel = `${retiredCount} máquina${retiredCount === 1 ? '' : 's'} r
 
 const skillCategories = [
   {
-    titulo: 'Ofensiva',
-    color: 'cyan', icon: '⚔️',
-    skills: ['Nmap', 'SQLMap', 'John / Hashcat', 'Evil-WinRM', 'Netcat', 'Reverse Shells']
-  },
-  {
-    titulo: 'Reconocimiento',
-    color: 'green', icon: '🔍',
-    skills: ['Gobuster / Dirbuster', 'Wireshark / TShark', 'SMB Enumeration', 'FTP Enumeration', 'Redis Enumeration', 'Subdomain Discovery', 'JS Scraping', 'Web Crawling']
-  },
-  {
-    titulo: 'Desarrollo Seguro',
-    color: 'orange', icon: '🛠️',
-    skills: ['Python', 'Bash', 'JavaScript / Node.js', 'Express', 'MySQL', 'Git / GitHub', 'Docker (básico)', 'REST APIs']
-  },
-  {
     titulo: 'Defensiva',
     color: 'purple', icon: '🛡️',
-    skills: ['Hardening HTTP Headers', 'CSRF Protection', 'Rate Limiting', 'XSS Prevention', 'SQLi Prevention', 'Input Sanitization', 'Helmet.js', 'OWASP Top 10']
+    skills: ['OWASP Top 10', 'Hardening HTTP Headers', 'CSRF Protection', 'Rate Limiting', 'XSS / SQLi Prevention', 'Input Sanitization', 'Helmet.js']
+  },
+  {
+    titulo: 'Infraestructura y Redes',
+    color: 'green', icon: '🌐',
+    skills: ['TCP/IP', 'DNS / DHCP', 'Subnetting', 'Windows', 'Linux (terminal)', 'VirtualBox / VMware', 'Wireshark / TShark']
+  },
+  {
+    titulo: 'Pentesting y Reconocimiento',
+    color: 'cyan', icon: '🔍',
+    skills: ['Nmap', 'Gobuster', 'SQLMap', 'John / Hashcat', 'Evil-WinRM', 'Netcat', 'SMB / FTP / Redis Enumeration']
+  },
+  {
+    titulo: 'Desarrollo y Automatización',
+    color: 'orange', icon: '🛠️',
+    skills: ['Python', 'Bash', 'JavaScript / Node.js', 'Express', 'MySQL', 'Git / GitHub', 'Docker (básico)']
   },
 ];
 
 const metodologia = [
-  { fase: 'Reconocimiento', color: 'cyan', desc: 'Enumeración de puertos, servicios, subdominios y tecnologías con Nmap, Gobuster y scripts personalizados.' },
-  { fase: 'Foothold',       color: 'green', desc: 'Acceso inicial mediante vulnerabilidades identificadas: SQLi, credenciales débiles, archivos expuestos.' },
-  { fase: 'Explotación',    color: 'orange', desc: 'Explotación de servicios, obtención de shells inversas y pivoting entre sistemas.' },
-  { fase: 'Escalada',       color: 'purple', desc: 'Elevación a root/Administrator mediante abuso de permisos, binarios SUID y tareas programadas.' },
-  { fase: 'Reporte',        color: 'pink', desc: 'Documentación técnica detallada con pasos de reproducción, herramientas utilizadas y recomendaciones.' },
+  { fase: 'Reconocimiento', color: 'cyan', desc: 'Enumeración de puertos, servicios y tecnologías con Nmap, Gobuster y scripts propios.' },
+  { fase: 'Foothold',       color: 'green', desc: 'Acceso inicial mediante vulnerabilidades identificadas: SQLi, IDOR, credenciales débiles, archivos expuestos.' },
+  { fase: 'Explotación',    color: 'orange', desc: 'Explotación de servicios mal configurados y obtención de shells inversas.' },
+  { fase: 'Escalada',       color: 'purple', desc: 'Elevación a root/Administrator mediante abuso de permisos, binarios SUID y credenciales reutilizadas.' },
+  { fase: 'Reporte',        color: 'pink', desc: 'Documentación técnica con pasos de reproducción, evidencias y recomendaciones de mitigación.' },
 ];
 
 const objetivos = [
-  { icon: '🔐', titulo: 'CompTIA Security+',     desc: 'Tras completar las certificaciones NSE',      color: 'orange', tag: 'pendiente'   },
-  { icon: '⚔️', titulo: 'eJPT',                  desc: 'Siguiente paso en seguridad ofensiva',      color: 'purple', tag: 'pendiente'   },
-  { icon: '🏆', titulo: 'HackTheBox Ranking',     desc: 'Mejorar ranking global activo',             color: 'orange', tag: 'en progreso' },
-  { icon: '💻', titulo: 'Open Source',            desc: 'Contribuir a proyectos de ciberseguridad', color: 'cyan',   tag: 'pendiente'   },
+  { icon: '🎓', titulo: 'Fortinet NSE 1 · 2 · 3',              desc: 'Fundamentos de ciberseguridad',                         color: 'orange', tag: 'en progreso' },
+  { icon: '🔐', titulo: 'ISC2 Certified in Cybersecurity (CC)', desc: 'Certificación de entrada reconocida por la industria',    color: 'purple', tag: 'siguiente'   },
+  { icon: '🛡️', titulo: 'Laboratorio SOC con Wazuh',           desc: 'Detección de ataques, análisis de logs y triage de alertas', color: 'cyan', tag: 'siguiente'   },
+  { icon: '📊', titulo: 'Labs Blue Team',                       desc: 'LetsDefend / Blue Team Labs Online: análisis de incidentes', color: 'green', tag: 'pendiente' },
 ];
 ---
 
@@ -70,7 +70,7 @@ const objetivos = [
             <span class="name-line">Carlos Santiago</span>
             <span class="name-line neon-cyan name-line--last">Patiño Reyes</span>
           </h1>
-          <p class="profile-role font-mono">Ingeniero de Sistemas · Junior TI &amp; Ciberseguridad</p>
+          <p class="profile-role font-mono">Ingeniero de Sistemas · Analista de Ciberseguridad Junior (SOC / Blue Team)</p>
           <div class="profile-cta">
             <a href={`${base}/projects`} class="btn-primary">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
@@ -117,9 +117,9 @@ const objetivos = [
         <section class="whoami-section animate-fade-in-up animate-delay-100">
           <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> sobre_mí</h2>
           <p class="bio-text">
-            Ingeniero de Sistemas e Informática egresado de la <strong>Universidad Pontificia Bolivariana — Seccional Bucaramanga</strong>, con formación dual en ciberseguridad ofensiva y defensiva. Combino pentesting estructurado (OWASP Top 10) con hardening de aplicaciones web, aplicando controles como CSRF protection, XSS/SQLi prevention y rate limiting.
-            Completé el track <strong>Starting Point de HackTheBox</strong> ({spCount} máquinas){retiredCount > 0 && <> y {retiredLabel}</>}, todo documentado con writeups técnicos, y tengo <strong>{allProjects.length} proyectos</strong> de seguridad publicados en GitHub, incluyendo un gestor de CVs con seguridad integrada como proyecto de grado.
-            Busco mi primera oportunidad profesional — idealmente en roles junior de TI, soporte técnico o equipos de ciberseguridad (Blue Team, SOC o AppSec) — donde pueda aplicar mi base técnica, seguir aprendiendo y contribuir a la protección de infraestructuras.
+            Ingeniero de Sistemas e Informática de la <strong>Universidad Pontificia Bolivariana — Seccional Bucaramanga</strong>. Busco mi primer rol como <strong>Analista SOC / Blue Team junior</strong> o en <strong>soporte TI</strong> con proyección a seguridad.
+            Entiendo cómo se ataca un sistema porque lo practico: completé el track <strong>Starting Point de HackTheBox</strong> ({spCount} máquinas){retiredCount > 0 && <> y {retiredLabel}</>}, documentando cada una con writeups técnicos. Y sé cómo defenderlo: mi proyecto de grado es una aplicación web con seguridad integrada desde el diseño (CSRF, XSS/SQLi prevention, rate limiting, cabeceras seguras).
+            Además he construido <strong>{allProjects.length} herramientas</strong> propias en Python y Bash para automatizar reconocimiento y detección de vulnerabilidades. Aprendo rápido, documento lo que hago y quiero aportar en un equipo real.
           </p>
           <div class="info-grid">
             <div class="info-card card-cyber info-card--green">
@@ -214,7 +214,7 @@ const objetivos = [
               <div class="item-body">
                 <div class="item-name">Ingeniero de Sistemas e Informática</div>
                 <div class="item-inst font-mono">Universidad Pontificia Bolivariana</div>
-                <div class="item-meta font-mono">Seccional Bucaramanga · Graduado</div>
+                <div class="item-meta font-mono">Seccional Bucaramanga · Graduado en mayo 2026</div>
               </div>
               <span class="tag-badge tag-cyan item-tag">ing. sistemas</span>
             </div>
@@ -260,6 +260,14 @@ const objetivos = [
           <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> áreas_de_interés</h2>
           <div class="card-list">
             <div class="item-card card-cyber">
+              <div class="item-icon" aria-hidden="true">📡</div>
+              <div class="item-body">
+                <div class="item-name">Monitoreo y Respuesta (SOC)</div>
+                <div class="item-meta font-mono">Análisis de logs · SIEM · Triage de alertas · Detección</div>
+              </div>
+              <span class="tag-badge tag-purple item-tag">defensivo</span>
+            </div>
+            <div class="item-card card-cyber">
               <div class="item-icon" aria-hidden="true">🛡️</div>
               <div class="item-body">
                 <div class="item-name">Blue Team &amp; Hardening</div>
@@ -271,7 +279,7 @@ const objetivos = [
               <div class="item-icon" aria-hidden="true">🖥️</div>
               <div class="item-body">
                 <div class="item-name">Pentesting Web</div>
-                <div class="item-meta font-mono">OWASP Top 10 · Burp Suite · SQLi · XSS · CSRF</div>
+                <div class="item-meta font-mono">OWASP Top 10 · SQLi · XSS · IDOR · CSRF</div>
               </div>
               <span class="tag-badge tag-cyan item-tag">ofensivo</span>
             </div>

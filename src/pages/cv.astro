@@ -43,7 +43,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       <header class="cv-header">
         <div class="cv-header-info">
           <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
-          <p class="cv-title font-mono">Ingeniero de Sistemas e Informática · Ciberseguridad — enfoque Red &amp; Blue Team</p>
+          <p class="cv-title font-mono">Ingeniero de Sistemas e Informática · Analista de Ciberseguridad Junior (SOC / Blue Team)</p>
           <div class="cv-contact font-mono">
             <span>Bucaramanga, Colombia</span>
             <span class="cv-contact-sep">|</span>
@@ -63,7 +63,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Resumen Profesional</h2>
         <p class="cv-text">
-          Ingeniero de Sistemas e Informática graduado de la Universidad Pontificia Bolivariana — Seccional Bucaramanga, con formación dual en ciberseguridad ofensiva y defensiva y fundamentos sólidos en redes, sistemas operativos y soporte TI. Experiencia práctica: track Starting Point de HackTheBox completado ({spCount} máquinas) y {retiredEs} —reconocimiento, explotación de servicios y escalada de privilegios— documentadas con writeups técnicos, y desarrollo seguro de aplicaciones web (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) como proyecto de grado, además de herramientas propias de análisis de vulnerabilidades. Busco mi primera oportunidad profesional en un rol junior de TI o ciberseguridad —soporte técnico, SOC, Blue Team o AppSec— donde pueda aplicar mi base técnica, aprender de un equipo real y aportar desde el primer día.
+          Ingeniero de Sistemas e Informática orientado a ciberseguridad defensiva, con base en redes, sistemas operativos y soporte TI. Práctica ofensiva documentada en HackTheBox ({spCount} máquinas de Starting Point y {retiredEs}), un proyecto de grado con seguridad integrada desde el diseño y herramientas propias en Python y Bash. Busco mi primer rol como Analista SOC / Blue Team junior o en soporte TI con proyección a seguridad.
         </p>
       </section>
 
@@ -73,11 +73,11 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
         <div class="cv-item">
           <div class="cv-item-header">
             <span class="cv-item-title">Ingeniería de Sistemas e Informática</span>
-            <span class="cv-item-date font-mono">Graduado</span>
+            <span class="cv-item-date font-mono">Mayo 2026</span>
           </div>
           <div class="cv-item-sub font-mono">Universidad Pontificia Bolivariana — Seccional Bucaramanga</div>
-          <div class="cv-item-desc">
-            Proyecto de grado: Sistema de Gestión de CVs con seguridad integrada (Node.js, Express, MySQL, Helmet.js, CSRF protection, rate limiting, XSS/SQLi prevention).
+          <div class="cv-item-desc cv-print-hide">
+            Proyecto de grado: Sistema de Gestión de CVs con seguridad integrada (ver Proyectos).
           </div>
         </div>
       </section>
@@ -99,18 +99,11 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Fundamentos de ciberseguridad · training.fortinet.com</div>
         </div>
-        <div class="cv-item">
-          <div class="cv-item-header">
-            <span class="cv-item-title">CompTIA Security+</span>
-            <span class="cv-item-date font-mono">Objetivo futuro</span>
-          </div>
-          <div class="cv-item-sub font-mono">Después de completar las certificaciones NSE</div>
-        </div>
       </section>
 
-      <!-- Experiencia Práctica -->
+      <!-- Proyectos y Laboratorios -->
       <section class="cv-section">
-        <h2 class="cv-section-title font-mono">Experiencia Práctica</h2>
+        <h2 class="cv-section-title font-mono">Proyectos y Laboratorios</h2>
 
         <div class="cv-item">
           <div class="cv-item-header">
@@ -133,7 +126,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Node.js · Express · MySQL · Proyecto de Grado</div>
           <div class="cv-item-desc">
-            Aplicación full-stack con seguridad defensiva integrada desde el diseño: prevención de XSS y SQL injection mediante consultas parametrizadas y sanitización de entrada, protección CSRF con tokens, rate limiting (200 req/15min), hardened HTTP headers con Helmet.js, autenticación con Passport.js y bcryptjs, sesiones seguras con express-session sobre MySQL.
+            Aplicación web MVC con seguridad desde el diseño: consultas parametrizadas contra SQLi, sanitización contra XSS, tokens CSRF, rate limiting, cabeceras seguras con Helmet.js y autenticación con Passport.js + bcrypt.
           </div>
           <div class="cv-tags">
             <span class="cv-tag">Helmet.js</span><span class="cv-tag">CSRF</span><span class="cv-tag">Rate Limiting</span><span class="cv-tag">XSS Prevention</span><span class="cv-tag">SQLi Prevention</span><span class="cv-tag">bcryptjs</span><span class="cv-tag">Passport.js</span>
@@ -147,7 +140,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Bash · Nmap · Automatización de Red Team</div>
           <div class="cv-item-desc">
-            Script en Bash que automatiza el escaneo de Nmap en 2 fases: descubrimiento rápido de puertos (-p- --min-rate 5000) seguido de escaneo detallado (-sCV) sobre los puertos encontrados. Soporta opciones de rate, puertos personalizados, modo lento, UDP, IPv6 y salida con timestamp.
+            Automatiza el reconocimiento: descubrimiento rápido de todos los puertos TCP y escaneo detallado (-sCV) solo de los abiertos. Soporta UDP, IPv6, modo sigiloso y salida con timestamp.
           </div>
         </div>
 
@@ -158,7 +151,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Python · OWASP Top 10 · Automatización</div>
           <div class="cv-item-desc">
-            Herramienta CLI en Python con 5 módulos de detección automatizada: headers de seguridad (HSTS, CSP, X-Frame-Options), XSS reflejado, SQLi basado en errores (MySQL/PostgreSQL/Oracle/SQLite), open redirect y directory listing. Reporte en formato JSON.
+            CLI con 5 módulos: cabeceras de seguridad, XSS reflejado, SQLi basado en errores, open redirect y directory listing. Reporte JSON por severidad.
           </div>
         </div>
 
@@ -169,7 +162,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Python · Reconocimiento Web · Multi-threading</div>
           <div class="cv-item-desc">
-            Herramienta modular de descubrimiento de contenido web con 4 módulos: fuerza bruta de directorios, enumeración de subdominios, scraping de endpoints en JavaScript y crawler recursivo BFS multi-hilo. Arquitectura extensible con sistema de módulos independientes.
+            Reconocimiento web multihilo: fuerza bruta de rutas, enumeración de subdominios, extracción de endpoints en JavaScript y crawler BFS.
           </div>
         </div>
       </section>
@@ -179,24 +172,20 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
         <h2 class="cv-section-title font-mono">Habilidades Técnicas</h2>
         <div class="cv-skills-grid">
           <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Ofensiva</h3>
-            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Reverse Shells, Burp Suite, Metasploit</p>
+            <h3 class="cv-skill-cat font-mono">Defensiva</h3>
+            <p class="cv-text cv-text--sm">OWASP Top 10, Hardening de cabeceras HTTP, CSRF Protection, Rate Limiting, XSS/SQLi Prevention, Input Sanitization, Helmet.js</p>
           </div>
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Infraestructura y Redes</h3>
-            <p class="cv-text cv-text--sm">Fundamentos TCP/IP, DNS, DHCP, Subredes, Windows (soporte y administración básica), Linux (terminal), Virtualización (VirtualBox/VMware), Backups, VPN</p>
+            <p class="cv-text cv-text--sm">TCP/IP, DNS, DHCP, Subredes, Windows (soporte y administración básica), Linux (terminal), Virtualización (VirtualBox/VMware), Wireshark/TShark</p>
           </div>
           <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Reconocimiento</h3>
-            <p class="cv-text cv-text--sm">Gobuster/Dirbuster, Wireshark/TShark, SMB/FTP/Redis Enumeration, Subdomain Discovery, JS Scraping, Web Crawling</p>
+            <h3 class="cv-skill-cat font-mono">Pentesting y Reconocimiento</h3>
+            <p class="cv-text cv-text--sm">Nmap, Gobuster, SQLMap, John/Hashcat, Evil-WinRM, Netcat, enumeración SMB/FTP/Redis</p>
           </div>
           <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Desarrollo</h3>
-            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (básico), REST APIs</p>
-          </div>
-          <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Defensiva</h3>
-            <p class="cv-text cv-text--sm">Hardening HTTP Headers, CSRF Protection, Rate Limiting, XSS/SQLi Prevention, Input Sanitization, Helmet.js, OWASP Top 10</p>
+            <h3 class="cv-skill-cat font-mono">Desarrollo y Automatización</h3>
+            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (básico)</p>
           </div>
         </div>
       </section>
@@ -212,8 +201,8 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       </section>
 
       <!-- Disponibilidad -->
-      <section class="cv-section cv-availability">
-        <p class="cv-text"><strong>Disponibilidad:</strong> Inmediata · Abierto a roles junior en TI y ciberseguridad, presenciales y remotos.</p>
+      <section class="cv-section cv-availability cv-print-hide">
+        <p class="cv-text"><strong>Disponibilidad:</strong> Inmediata · Roles junior en SOC, Blue Team o soporte TI · Presencial (Bucaramanga) o remoto.</p>
       </section>
 
     </div>
@@ -225,7 +214,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       <header class="cv-header">
         <div class="cv-header-info">
           <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
-          <p class="cv-title font-mono">Systems Engineer · Cybersecurity — Red &amp; Blue Team focus</p>
+          <p class="cv-title font-mono">Systems Engineer · Junior Cybersecurity Analyst (SOC / Blue Team)</p>
           <div class="cv-contact font-mono">
             <span>Bucaramanga, Colombia</span>
             <span class="cv-contact-sep">|</span>
@@ -245,7 +234,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Professional Summary</h2>
         <p class="cv-text">
-          Systems Engineer graduated from Universidad Pontificia Bolivariana — Bucaramanga, with dual training in offensive and defensive cybersecurity and solid fundamentals in networking, operating systems, and IT support. Hands-on experience: completed the HackTheBox Starting Point track ({spCount} machines) plus {retiredEn} —reconnaissance, service exploitation, and privilege escalation— documented with technical writeups, plus secure web development (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) as a degree project and custom vulnerability assessment tools. Seeking my first professional opportunity in a junior IT or cybersecurity role —technical support, SOC, Blue Team, or AppSec— where I can apply my technical foundation, learn from a real team, and contribute from day one.
+          Systems and Informatics Engineer focused on defensive cybersecurity, with a foundation in networking, operating systems, and IT support. Documented offensive practice on HackTheBox ({spCount} Starting Point machines plus {retiredEn}), a degree project with security built in by design, and my own Python and Bash tools. Seeking my first role as a junior SOC / Blue Team analyst or in IT support with a path into security.
         </p>
       </section>
 
@@ -255,11 +244,11 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
         <div class="cv-item">
           <div class="cv-item-header">
             <span class="cv-item-title">B.Sc. Systems and Informatics Engineering</span>
-            <span class="cv-item-date font-mono">Graduated</span>
+            <span class="cv-item-date font-mono">May 2026</span>
           </div>
           <div class="cv-item-sub font-mono">Universidad Pontificia Bolivariana — Bucaramanga, Colombia</div>
-          <div class="cv-item-desc">
-            Degree project: CV Management System with integrated security (Node.js, Express, MySQL, Helmet.js, CSRF protection, rate limiting, XSS/SQLi prevention).
+          <div class="cv-item-desc cv-print-hide">
+            Degree project: CV Management System with built-in security (see Projects).
           </div>
         </div>
       </section>
@@ -281,18 +270,11 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Cybersecurity fundamentals · training.fortinet.com</div>
         </div>
-        <div class="cv-item">
-          <div class="cv-item-header">
-            <span class="cv-item-title">CompTIA Security+</span>
-            <span class="cv-item-date font-mono">Future goal</span>
-          </div>
-          <div class="cv-item-sub font-mono">After completing the NSE certifications</div>
-        </div>
       </section>
 
-      <!-- Practical Experience -->
+      <!-- Projects & Labs -->
       <section class="cv-section">
-        <h2 class="cv-section-title font-mono">Practical Experience</h2>
+        <h2 class="cv-section-title font-mono">Projects &amp; Labs</h2>
 
         <div class="cv-item">
           <div class="cv-item-header">
@@ -315,7 +297,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Node.js · Express · MySQL · Degree Project</div>
           <div class="cv-item-desc">
-            Full-stack application with defensive security built-in from the design phase: XSS and SQL injection prevention via parameterized queries and input sanitization, CSRF protection with tokens, rate limiting (200 req/15min), hardened HTTP headers with Helmet.js, authentication with Passport.js and bcryptjs, secure sessions with express-session on MySQL.
+            MVC web app with security by design: parameterized queries against SQLi, XSS sanitization, CSRF tokens, rate limiting, hardened headers with Helmet.js, and authentication with Passport.js + bcrypt.
           </div>
           <div class="cv-tags">
             <span class="cv-tag">Helmet.js</span><span class="cv-tag">CSRF</span><span class="cv-tag">Rate Limiting</span><span class="cv-tag">XSS Prevention</span><span class="cv-tag">SQLi Prevention</span><span class="cv-tag">bcryptjs</span><span class="cv-tag">Passport.js</span>
@@ -329,7 +311,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Bash · Nmap · Red Team Automation</div>
           <div class="cv-item-desc">
-            Bash script automating 2-phase Nmap scanning: fast port discovery (-p- --min-rate 5000) followed by detailed scanning (-sCV) on discovered ports. Supports rate options, custom ports, slow mode, UDP, IPv6, and timestamped output.
+            Automates recon: fast discovery of all TCP ports followed by a detailed (-sCV) scan of open ones only. Supports UDP, IPv6, stealth mode, and timestamped output.
           </div>
         </div>
 
@@ -340,7 +322,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Python · OWASP Top 10 · Automation</div>
           <div class="cv-item-desc">
-            Python CLI tool with 5 automated detection modules: security headers (HSTS, CSP, X-Frame-Options), reflected XSS, error-based SQLi (MySQL/PostgreSQL/Oracle/SQLite signatures), open redirect, and directory listing. JSON report output.
+            CLI with 5 modules: security headers, reflected XSS, error-based SQLi, open redirect, and directory listing. JSON report by severity.
           </div>
         </div>
 
@@ -351,7 +333,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-item-sub font-mono">Python · Web Recon · Multi-threading</div>
           <div class="cv-item-desc">
-            Modular web content discovery tool with 4 modules: directory brute-force, subdomain enumeration, JavaScript endpoint scraping, and multi-threaded BFS recursive crawler. Extensible architecture with independent module system.
+            Multi-threaded web recon: path brute-forcing, subdomain enumeration, JavaScript endpoint extraction, and BFS crawler.
           </div>
         </div>
       </section>
@@ -361,24 +343,20 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
         <h2 class="cv-section-title font-mono">Technical Skills</h2>
         <div class="cv-skills-grid">
           <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Offensive</h3>
-            <p class="cv-text cv-text--sm">Nmap, SQLMap, John/Hashcat, Evil-WinRM, Netcat, Reverse Shells, Burp Suite, Metasploit</p>
+            <h3 class="cv-skill-cat font-mono">Defensive</h3>
+            <p class="cv-text cv-text--sm">OWASP Top 10, HTTP Header Hardening, CSRF Protection, Rate Limiting, XSS/SQLi Prevention, Input Sanitization, Helmet.js</p>
           </div>
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Infrastructure &amp; Networking</h3>
-            <p class="cv-text cv-text--sm">TCP/IP fundamentals, DNS, DHCP, Subnetting, Windows (basic support &amp; administration), Linux (terminal), Virtualization (VirtualBox/VMware), Backups, VPN</p>
+            <p class="cv-text cv-text--sm">TCP/IP, DNS, DHCP, Subnetting, Windows (basic support &amp; administration), Linux (terminal), Virtualization (VirtualBox/VMware), Wireshark/TShark</p>
           </div>
           <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Reconnaissance</h3>
-            <p class="cv-text cv-text--sm">Gobuster/Dirbuster, Wireshark/TShark, SMB/FTP/Redis Enumeration, Subdomain Discovery, JS Scraping, Web Crawling</p>
+            <h3 class="cv-skill-cat font-mono">Pentesting &amp; Recon</h3>
+            <p class="cv-text cv-text--sm">Nmap, Gobuster, SQLMap, John/Hashcat, Evil-WinRM, Netcat, SMB/FTP/Redis enumeration</p>
           </div>
           <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Development</h3>
-            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (basic), REST APIs</p>
-          </div>
-          <div class="cv-skill-group">
-            <h3 class="cv-skill-cat font-mono">Defensive</h3>
-            <p class="cv-text cv-text--sm">HTTP Header Hardening, CSRF Protection, Rate Limiting, XSS/SQLi Prevention, Input Sanitization, Helmet.js, OWASP Top 10</p>
+            <h3 class="cv-skill-cat font-mono">Development &amp; Automation</h3>
+            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (basic)</p>
           </div>
         </div>
       </section>
@@ -394,8 +372,8 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       </section>
 
       <!-- Availability -->
-      <section class="cv-section cv-availability">
-        <p class="cv-text"><strong>Availability:</strong> Immediate · Open to junior IT and cybersecurity roles, on-site and remote.</p>
+      <section class="cv-section cv-availability cv-print-hide">
+        <p class="cv-text"><strong>Availability:</strong> Immediate · Junior SOC, Blue Team or IT support roles · On-site (Bucaramanga) or remote.</p>
       </section>
 
     </div>
@@ -545,15 +523,37 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
   }
 
   @media print {
-    @page { margin: 1.5cm; size: A4; }
+    @page { margin: 0.9cm 1.2cm; size: A4; }
 
     :global(body) { background: #fff !important; color: #000 !important; }
+    :global(.skip-link) { display: none !important; }
+
+    /* Compactar para que el CV quepa en una página (formato ATS) */
+    .cv-tags { display: none !important; }
+    .cv-header { margin-bottom: 0.8rem !important; padding-bottom: 0.6rem !important; }
+    .cv-photo { width: 78px !important; height: 78px !important; }
+    .cv-section { margin-bottom: 0.55rem !important; }
+    .cv-section-title { margin-bottom: 0.35rem !important; }
+    .cv-item { margin-bottom: 0.4rem !important; }
+    .cv-text { font-size: 0.72rem !important; line-height: 1.36 !important; }
+    .cv-text--sm, .cv-item-desc { font-size: 0.68rem !important; line-height: 1.32 !important; margin-top: 0.05rem !important; }
+    .cv-item-sub { margin-top: 0 !important; }
+    .cv-section-title { padding-bottom: 0.15rem !important; }
+    .cv-item-title { font-size: 0.8rem !important; }
+    .cv-item-sub { font-size: 0.66rem !important; }
+    .cv-skills-grid { gap: 0.2rem 1rem !important; }
+    .cv-skill-group { padding: 0.1rem 0 !important; }
+    .cv-availability { margin-top: 0.4rem !important; padding: 0.4rem 0.7rem !important; }
+    .cv-contact { margin-top: 0.25rem !important; font-size: 0.62rem !important; gap: 0.15rem 0.3rem !important; }
+    .cv-name { font-size: 1.25rem !important; }
+    .cv-title { font-size: 0.66rem !important; }
+    .cv-lang-row { font-size: 0.74rem !important; }
     :global(#sidebar) { display: none !important; }
     :global(#particle-canvas) { display: none !important; }
     :global(.grid-bg) { background: none !important; }
     :global(.page-content) { margin-left: 0 !important; padding: 0 !important; }
 
-    .no-print { display: none !important; }
+    .no-print, .cv-print-hide { display: none !important; }
 
     .cv-page { padding: 0 !important; max-width: none !important; margin: 0 !important; }
     .cv-card {
