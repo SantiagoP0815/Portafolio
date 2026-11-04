@@ -7,6 +7,7 @@ herramientas: ["nmap", "smbclient", "mssqlclient.py", "evil-winrm"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold", "Escalada de Privilegios"]
 ---
 
@@ -87,7 +88,7 @@ EXEC xp_cmdshell 'dir C:\Users\sql_svc\Desktop';
 -- user.txt detectado
 
 EXEC xp_cmdshell 'type C:\Users\sql_svc\Desktop\user.txt';
--- 3e7b102e78218e935bf3f4951fec21a3
+-- [flag de usuario — omitida]
 ```
 
 ## Escalada de Privilegios
@@ -123,7 +124,7 @@ type C:\Users\Administrator\Desktop\root.txt
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| User | `3e7b102e78218e935bf3f4951fec21a3` |
-| Root | `b91ccec3305e98240082d4474b848528` |
+| Flag | Estado |
+|------|--------|
+| User | ✅ obtenida |
+| Root | ✅ obtenida |

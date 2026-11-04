@@ -21,7 +21,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
 
 <Layout
   title="Proyectos | Carlos Santiago Patiño Reyes"
-  description="Proyectos de ciberseguridad y desarrollo: honeypots, herramientas ofensivas, aplicaciones seguras y más."
+  description="Proyectos de ciberseguridad y desarrollo: herramientas de reconocimiento y escaneo, y aplicaciones web con seguridad integrada."
 >
   <div class="page-wrapper">
 
@@ -37,7 +37,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
       </h1>
       <p class="page-subtitle">
         Herramientas de seguridad, aplicaciones y scripts desarrollados con
-        seguridad como principio central — desde honeypots hasta plataformas full-stack seguras.
+        seguridad como principio central — desde herramientas de reconocimiento hasta aplicaciones full-stack seguras.
       </p>
     </header>
 
@@ -79,6 +79,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
             <button
               class={`filter-btn font-mono ${c === 'todas' ? 'filter-btn-active' : ''}`}
               data-cat={c}
+              aria-pressed={c === 'todas' ? 'true' : 'false'}
               id={`cat-${c}`}
             >
               {c}
@@ -95,6 +96,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
             <button
               class={`filter-btn font-mono ${e === 'todos' ? 'filter-btn-est-active' : ''}`}
               data-est={e}
+              aria-pressed={e === 'todos' ? 'true' : 'false'}
               id={`est-${e}`}
             >
               {e}
@@ -113,7 +115,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
           <input
             type="text"
             id="proy-search"
-            placeholder="nmap, python, JWT..."
+            placeholder="nmap, python, express..."
             class="search-input font-mono"
             aria-label="Buscar por herramienta o título"
           />
@@ -356,8 +358,12 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
     if (!btn?.dataset.cat) return;
     activeCat = btn.dataset.cat;
-    document.querySelectorAll<HTMLElement>('[data-cat]').forEach(b => b.classList.remove('filter-btn-active'));
+    document.querySelectorAll<HTMLElement>('#cat-filter .filter-btn').forEach(b => {
+      b.classList.remove('filter-btn-active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('filter-btn-active');
+    btn.setAttribute('aria-pressed', 'true');
     applyFilters();
   });
 
@@ -365,8 +371,12 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('.filter-btn');
     if (!btn?.dataset.est) return;
     activeEst = btn.dataset.est;
-    document.querySelectorAll<HTMLElement>('[data-est]').forEach(b => b.classList.remove('filter-btn-est-active'));
+    document.querySelectorAll<HTMLElement>('#est-filter .filter-btn').forEach(b => {
+      b.classList.remove('filter-btn-est-active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('filter-btn-est-active');
+    btn.setAttribute('aria-pressed', 'true');
     applyFilters();
   });
 

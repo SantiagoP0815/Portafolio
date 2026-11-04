@@ -14,7 +14,7 @@ interface Props {
 
 const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha, slug, fases = [] } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'short', day: 'numeric' });
+const dateStr = fecha.toLocaleDateString('es-CO', { timeZone: 'UTC', year: 'numeric', month: 'short', day: 'numeric' });
 
 const diffConfig: Record<string, { cls: string; label: string; dot: string }> = {
   easy:   { cls: 'diff-easy',   label: 'EASY',   dot: '#4ade80' },
@@ -32,7 +32,7 @@ const platformMeta: Record<string, { icon: string; color: string }> = {
 };
 const plat = platformMeta[plataforma] ?? { icon: '⚡', color: '#22d3ee' };
 
-const phases = fases.length ? fases : ['Exploitation'];
+const phases = fases.length ? fases : ['Explotación'];
 const MAX_TOOLS_DISPLAY = 5;
 ---
 

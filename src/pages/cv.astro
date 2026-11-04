@@ -7,8 +7,12 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const allWriteups = await getCollection('writeups');
 const allProjects = await getCollection('projects');
 const sortedWriteups = allWriteups.sort((a, b) => b.data.fecha.getTime() - a.data.fecha.getTime());
-const machineNames = sortedWriteups.map(w => w.data.titulo.replace(/\.md$/, '')).join(', ');
-const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
+const spMachines      = sortedWriteups.filter(w => w.data.startingPoint).map(w => w.data.titulo);
+const retiredMachines = sortedWriteups.filter(w => !w.data.startingPoint).map(w => w.data.titulo);
+const spCount      = spMachines.length;
+const retiredCount = retiredMachines.length;
+const retiredEs = `${retiredCount} ${retiredCount === 1 ? 'máquina retirada' : 'máquinas retiradas'}`;
+const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'retired machines'}`;
 ---
 
 <Layout
@@ -43,11 +47,11 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
           <div class="cv-contact font-mono">
             <span>Bucaramanga, Colombia</span>
             <span class="cv-contact-sep">|</span>
-            <span>santiago.p.0815@gmail.com</span>
+            <a class="cv-contact-link" href="mailto:santiago.p.0815@gmail.com">santiago.p.0815@gmail.com</a>
             <span class="cv-contact-sep">|</span>
-            <span>github.com/SantiagoP0815</span>
+            <a class="cv-contact-link" href="https://github.com/SantiagoP0815" target="_blank" rel="noopener noreferrer">github.com/SantiagoP0815</a>
             <span class="cv-contact-sep">|</span>
-            <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+            <a class="cv-contact-link" href="https://linkedin.com/in/carlos-santiago-patino-reyes" target="_blank" rel="noopener noreferrer">linkedin.com/in/carlos-santiago-patino-reyes</a>
             <span class="cv-contact-sep">|</span>
             <a class="cv-contact-link" href="https://SantiagoP0815.github.io/Portafolio" target="_blank" rel="noopener noreferrer">Portafolio: SantiagoP0815.github.io/Portafolio</a>
           </div>
@@ -59,7 +63,7 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Resumen Profesional</h2>
         <p class="cv-text">
-          Ingeniero de Sistemas e Informática graduado de la Universidad Pontificia Bolivariana — Seccional Bucaramanga, con formación dual en ciberseguridad ofensiva y defensiva y fundamentos sólidos en redes, sistemas operativos y soporte TI. Experiencia práctica: {allWriteups.length} máquinas resueltas en HackTheBox —reconocimiento, explotación de servicios y escalada de privilegios— documentadas con writeups técnicos, y desarrollo seguro de aplicaciones web (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) como proyecto de grado, además de herramientas propias de análisis de vulnerabilidades. Busco mi primera oportunidad profesional en un rol junior de TI o ciberseguridad —soporte técnico, SOC, Blue Team o AppSec— donde pueda aplicar mi base técnica, aprender de un equipo real y aportar desde el primer día.
+          Ingeniero de Sistemas e Informática graduado de la Universidad Pontificia Bolivariana — Seccional Bucaramanga, con formación dual en ciberseguridad ofensiva y defensiva y fundamentos sólidos en redes, sistemas operativos y soporte TI. Experiencia práctica: track Starting Point de HackTheBox completado ({spCount} máquinas) y {retiredEs} —reconocimiento, explotación de servicios y escalada de privilegios— documentadas con writeups técnicos, y desarrollo seguro de aplicaciones web (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) como proyecto de grado, además de herramientas propias de análisis de vulnerabilidades. Busco mi primera oportunidad profesional en un rol junior de TI o ciberseguridad —soporte técnico, SOC, Blue Team o AppSec— donde pueda aplicar mi base técnica, aprender de un equipo real y aportar desde el primer día.
         </p>
       </section>
 
@@ -110,12 +114,12 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
 
         <div class="cv-item">
           <div class="cv-item-header">
-            <span class="cv-item-title">HackTheBox — {allWriteups.length} Máquinas Resueltas</span>
+            <span class="cv-item-title">HackTheBox — Starting Point ({spCount}) + {retiredEs}</span>
             <span class="cv-item-date font-mono">2026</span>
           </div>
-          <div class="cv-item-sub font-mono">Writeups técnicos con metodología OSCP-style</div>
+          <div class="cv-item-sub font-mono">Writeups técnicos: reconocimiento, foothold, explotación y escalada</div>
           <div class="cv-item-desc">
-            Máquinas completadas: {machineNames}. Documentación completa con fases de reconocimiento, foothold, explotación y escalada de privilegios.
+            Starting Point (Tiers 0–2): {spMachines.join(', ')}.{retiredCount > 0 && ` Retiradas: ${retiredMachines.join(', ')}.`}
           </div>
           <div class="cv-tags">
             <span class="cv-tag">Nmap</span><span class="cv-tag">Gobuster</span><span class="cv-tag">SQLMap</span><span class="cv-tag">John/Hashcat</span><span class="cv-tag">Evil-WinRM</span><span class="cv-tag">Wireshark</span><span class="cv-tag">SMB</span><span class="cv-tag">FTP</span><span class="cv-tag">Redis</span><span class="cv-tag">Responder</span>
@@ -225,11 +229,11 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
           <div class="cv-contact font-mono">
             <span>Bucaramanga, Colombia</span>
             <span class="cv-contact-sep">|</span>
-            <span>santiago.p.0815@gmail.com</span>
+            <a class="cv-contact-link" href="mailto:santiago.p.0815@gmail.com">santiago.p.0815@gmail.com</a>
             <span class="cv-contact-sep">|</span>
-            <span>github.com/SantiagoP0815</span>
+            <a class="cv-contact-link" href="https://github.com/SantiagoP0815" target="_blank" rel="noopener noreferrer">github.com/SantiagoP0815</a>
             <span class="cv-contact-sep">|</span>
-            <span>linkedin.com/in/carlos-santiago-patino-reyes</span>
+            <a class="cv-contact-link" href="https://linkedin.com/in/carlos-santiago-patino-reyes" target="_blank" rel="noopener noreferrer">linkedin.com/in/carlos-santiago-patino-reyes</a>
             <span class="cv-contact-sep">|</span>
             <a class="cv-contact-link" href="https://SantiagoP0815.github.io/Portafolio" target="_blank" rel="noopener noreferrer">Portfolio: SantiagoP0815.github.io/Portafolio</a>
           </div>
@@ -241,7 +245,7 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Professional Summary</h2>
         <p class="cv-text">
-          Systems Engineer graduated from Universidad Pontificia Bolivariana — Bucaramanga, with dual training in offensive and defensive cybersecurity and solid fundamentals in networking, operating systems, and IT support. Hands-on experience: {allWriteups.length} HackTheBox machines solved —reconnaissance, service exploitation, and privilege escalation— documented with technical writeups, plus secure web development (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) as a degree project and custom vulnerability assessment tools. Seeking my first professional opportunity in a junior IT or cybersecurity role —technical support, SOC, Blue Team, or AppSec— where I can apply my technical foundation, learn from a real team, and contribute from day one.
+          Systems Engineer graduated from Universidad Pontificia Bolivariana — Bucaramanga, with dual training in offensive and defensive cybersecurity and solid fundamentals in networking, operating systems, and IT support. Hands-on experience: completed the HackTheBox Starting Point track ({spCount} machines) plus {retiredEn} —reconnaissance, service exploitation, and privilege escalation— documented with technical writeups, plus secure web development (CSRF, XSS/SQLi prevention, rate limiting, Helmet.js) as a degree project and custom vulnerability assessment tools. Seeking my first professional opportunity in a junior IT or cybersecurity role —technical support, SOC, Blue Team, or AppSec— where I can apply my technical foundation, learn from a real team, and contribute from day one.
         </p>
       </section>
 
@@ -292,12 +296,12 @@ const htbCount = allWriteups.filter(w => w.data.categoria === 'htb').length;
 
         <div class="cv-item">
           <div class="cv-item-header">
-            <span class="cv-item-title">HackTheBox — {allWriteups.length} Machines Solved</span>
+            <span class="cv-item-title">HackTheBox — Starting Point ({spCount}) + {retiredEn}</span>
             <span class="cv-item-date font-mono">2026</span>
           </div>
-          <div class="cv-item-sub font-mono">Technical writeups with OSCP-style methodology</div>
+          <div class="cv-item-sub font-mono">Technical writeups: reconnaissance, foothold, exploitation and privilege escalation</div>
           <div class="cv-item-desc">
-            Completed machines: {machineNames}. Full documentation covering reconnaissance, foothold, exploitation, and privilege escalation phases.
+            Starting Point (Tiers 0–2): {spMachines.join(', ')}.{retiredCount > 0 && ` Retired: ${retiredMachines.join(', ')}.`}
           </div>
           <div class="cv-tags">
             <span class="cv-tag">Nmap</span><span class="cv-tag">Gobuster</span><span class="cv-tag">SQLMap</span><span class="cv-tag">John/Hashcat</span><span class="cv-tag">Evil-WinRM</span><span class="cv-tag">Wireshark</span><span class="cv-tag">SMB</span><span class="cv-tag">FTP</span><span class="cv-tag">Redis</span><span class="cv-tag">Responder</span>

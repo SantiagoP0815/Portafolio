@@ -7,6 +7,7 @@ herramientas: ["nmap", "redis-cli"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold"]
 ---
 
@@ -55,6 +56,6 @@ GET flag
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `03e1d2b376c37ab3f5319922053953eb` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |

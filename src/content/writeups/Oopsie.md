@@ -7,6 +7,7 @@ herramientas: ["nmap", "gobuster", "curl", "nc"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold", "Escalada de Privilegios"]
 ---
 
@@ -127,7 +128,7 @@ Root flag expuesta.
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| User | `f2c74ee8db7983851ab2a96a44eb7981` |
-| Root | `af13b0bee69f8a877c3faf667f7beacf` |
+| Flag | Estado |
+|------|--------|
+| User | ✅ obtenida |
+| Root | ✅ obtenida |

@@ -7,6 +7,7 @@ herramientas: ["nmap", "smbclient"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold"]
 ---
 
@@ -43,6 +44,6 @@ smb: \> get flag.txt
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `5f61c10dffbc77a704d76016a22f1664` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |

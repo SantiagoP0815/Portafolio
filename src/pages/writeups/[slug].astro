@@ -15,7 +15,7 @@ const { Content } = await render(writeup);
 const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha, fases } = writeup.data;
 const base = (import.meta.env.BASE_URL as string).replace(/\/$/, '');
 
-const dateStr = fecha.toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric' });
+const dateStr = fecha.toLocaleDateString('es-CO', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
 
 const diffConfig: Record<string, { cls: string; color: string; label: string }> = {
   easy:   { cls: 'diff-easy',   color: '#4ade80', label: 'EASY'   },
@@ -34,7 +34,7 @@ const platformMeta: Record<string, { icon: string; color: string; accentColor: s
 const diff = diffConfig[dificultad] ?? diffConfig.easy;
 const plat = platformMeta[plataforma] ?? { icon: '⚡', color: '#22d3ee', accentColor: '#22d3ee' };
 
-const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'PrivEsc'];
+const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escalada de Privilegios'];
 ---
 
 <Layout title={`${titulo} | Carlos Santiago Patiño Reyes`} description={descripcion}>
@@ -166,7 +166,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'PrivE
       </aside>
 
       <!-- ── Main content ───────────────────────────────────── -->
-      <main class="main-content animate-fade-in-up">
+      <div class="main-content animate-fade-in-up">
         <div class="content-chrome">
           <div class="chrome-dots-inline">
             <span class="chrome-dot-s" style="background:#ff5f57"></span>
@@ -182,7 +182,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'PrivE
         <article class="prose-cyber content-body">
           <Content />
         </article>
-      </main>
+      </div>
     </div>
 
   </div>

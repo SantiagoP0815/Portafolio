@@ -7,6 +7,7 @@ herramientas: ["nmap", "mysql"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold"]
 ---
 
@@ -80,13 +81,13 @@ Output:
 |  2 | security              | default                          |
 |  3 | auto_logon            | false                            |
 |  4 | max_size              | 2M                               |
-|  5 | flag                  | 7b4bec00d1a39e3dd4e021ec3d915da8 |
+|  5 | flag                  | [omitida]                        |
 |  6 | enable_uploads        | false                            |
 |  7 | authentication_method | radius                           |
 +----+-----------------------+----------------------------------+
 ```
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `7b4bec00d1a39e3dd4e021ec3d915da8` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |

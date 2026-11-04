@@ -85,7 +85,7 @@ cat /root/root.txt
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| User | `470087221128584d9f720ae7a1bcc0f8` |
-| Root | `4f28ccb45b74546eb6e26e0cf336566b` |
+| Flag | Estado |
+|------|--------|
+| User | ✅ obtenida |
+| Root | ✅ obtenida |

@@ -4,22 +4,23 @@ Portafolio personal de **Carlos Santiago Patiño Reyes** — Ingeniero de Sistem
 
 ## Stack
 
-- [Astro 6](https://astro.build) — Static site generation
+- [Astro 6](https://astro.build) — Static site generation (+ `@astrojs/sitemap`)
 - [Tailwind CSS v4](https://tailwindcss.com) — Estilos utilitarios
 - Tipado completo con TypeScript strict
+- Fuentes autoalojadas (Inter y JetBrains Mono vía Fontsource)
 
 ## Estructura
 
 ```
 /
 ├── src/
-│   ├── components/    # ProjectCard, WriteupCard, Sidebar, Footer
+│   ├── components/    # ProjectCard, WriteupCard, Sidebar
 │   ├── content/       # Colecciones: projects/ + writeups/ (Markdown)
 │   ├── layouts/       # Layout.astro (shell común)
-│   ├── pages/         # Rutas: index, /projects, /writeups, [slug]
+│   ├── pages/         # Rutas: index, /cv, /projects, /writeups, [slug], 404
 │   └── styles/        # global.css (tema cyberpunk + utilidades)
-├── public/            # favicon.svg, og-image.png
-└── astro.config.mjs   # Config: site, base, Tailwind Vite plugin
+├── public/            # favicon.svg, og-image.png, perfil.jpg
+└── astro.config.mjs   # Config: site, base, Tailwind, sitemap
 ```
 
 ## Comandos
@@ -49,8 +50,11 @@ Herramientas y aplicaciones de ciberseguridad:
 
 ### Writeups (`src/content/writeups/`)
 
-Documentación técnica de máquinas resueltas en HackTheBox, TryHackMe y CTFs.
-Incluye reconocimiento, explotación y escalada de privilegios con enfoque OSCP-style.
+Documentación técnica de máquinas de HackTheBox (track Starting Point + máquinas retiradas):
+reconocimiento, explotación y escalada de privilegios. Las flags no se publican.
+
+Marca `startingPoint: true` en el frontmatter de las máquinas del track Starting Point;
+los conteos de la portada y el CV se calculan a partir de ese campo.
 
 ---
 

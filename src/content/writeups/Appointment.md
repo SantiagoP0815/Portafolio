@@ -7,6 +7,7 @@ herramientas: ["nmap", "SQL injection"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold"]
 ---
 
@@ -47,6 +48,6 @@ El `AND password=...` queda comentado. El servidor autentica solo por username, 
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `e3d0796d002a446c0e622226f42e9672` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |

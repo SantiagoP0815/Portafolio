@@ -6,6 +6,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const allProjects = await getCollection('projects');
 const allWriteups  = await getCollection('writeups');
+const spCount      = allWriteups.filter(w => w.data.startingPoint).length;
+const retiredCount = allWriteups.length - spCount;
+const retiredLabel = `${retiredCount} máquina${retiredCount === 1 ? '' : 's'} retirada${retiredCount === 1 ? '' : 's'}`;
 
 const skillCategories = [
   {
@@ -88,6 +91,12 @@ const objetivos = [
               CV
             </a>
             <div class="profile-social-row">
+            <a href="mailto:santiago.p.0815@gmail.com" class="btn-primary">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
+              </svg>
+              Contacto
+            </a>
             <a href="https://github.com/SantiagoP0815" target="_blank" rel="noopener noreferrer" class="btn-ghost">
               <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
@@ -109,12 +118,12 @@ const objetivos = [
           <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> sobre_mí</h2>
           <p class="bio-text">
             Ingeniero de Sistemas e Informática egresado de la <strong>Universidad Pontificia Bolivariana — Seccional Bucaramanga</strong>, con formación dual en ciberseguridad ofensiva y defensiva. Combino pentesting estructurado (OWASP Top 10) con hardening de aplicaciones web, aplicando controles como CSRF protection, XSS/SQLi prevention y rate limiting.
-            Cuento con <strong>{allWriteups.length} máquinas resueltas</strong> en HackTheBox documentadas con writeups técnicos y <strong>{allProjects.length} proyectos</strong> de seguridad publicados en GitHub, incluyendo un gestor de CVs con seguridad integrada como proyecto de grado.
+            Completé el track <strong>Starting Point de HackTheBox</strong> ({spCount} máquinas){retiredCount > 0 && <> y {retiredLabel}</>}, todo documentado con writeups técnicos, y tengo <strong>{allProjects.length} proyectos</strong> de seguridad publicados en GitHub, incluyendo un gestor de CVs con seguridad integrada como proyecto de grado.
             Busco mi primera oportunidad profesional — idealmente en roles junior de TI, soporte técnico o equipos de ciberseguridad (Blue Team, SOC o AppSec) — donde pueda aplicar mi base técnica, seguir aprendiendo y contribuir a la protección de infraestructuras.
           </p>
           <div class="info-grid">
             <div class="info-card card-cyber info-card--green">
-              <span class="info-card-icon">💼</span>
+              <span class="info-card-icon" aria-hidden="true">💼</span>
               <div class="info-card-body">
                 <span class="info-card-label font-mono">Estado</span>
                 <span class="info-card-value">DISPONIBLE</span>
@@ -122,23 +131,23 @@ const objetivos = [
               </div>
             </div>
             <div class="info-card card-cyber info-card--purple">
-              <span class="info-card-icon">⚔️</span>
+              <span class="info-card-icon" aria-hidden="true">⚔️</span>
               <div class="info-card-body">
                 <span class="info-card-label font-mono">CTF & Hacking</span>
                 <span class="info-card-value">{allWriteups.length} WRITEUPS</span>
-                <span class="info-card-sub font-mono">HackTheBox · Starting Point</span>
+                <span class="info-card-sub font-mono">HTB · Starting Point{retiredCount > 0 && ` + ${retiredCount} retirada${retiredCount === 1 ? '' : 's'}`}</span>
               </div>
             </div>
             <div class="info-card card-cyber info-card--cyan">
-              <span class="info-card-icon">🛠️</span>
+              <span class="info-card-icon" aria-hidden="true">🛠️</span>
               <div class="info-card-body">
                 <span class="info-card-label font-mono">Proyectos</span>
-                <span class="info-card-value">{allProjects.length} ACTIVOS</span>
+                <span class="info-card-value">{allProjects.length} PUBLICADOS</span>
                 <span class="info-card-sub font-mono">Seguridad & Desarrollo</span>
               </div>
             </div>
             <div class="info-card card-cyber info-card--purple">
-              <span class="info-card-icon">🇬🇧</span>
+              <span class="info-card-icon" aria-hidden="true">🇬🇧</span>
               <div class="info-card-body">
                 <span class="info-card-label font-mono">Inglés</span>
                 <span class="info-card-value">NIVEL B2</span>
@@ -146,7 +155,7 @@ const objetivos = [
               </div>
             </div>
             <div class="info-card card-cyber info-card--green">
-              <span class="info-card-icon">📍</span>
+              <span class="info-card-icon" aria-hidden="true">📍</span>
               <div class="info-card-body">
                 <span class="info-card-label font-mono">Ubicación</span>
                 <span class="info-card-value">Bucaramanga, Colombia</span>
@@ -163,7 +172,7 @@ const objetivos = [
             {skillCategories.map(cat => (
               <div class="skill-cat">
                 <h3 class={`skill-cat-title font-mono cat-${cat.color}`}>
-                  <span>{cat.icon}</span> {cat.titulo}
+                  <span aria-hidden="true">{cat.icon}</span> {cat.titulo}
                 </h3>
                 <div class="skills-wrap">
                   {cat.skills.map(s => (
@@ -201,7 +210,7 @@ const objetivos = [
           <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> títulos</h2>
           <div class="card-list">
             <div class="item-card card-cyber">
-              <div class="item-icon">🎓</div>
+              <div class="item-icon" aria-hidden="true">🎓</div>
               <div class="item-body">
                 <div class="item-name">Ingeniero de Sistemas e Informática</div>
                 <div class="item-inst font-mono">Universidad Pontificia Bolivariana</div>
@@ -210,7 +219,7 @@ const objetivos = [
               <span class="tag-badge tag-cyan item-tag">ing. sistemas</span>
             </div>
             <div class="item-card card-cyber">
-              <div class="item-icon">📋</div>
+              <div class="item-icon" aria-hidden="true">📋</div>
               <div class="item-body">
                 <div class="item-name">Proyecto de Grado — Sistema de Gestión de CVs</div>
                 <div class="item-inst font-mono">Node.js · Express · MySQL · Seguridad Integrada</div>
@@ -226,7 +235,7 @@ const objetivos = [
           <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> certificaciones</h2>
           <div class="card-list">
             <div class="item-card card-cyber">
-              <div class="item-icon">🏅</div>
+              <div class="item-icon" aria-hidden="true">🏅</div>
               <div class="item-body">
                 <div class="item-name">Bootcamp Ciberseguridad Nivel Intermedio</div>
                 <div class="item-inst font-mono">MINTIC · Talento Tech</div>
@@ -235,7 +244,7 @@ const objetivos = [
               <span class="tag-badge tag-green item-tag">completado</span>
             </div>
             <div class="item-card card-cyber">
-              <div class="item-icon">🎓</div>
+              <div class="item-icon" aria-hidden="true">🎓</div>
               <div class="item-body">
                 <div class="item-name">Fortinet NSE 1 · 2 · 3</div>
                 <div class="item-inst font-mono">Fortinet Training Institute</div>
@@ -251,7 +260,7 @@ const objetivos = [
           <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> áreas_de_interés</h2>
           <div class="card-list">
             <div class="item-card card-cyber">
-              <div class="item-icon">🛡️</div>
+              <div class="item-icon" aria-hidden="true">🛡️</div>
               <div class="item-body">
                 <div class="item-name">Blue Team &amp; Hardening</div>
                 <div class="item-meta font-mono">CSRF · XSS/SQLi Prevention · Rate Limiting · HTTP Headers</div>
@@ -259,7 +268,7 @@ const objetivos = [
               <span class="tag-badge tag-purple item-tag">defensivo</span>
             </div>
             <div class="item-card card-cyber">
-              <div class="item-icon">🖥️</div>
+              <div class="item-icon" aria-hidden="true">🖥️</div>
               <div class="item-body">
                 <div class="item-name">Pentesting Web</div>
                 <div class="item-meta font-mono">OWASP Top 10 · Burp Suite · SQLi · XSS · CSRF</div>
@@ -267,7 +276,7 @@ const objetivos = [
               <span class="tag-badge tag-cyan item-tag">ofensivo</span>
             </div>
             <div class="item-card card-cyber">
-              <div class="item-icon">🔍</div>
+              <div class="item-icon" aria-hidden="true">🔍</div>
               <div class="item-body">
                 <div class="item-name">Análisis de Vulnerabilidades</div>
                 <div class="item-meta font-mono">Escaneo automatizado · Revisión manual · Reportes</div>
@@ -275,7 +284,7 @@ const objetivos = [
               <span class="tag-badge tag-green item-tag">defensivo</span>
             </div>
             <div class="item-card card-cyber">
-              <div class="item-icon">🛠️</div>
+              <div class="item-icon" aria-hidden="true">🛠️</div>
               <div class="item-body">
                 <div class="item-name">Desarrollo de Herramientas de Seguridad</div>
                 <div class="item-meta font-mono">Python · Bash · Automatización de tareas</div>
@@ -290,7 +299,7 @@ const objetivos = [
           <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> idiomas</h2>
           <div class="card-list">
             <div class="item-card card-cyber">
-              <div class="item-icon">🇪🇸</div>
+              <div class="item-icon" aria-hidden="true">🇪🇸</div>
               <div class="item-body">
                 <div class="item-name">Español</div>
                 <div class="item-meta font-mono">Nativo</div>
@@ -298,7 +307,7 @@ const objetivos = [
               <span class="tag-badge tag-green item-tag">nativo</span>
             </div>
             <div class="item-card card-cyber">
-              <div class="item-icon">🇬🇧</div>
+              <div class="item-icon" aria-hidden="true">🇬🇧</div>
               <div class="item-body">
                 <div class="item-name">Inglés — B2</div>
                 <div class="item-meta font-mono">Lectura técnica fluida · Comunicación intermedia</div>
@@ -314,7 +323,7 @@ const objetivos = [
           <div class="card-list">
             {objetivos.map(obj => (
               <div class="item-card card-cyber">
-                <div class="item-icon">{obj.icon}</div>
+                <div class="item-icon" aria-hidden="true">{obj.icon}</div>
                 <div class="item-body">
                   <div class="item-name">{obj.titulo}</div>
                   <div class="item-meta font-mono">{obj.desc}</div>

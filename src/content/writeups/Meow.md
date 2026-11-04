@@ -7,6 +7,7 @@ herramientas: ["nmap", "telnet"]
 categoria: htb
 plataforma: HackTheBox
 completado: true
+startingPoint: true
 fases: ["Reconocimiento", "Foothold"]
 ---
 
@@ -44,6 +45,6 @@ cat flag.txt
 
 ## Flags
 
-| Flag | Hash |
-|------|------|
-| Root | `b40abdfe23665f766f9c61ecba8a4c19` |
+| Flag | Estado |
+|------|--------|
+| Root | ✅ obtenida |
