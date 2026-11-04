@@ -26,3 +26,6 @@ pnpm-debug.log*
 # editor / tool configs
 .claude/
 .vscode/
+
+# repos de proyectos clonados localmente (cada uno tiene su propio git)
+proyectos/
