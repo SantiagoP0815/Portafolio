@@ -64,6 +64,7 @@ const ogImageUrl = new URL(`${base}/og-image.png`, Astro.site).href;
   if (!ctx) return;
 
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
   const COLOR = '34, 211, 238';
   // Las líneas se agrupan en pocos niveles de opacidad para trazarlas en lote
   // (un stroke() por nivel en vez de uno por línea).
@@ -82,23 +83,31 @@ const ogImageUrl = new URL(`${base}/og-image.png`, Astro.site).href;
   }
 
   function resize() {
+    const newW = window.innerWidth;
+    // En pantallas táctiles se usa la altura completa de la pantalla para cubrir
+    // de entrada el área que queda libre cuando se oculta la barra de direcciones.
+    const newH = isTouch ? Math.max(window.innerHeight, window.screen.height) : window.innerHeight;
+    const widthChanged = newW !== w;
+
+    // En móvil, la barra de direcciones aparece/desaparece al hacer scroll y
+    // cambia solo la altura. El canvas se dimensiona a la mayor altura vista,
+    // así que esos cambios no deben redimensionar ni mover nada.
+    if (!widthChanged && newH <= h) return;
+
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const prevW = w, prevH = h;
-    w = window.innerWidth;
-    h = window.innerHeight;
+    w = newW;
+    h = widthChanged ? newH : Math.max(h, newH);
     canvas!.width = Math.round(w * dpr);
     canvas!.height = Math.round(h * dpr);
     canvas!.style.width = `${w}px`;
     canvas!.style.height = `${h}px`;
     ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-    const prevCount = count;
-    configure();
-    if (count !== prevCount || particles.length === 0) {
+    // Solo se regeneran las partículas cuando cambia el ancho
+    // (rotación de pantalla, ventana de escritorio redimensionada).
+    if (widthChanged || particles.length === 0) {
+      configure();
       initParticles();
-    } else if (prevW && prevH) {
-      // Reescalar posiciones en vez de regenerar (p. ej. barra de URL en móvil)
-      for (const p of particles) { p.x *= w / prevW; p.y *= h / prevH; }
     }
     if (reducedMotion.matches) draw();
   }
