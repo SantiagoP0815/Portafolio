@@ -10,14 +10,17 @@ interface Props {
   slug: string;
   github?: string;
   demo?: string;
+  /** h2 en la página de proyectos; h3 cuando la tarjeta va dentro de una sección con h2 */
+  headingLevel?: 'h2' | 'h3';
 }
 
-const { titulo, descripcion, herramientas, categoria, fecha, estado, slug, github, demo } = Astro.props;
+const { titulo, descripcion, herramientas, categoria, fecha, estado, slug, github, demo, headingLevel = 'h3' } = Astro.props;
+const Heading = headingLevel;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 const categoriaConfig: Record<string, { label: string; cls: string; accentColor: string; icon: string }> = {
   web:        { label: 'Web',        cls: 'tag-cyan',   accentColor: '#22d3ee', icon: '◈' },
-  red:        { label: 'Red Team',   cls: 'tag-green',  accentColor: '#4ade80', icon: '⚔' },
+  red:        { label: 'Recon',      cls: 'tag-green',  accentColor: '#4ade80', icon: '⚔' },
   forense:    { label: 'Forense',    cls: 'tag-purple', accentColor: '#a78bfa', icon: '🔬' },
   malware:    { label: 'Malware',    cls: 'tag-pink',   accentColor: '#f472b6', icon: '☣' },
   ctf:        { label: 'CTF',        cls: 'tag-orange', accentColor: '#fb923c', icon: '⚑' },
@@ -40,9 +43,9 @@ const MAX_TOOLS_DISPLAY = 6;
 <article class="pcard" style={`--accent: ${cat.accentColor}`}>
   <!-- Terminal chrome bar -->
   <div class="pcard-chrome">
-    <span class="chrome-dot" style="background:#ff5f57"></span>
-    <span class="chrome-dot" style="background:#ffbd2e"></span>
-    <span class="chrome-dot" style="background:#28ca41"></span>
+    <span class="chrome-dot" style="background:#ff5f57" aria-hidden="true"></span>
+    <span class="chrome-dot" style="background:#ffbd2e" aria-hidden="true"></span>
+    <span class="chrome-dot" style="background:#28ca41" aria-hidden="true"></span>
     <span class="chrome-title font-mono">{cat.label} · {est.label}</span>
     <span class="chrome-right font-mono">
       <span class="status-dot-terminal" style={`background: ${est.color}; box-shadow: 0 0 6px ${est.color}`} class:list={[{ 'pulse-anim': est.pulse }]}></span>
@@ -52,9 +55,9 @@ const MAX_TOOLS_DISPLAY = 6;
   <div class="pcard-body">
     <!-- Shell prompt title -->
     <div class="pcard-prompt">
-      <span class="prompt-symbol font-mono" style="color: var(--accent);">$</span>
-      <span class="prompt-cat font-mono" style="color: var(--color-text-muted);">cat</span>
-      <h3 class="pcard-title font-mono">{titulo}</h3>
+      <span class="prompt-symbol font-mono" style="color: var(--accent);" aria-hidden="true">$</span>
+      <span class="prompt-cat font-mono" aria-hidden="true">cat</span>
+      <Heading class="pcard-title font-mono">{titulo}</Heading>
     </div>
 
     <!-- Description as terminal output -->
@@ -66,8 +69,8 @@ const MAX_TOOLS_DISPLAY = 6;
     <!-- Tech Stack as terminal packages -->
     <div class="stack-section">
       <div class="stack-header font-mono">
-        <span class="stack-prompt" style="color: var(--accent);">$</span>
-        <span class="stack-label">apt install</span>
+        <span class="stack-prompt" style="color: var(--accent);" aria-hidden="true">$</span>
+        <span class="stack-label">cat stack.txt</span>
       </div>
       <div class="stack-pills">
         {herramientas.slice(0, MAX_TOOLS_DISPLAY).map((tool) => (
@@ -83,16 +86,16 @@ const MAX_TOOLS_DISPLAY = 6;
     <div class="pcard-footer">
       <div class="pcard-actions">
         {github && (
-          <a href={github} target="_blank" rel="noopener noreferrer" class="action-btn" aria-label="Ver código en GitHub">
-            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24">
+          <a href={github} target="_blank" rel="noopener noreferrer" class="action-btn action-raise" aria-label={`Ver código de ${titulo} en GitHub (abre en otra pestaña)`}>
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
             </svg>
             gh clone
           </a>
         )}
         {demo && (
-          <a href={demo} target="_blank" rel="noopener noreferrer" class="action-btn" aria-label="Ver demo">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <a href={demo} target="_blank" rel="noopener noreferrer" class="action-btn action-raise" aria-label={`Ver demo de ${titulo} (abre en otra pestaña)`}>
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
             </svg>
             open demo
@@ -116,13 +119,18 @@ const MAX_TOOLS_DISPLAY = 6;
     display: flex;
     flex-direction: column;
     position: relative;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    transition: border-color var(--dur-base) var(--ease-out), box-shadow var(--dur-base) var(--ease-out), transform var(--dur-base) var(--ease-out);
   }
-  .pcard:hover {
-    border-color: var(--accent);
-    box-shadow: 0 8px 40px color-mix(in srgb, var(--accent) 12%, transparent);
-    transform: translateY(-3px);
+  /* Elevación solo con ratón: en pantallas táctiles el hover se queda "pegado" */
+  @media (hover: hover) and (pointer: fine) {
+    .pcard:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 40px color-mix(in srgb, var(--accent) 12%, transparent);
+      transform: translateY(-3px);
+    }
   }
+  .pcard:active { transform: translateY(0) scale(0.99); }
+  .pcard:has(.action-primary:focus-visible) { border-color: var(--accent); }
   .pcard::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
@@ -130,7 +138,7 @@ const MAX_TOOLS_DISPLAY = 6;
     opacity: 0;
     transition: opacity 0.25s ease;
   }
-  .pcard:hover::before { opacity: 0.6; }
+  @media (hover: hover) and (pointer: fine) { .pcard:hover::before { opacity: 0.6; } }
 
   /* ── Chrome bar ─────────────────────────────────────────────── */
   .pcard-chrome {
@@ -147,7 +155,7 @@ const MAX_TOOLS_DISPLAY = 6;
     flex-shrink: 0;
   }
   .chrome-title {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -198,9 +206,7 @@ const MAX_TOOLS_DISPLAY = 6;
     font-weight: 700;
     color: var(--color-text-primary);
     line-height: 1.35;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-wrap: balance;
   }
 
   /* ── Description ────────────────────────────────────────────── */
@@ -210,9 +216,8 @@ const MAX_TOOLS_DISPLAY = 6;
     gap: 0.35rem;
   }
   .desc-line--comment {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
-    opacity: 0.6;
   }
   .pcard-desc {
     font-family: var(--font-sans);
@@ -242,7 +247,7 @@ const MAX_TOOLS_DISPLAY = 6;
     gap: 0.35rem;
   }
   .stack-pill {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     padding: 0.18rem 0.55rem;
     background: rgba(34,211,238,0.04);
     border: 1px solid rgba(34,211,238,0.15);
@@ -256,7 +261,7 @@ const MAX_TOOLS_DISPLAY = 6;
     border-color: rgba(34,211,238,0.25);
   }
   .stack-more {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     padding: 0.18rem 0.4rem;
     align-self: center;
@@ -282,11 +287,12 @@ const MAX_TOOLS_DISPLAY = 6;
     padding: 0.3rem 0.65rem;
     border-radius: 0.35rem;
     font-family: var(--font-mono);
-    font-size: 0.7rem;
+    min-height: 32px;
+    font-size: 0.75rem;
     font-weight: 500;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
     white-space: nowrap;
     border: 1px solid var(--color-border-subtle);
     color: var(--color-text-muted);
@@ -296,11 +302,18 @@ const MAX_TOOLS_DISPLAY = 6;
     border-color: rgba(34,211,238,0.4);
     color: var(--color-neon-cyan);
   }
+  /* El enlace principal se estira sobre la tarjeta: si se escalara al pulsar,
+     su área se encogería bajo el cursor y el clic se perdería. */
+  .action-raise:active { transform: scale(0.96); }
   .action-primary {
     border: 1px solid var(--accent);
     color: var(--accent);
     margin-left: auto;
   }
+  /* Toda la tarjeta lleva al detalle: el enlace principal se estira sobre ella */
+  .action-primary::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+  .action-raise { position: relative; z-index: 2; }
+  .pcard:hover .action-primary,
   .action-primary:hover {
     background: var(--accent);
     color: var(--color-bg-primary);

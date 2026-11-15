@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 
 const allProjects = await getCollection('projects');
@@ -10,6 +11,7 @@ const projectsList = allProjects.sort(
 );
 
 const categorias = ['todas', ...new Set<string>(projectsList.map((p: CollectionEntry<'projects'>) => p.data.categoria))];
+const catLabel: Record<string, string> = { todas: 'todas', web: 'web', red: 'recon', forense: 'forense', malware: 'malware', ctf: 'ctf', desarrollo: 'dev' };
 const estados    = ['todos', ...new Set<string>(projectsList.map((p: CollectionEntry<'projects'>) => p.data.estado))];
 
 // Stats
@@ -30,7 +32,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
       <div class="header-terminal font-mono">
         <span class="hl-cyan">~/projects</span>
         <span class="hl-muted"> $ ls -la --sort=date</span>
-        <span class="cursor-blink"></span>
+        <span class="cursor-blink" aria-hidden="true"></span>
       </div>
       <h1 class="page-title font-mono">
         Proyectos<span class="neon-cyan">.</span>
@@ -82,7 +84,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
               aria-pressed={c === 'todas' ? 'true' : 'false'}
               id={`cat-${c}`}
             >
-              {c}
+              {catLabel[c] ?? c}
             </button>
           ))}
         </div>
@@ -113,7 +115,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
           </svg>
           <input
-            type="text"
+            type="search"
             id="proy-search"
             placeholder="nmap, python, express..."
             class="search-input font-mono"
@@ -144,14 +146,15 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
             slug={p.id}
             github={p.data.github}
             demo={p.data.demo}
+            headingLevel="h2"
           />
         </div>
       ))}
     </div>
 
     <!-- Empty state -->
-    <div id="empty-proy" class="empty-state" style="display:none">
-      <div class="empty-icon">⬡</div>
+    <div id="empty-proy" class="empty-state" style="display:none" role="status">
+      <div class="empty-icon"><Icon name="folder" size={36} /></div>
       <p class="font-mono empty-msg">No hay proyectos que coincidan con los filtros.</p>
     </div>
 
@@ -220,7 +223,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     line-height: 1;
   }
   .stat-label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -249,7 +252,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     gap: 0.4rem;
   }
   .filter-group-label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -266,11 +269,13 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     color: var(--color-text-muted);
     background: transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
+  .filter-btn { min-height: 32px; }
+  .filter-btn:active { transform: scale(0.96); }
   .filter-btn:hover,
   .filter-btn-active,
   .filter-btn-est-active {
@@ -289,6 +294,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
   }
   .search-input {
     width: 100%;
+    min-height: 40px;
     padding: 0.38rem 0.75rem 0.38rem 2rem;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-subtle);
@@ -300,7 +306,7 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     caret-color: var(--color-neon-cyan);
   }
   .search-input::placeholder { color: var(--color-text-muted); }
-  .search-input:focus { border-color: rgba(34,211,238,0.45); }
+  .search-input:focus-visible { outline: none; border-color: var(--color-neon-cyan); }
 
   /* ── Grid ───────────────────────────────────────────────────── */
   .projects-grid {

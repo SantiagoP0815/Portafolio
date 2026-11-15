@@ -30,6 +30,9 @@ const writeups = defineCollection({
     /** Máquina del track introductorio "Starting Point" de HackTheBox */
     startingPoint: z.boolean().default(false),
     fases: z.array(z.enum(['Reconocimiento', 'Foothold', 'Explotación', 'Escalada de Privilegios'])).optional(),
+    /** Opcional: qué vería un analista SOC (logs, alertas, IOCs). Se muestra
+     *  como la sección "Cómo se detectaría" al final del writeup. */
+    deteccion: z.array(z.string()).optional(),
   }),
 });
 

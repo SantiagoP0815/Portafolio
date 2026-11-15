@@ -44,7 +44,7 @@ const ogImageUrl = new URL(`${base}/og-image.png`, Astro.site).href;
   <link rel="icon" type="image/svg+xml" href={`${base}/favicon.svg`} />
   <title>{title}</title>
 </head>
-<body class="scanlines app-shell">
+<body class="app-shell">
   <a href="#main" class="skip-link font-mono">Saltar al contenido</a>
   <canvas id="particle-canvas" aria-hidden="true"></canvas>
   <Sidebar />
@@ -109,7 +109,7 @@ const ogImageUrl = new URL(`${base}/og-image.png`, Astro.site).href;
       configure();
       initParticles();
     }
-    if (reducedMotion.matches) draw();
+    draw();   // el canvas se borra al redimensionarlo: repintar aunque esté quieto
   }
 
   function initParticles() {
@@ -220,7 +220,7 @@ const ogImageUrl = new URL(`${base}/og-image.png`, Astro.site).href;
     font-size: 0.8rem; font-weight: 700;
     text-decoration: none;
     transform: translateY(-200%);
-    transition: transform 0.2s ease;
+    transition: transform var(--dur-base) var(--ease-out);
   }
   .skip-link:focus { transform: translateY(0); }
 </style>

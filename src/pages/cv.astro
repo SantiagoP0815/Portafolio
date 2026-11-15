@@ -22,15 +22,14 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
   <div class="cv-page" id="cv-page">
 
     <!-- ── Language toggle ───────────────────────────────────── -->
-    <div class="cv-lang-toggle no-print">
-      <button id="lang-es" class="lang-btn lang-btn-active font-mono">ES</button>
-      <span class="lang-sep">/</span>
-      <button id="lang-en" class="lang-btn font-mono">EN</button>
-      <button id="print-btn" class="print-btn font-mono">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6.72 13.829c-.24.03-.48.062-.72.096m.72-.096a42.415 42.415 0 0110.56 0m-10.56 0L6.34 18m10.94-4.171c.24.03.48.062.72.096m-.72-.096L17.66 18m0 0l.229 2.523a1.125 1.125 0 01-1.12 1.227H7.231c-.662 0-1.18-.568-1.12-1.227L6.34 18m11.318 0h1.091A2.25 2.25 0 0021 15.75V9.456c0-1.081-.768-2.015-1.837-2.175a48.055 48.055 0 00-1.913-.247M6.34 18H5.25A2.25 2.25 0 013 15.75V9.456c0-1.081.768-2.015 1.837-2.175a48.041 48.041 0 011.913-.247m10.5 0a48.536 48.536 0 00-10.5 0m10.5 0V3.375c0-.621-.504-1.125-1.125-1.125h-8.25c-.621 0-1.125.504-1.125 1.125v3.659M18 10.5h.008v.008H18V10.5zm-3 0h.008v.008H15V10.5z"/>
-        </svg>
-        Imprimir / Print
+    <div class="cv-toolbar no-print">
+      <div class="cv-lang-toggle" role="group" aria-label="Idioma del CV">
+        <button id="lang-es" class="lang-btn lang-btn-active font-mono" aria-pressed="true" lang="es">Español</button>
+        <button id="lang-en" class="lang-btn font-mono" aria-pressed="false" lang="en">English</button>
+      </div>
+      <button id="print-btn" class="btn-primary print-btn">
+        <svg class="icon" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M4.5 19.5h15"/></svg>
+        <span id="print-label">Guardar PDF / Imprimir</span>
       </button>
     </div>
 
@@ -46,13 +45,13 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           <p class="cv-title font-mono">Ingeniero de Sistemas e Informática · Analista de Ciberseguridad Junior (SOC / Blue Team)</p>
           <div class="cv-contact font-mono">
             <span>Bucaramanga, Colombia</span>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="mailto:santiago.p.0815@gmail.com">santiago.p.0815@gmail.com</a>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="https://github.com/SantiagoP0815" target="_blank" rel="noopener noreferrer">github.com/SantiagoP0815</a>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="https://linkedin.com/in/carlos-santiago-patino-reyes" target="_blank" rel="noopener noreferrer">linkedin.com/in/carlos-santiago-patino-reyes</a>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="https://SantiagoP0815.github.io/Portafolio" target="_blank" rel="noopener noreferrer">Portafolio: SantiagoP0815.github.io/Portafolio</a>
           </div>
         </div>
@@ -138,7 +137,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
             <span class="cv-item-title">NmapScan — Wrapper de Nmap en 2 Fases</span>
             <span class="cv-item-date font-mono">2026</span>
           </div>
-          <div class="cv-item-sub font-mono">Bash · Nmap · Automatización de Red Team</div>
+          <div class="cv-item-sub font-mono">Bash · Nmap · Automatización de reconocimiento</div>
           <div class="cv-item-desc">
             Automatiza el reconocimiento: descubrimiento rápido de todos los puertos TCP y escaneo detallado (-sCV) solo de los abiertos. Soporta UDP, IPv6, modo sigiloso y salida con timestamp.
           </div>
@@ -195,7 +194,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
         <h2 class="cv-section-title font-mono">Idiomas</h2>
         <div class="cv-lang-row">
           <span><strong>Español:</strong> Nativo</span>
-          <span class="cv-lang-sep">|</span>
+          <span class="cv-lang-sep" aria-hidden="true">|</span>
           <span><strong>Inglés:</strong> B2 — Lectura técnica fluida, comunicación intermedia</span>
         </div>
       </section>
@@ -208,7 +207,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
     </div>
 
     <!-- ═══════════ CV ENGLISH ════════════════════════════════ -->
-    <div id="cv-en" class="cv-lang-content" style="display:none">
+    <div id="cv-en" class="cv-lang-content" lang="en" style="display:none">
 
       <!-- Header -->
       <header class="cv-header">
@@ -217,13 +216,13 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           <p class="cv-title font-mono">Systems Engineer · Junior Cybersecurity Analyst (SOC / Blue Team)</p>
           <div class="cv-contact font-mono">
             <span>Bucaramanga, Colombia</span>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="mailto:santiago.p.0815@gmail.com">santiago.p.0815@gmail.com</a>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="https://github.com/SantiagoP0815" target="_blank" rel="noopener noreferrer">github.com/SantiagoP0815</a>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="https://linkedin.com/in/carlos-santiago-patino-reyes" target="_blank" rel="noopener noreferrer">linkedin.com/in/carlos-santiago-patino-reyes</a>
-            <span class="cv-contact-sep">|</span>
+            <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="https://SantiagoP0815.github.io/Portafolio" target="_blank" rel="noopener noreferrer">Portfolio: SantiagoP0815.github.io/Portafolio</a>
           </div>
         </div>
@@ -309,7 +308,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
             <span class="cv-item-title">NmapScan — 2-Phase Nmap Wrapper</span>
             <span class="cv-item-date font-mono">2026</span>
           </div>
-          <div class="cv-item-sub font-mono">Bash · Nmap · Red Team Automation</div>
+          <div class="cv-item-sub font-mono">Bash · Nmap · Recon automation</div>
           <div class="cv-item-desc">
             Automates recon: fast discovery of all TCP ports followed by a detailed (-sCV) scan of open ones only. Supports UDP, IPv6, stealth mode, and timestamped output.
           </div>
@@ -366,7 +365,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
         <h2 class="cv-section-title font-mono">Languages</h2>
         <div class="cv-lang-row">
           <span><strong>Spanish:</strong> Native</span>
-          <span class="cv-lang-sep">|</span>
+          <span class="cv-lang-sep" aria-hidden="true">|</span>
           <span><strong>English:</strong> B2 — Fluent technical reading, intermediate communication</span>
         </div>
       </section>
@@ -398,6 +397,10 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
     cvEn.style.display = showEs ? 'none' : '';
     btnEs.classList.toggle('lang-btn-active', showEs);
     btnEn.classList.toggle('lang-btn-active', !showEs);
+    btnEs.setAttribute('aria-pressed', String(showEs));
+    btnEn.setAttribute('aria-pressed', String(!showEs));
+    const label = document.getElementById('print-label');
+    if (label) label.textContent = showEs ? 'Guardar PDF / Imprimir' : 'Save PDF / Print';
   }
 
   btnEs.addEventListener('click', () => showLang('es'));
@@ -435,77 +438,71 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
     box-shadow: 0 4px 32px rgba(0,0,0,0.3);
   }
 
-  /* ── Language toggle ──────────────────────────────────────── */
+  /* ── Barra de herramientas ────────────────────────────────── */
+  .cv-toolbar {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
   .cv-lang-toggle {
-    display: flex; align-items: center; gap: 0.4rem;
-    margin-bottom: 1.5rem;
-    padding: 0.4rem 0.8rem;
-    border: 1px solid var(--color-border-subtle); border-radius: 0.5rem;
-    width: fit-content;
+    display: inline-flex; padding: 3px; gap: 3px;
+    border: 1px solid var(--color-border-subtle); border-radius: 0.6rem;
     background: var(--color-bg-secondary);
   }
   .lang-btn {
+    min-height: 38px;
     background: transparent; border: none;
-    color: var(--color-text-muted); cursor: pointer;
-    font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 0.3rem;
-    transition: color 0.2s, background 0.2s;
+    color: var(--color-text-secondary); cursor: pointer;
+    font-size: 0.82rem; padding: 0 0.9rem; border-radius: 0.45rem;
+    transition: color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
   }
-  .lang-btn:hover { color: var(--color-text-primary); }
-  .lang-btn-active { color: var(--color-neon-cyan) !important; background: rgba(34,211,238,0.1); }
-  .lang-sep { color: var(--color-text-muted); font-size: 0.7rem; }
-  .print-btn {
-    margin-left: auto;
-    display: inline-flex; align-items: center; gap: 0.35rem;
-    background: rgba(34,211,238,0.08); border: 1px solid rgba(34,211,238,0.25);
-    color: var(--color-neon-cyan); cursor: pointer;
-    font-size: 0.68rem; padding: 0.3rem 0.7rem; border-radius: 0.375rem;
-    transition: background 0.2s, border-color 0.2s;
-  }
-  .print-btn:hover { background: rgba(34,211,238,0.15); border-color: rgba(34,211,238,0.45); }
+  @media (hover: hover) and (pointer: fine) { .lang-btn:hover { color: var(--color-text-primary); } }
+  .lang-btn:active { transform: scale(0.97); }
+  .lang-btn-active { color: var(--color-neon-cyan); background: rgba(34,211,238,0.12); }
+  .print-btn { font-size: 0.82rem; }
 
   /* ── CV content ───────────────────────────────────────────── */
   .cv-header { margin-bottom: 1.75rem; padding-bottom: 1.25rem; border-bottom: 2px solid var(--color-neon-cyan); display: flex; justify-content: space-between; align-items: center; gap: 1.5rem; }
   .cv-header-info { min-width: 0; }
-  .cv-photo { width: 130px; height: 130px; object-fit: cover; border-radius: 0.5rem; border: 2px solid var(--color-neon-cyan); box-shadow: 0 0 12px rgba(34,211,238,0.15); flex-shrink: 0; }
+  .cv-photo { width: 130px; height: 130px; object-fit: cover; border-radius: 0.5rem; border: 1px solid var(--color-border-subtle); flex-shrink: 0; }
   .cv-name { font-family: var(--font-sans); font-size: 1.6rem; font-weight: 700; color: var(--color-text-primary); letter-spacing: -0.02em; }
-  .cv-title { font-size: 0.8rem; color: var(--color-neon-cyan); margin-top: 0.15rem; }
-  .cv-contact { margin-top: 0.5rem; font-size: 0.68rem; color: var(--color-text-muted); display: flex; flex-wrap: wrap; gap: 0.3rem; }
-  .cv-contact-link { color: inherit; text-decoration: none; border-bottom: 1px dashed rgba(34,211,238,0.4); transition: color 0.2s, border-color 0.2s; }
+  .cv-title { font-size: 0.88rem; color: var(--color-neon-cyan); margin-top: 0.15rem; }
+  .cv-contact { margin-top: 0.6rem; font-size: 0.8rem; line-height: 1.9; color: var(--color-text-muted); display: flex; flex-wrap: wrap; gap: 0.3rem; }
+  .cv-contact-link { color: var(--color-text-secondary); text-decoration: underline; text-decoration-color: rgba(34,211,238,0.4); text-underline-offset: 3px; transition: color var(--dur-fast) var(--ease-out); }
   .cv-contact-link:hover { color: var(--color-neon-cyan); border-bottom-color: var(--color-neon-cyan); }
-  .cv-contact-sep { opacity: 0.3; }
+  .cv-contact-sep { color: var(--color-border-subtle); }
 
   .cv-section { margin-bottom: 1.5rem; }
   .cv-section-title {
-    font-size: 0.72rem; font-weight: 700; color: var(--color-neon-cyan);
-    text-transform: uppercase; letter-spacing: 0.1em;
+    font-size: 0.82rem; font-weight: 700; color: var(--color-neon-cyan);
+    text-transform: uppercase; letter-spacing: 0.08em;
     border-bottom: 1px solid var(--color-border-subtle);
     padding-bottom: 0.25rem; margin-bottom: 0.65rem;
   }
 
-  .cv-text { font-size: 0.82rem; color: var(--color-text-secondary); line-height: 1.65; }
-  .cv-text--sm { font-size: 0.76rem; line-height: 1.55; }
+  .cv-text { font-size: 0.95rem; color: var(--color-text-secondary); line-height: 1.65; }
+  .cv-text--sm { font-size: 0.88rem; line-height: 1.55; }
 
   .cv-item { margin-bottom: 0.85rem; page-break-inside: avoid; }
   .cv-item-header { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
-  .cv-item-title { font-family: var(--font-sans); font-size: 0.88rem; font-weight: 600; color: var(--color-text-primary); }
-  .cv-item-date { font-size: 0.65rem; color: var(--color-text-muted); white-space: nowrap; flex-shrink: 0; }
-  .cv-item-sub { font-size: 0.72rem; color: var(--color-neon-cyan); margin-top: 0.1rem; opacity: 0.85; }
-  .cv-item-desc { font-size: 0.76rem; color: var(--color-text-secondary); margin-top: 0.2rem; line-height: 1.55; }
+  .cv-item-title { font-family: var(--font-sans); font-size: 0.98rem; font-weight: 600; color: var(--color-text-primary); }
+  .cv-item-date { font-size: 0.78rem; color: var(--color-text-muted); white-space: nowrap; flex-shrink: 0; }
+  .cv-item-sub { font-size: 0.82rem; color: var(--color-neon-cyan); margin-top: 0.1rem; }
+  .cv-item-desc { font-size: 0.88rem; color: var(--color-text-secondary); margin-top: 0.2rem; line-height: 1.55; }
 
   .cv-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.35rem; }
   .cv-tag {
-    font-family: var(--font-mono); font-size: 0.6rem;
-    color: var(--color-text-muted); background: rgba(34,211,238,0.06);
+    font-family: var(--font-mono); font-size: 0.75rem;
+    color: var(--color-text-secondary); background: rgba(34,211,238,0.06);
     border: 1px solid var(--color-border-subtle); border-radius: 0.25rem;
     padding: 0.1rem 0.4rem;
   }
 
   .cv-skills-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
   .cv-skill-group { padding: 0.35rem 0; }
-  .cv-skill-cat { font-size: 0.68rem; font-weight: 700; color: var(--color-neon-cyan); margin-bottom: 0.15rem; }
+  .cv-skill-cat { font-size: 0.82rem; font-weight: 700; color: var(--color-neon-cyan); margin-bottom: 0.15rem; }
 
-  .cv-lang-row { font-size: 0.82rem; color: var(--color-text-secondary); display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .cv-lang-sep { opacity: 0.3; }
+  .cv-lang-row { font-size: 0.92rem; color: var(--color-text-secondary); display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .cv-lang-sep { color: var(--color-border-subtle); }
   .cv-lang-row strong { color: var(--color-text-primary); }
 
   .cv-availability { margin-top: 1rem; padding: 0.7rem 0.9rem; border: 1px solid rgba(34,211,238,0.2); border-radius: 0.5rem; background: rgba(34,211,238,0.03); }
@@ -548,9 +545,11 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
     .cv-name { font-size: 1.25rem !important; }
     .cv-title { font-size: 0.66rem !important; }
     .cv-lang-row { font-size: 0.74rem !important; }
+    .cv-item-date { font-size: 0.62rem !important; }
+    .cv-skill-cat { font-size: 0.66rem !important; }
+    .cv-section-title { font-size: 0.7rem !important; }
     :global(#sidebar) { display: none !important; }
     :global(#particle-canvas) { display: none !important; }
-    :global(.grid-bg) { background: none !important; }
     :global(.page-content) { margin-left: 0 !important; padding: 0 !important; }
 
     .no-print, .cv-print-hide { display: none !important; }

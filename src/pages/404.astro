@@ -8,7 +8,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   <div class="nf-page">
     <div class="nf-terminal card-cyber">
       <div class="nf-chrome">
-        <span class="nf-dot" style="background:#ff5f57"></span>
+        <span class="nf-dot" style="background:#ff5f57" aria-hidden="true"></span>
         <span class="nf-dot" style="background:#ffbd2e"></span>
         <span class="nf-dot" style="background:#28ca41"></span>
         <span class="nf-chrome-title font-mono">bash</span>
@@ -19,9 +19,9 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
         <h1 class="nf-code">404</h1>
         <p class="nf-msg">La página que buscas no existe o fue movida.</p>
         <div class="nf-actions">
-          <a href={`${base}/`} class="btn-primary">cd ~/inicio</a>
-          <a href={`${base}/projects`} class="btn-ghost">ls projects/</a>
-          <a href={`${base}/writeups`} class="btn-ghost">ls writeups/</a>
+          <a href={`${base}/`} class="btn-primary">Ir al inicio</a>
+          <a href={`${base}/projects`} class="btn-ghost">Ver proyectos</a>
+          <a href={`${base}/writeups`} class="btn-ghost">Ver writeups</a>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     display: flex; align-items: center; justify-content: center;
     padding: 2rem 1rem;
   }
-  .nf-terminal { width: 100%; max-width: 36rem; }
+  .nf-terminal { width: 100%; max-width: 36rem; overflow: hidden; }
   .nf-chrome {
     display: flex; align-items: center; gap: 0.4rem;
     padding: 0.55rem 0.9rem;
@@ -47,7 +47,7 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
     border-bottom: 1px solid var(--color-border-subtle);
   }
   .nf-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .nf-chrome-title { margin-left: 0.5rem; font-size: 0.72rem; color: var(--color-text-muted); }
+  .nf-chrome-title { margin-left: 0.5rem; font-size: 0.78rem; color: var(--color-text-muted); }
   .nf-body { padding: 1.5rem; font-size: 0.85rem; display: flex; flex-direction: column; gap: 0.5rem; }
   .nf-prompt { color: var(--color-neon-green); }
   .nf-path { color: var(--color-neon-cyan); word-break: break-all; }
@@ -55,7 +55,6 @@ const base = import.meta.env.BASE_URL.replace(/\/$/, '');
   .nf-code {
     font-size: 4.5rem; font-weight: 700; line-height: 1;
     color: var(--color-neon-cyan);
-    text-shadow: 0 0 24px rgba(34,211,238,0.35);
     margin-top: 1rem;
   }
   .nf-msg { font-family: var(--font-sans); color: var(--color-text-secondary); }

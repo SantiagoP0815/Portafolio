@@ -1,6 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import WriteupCard from '../components/WriteupCard.astro';
+import Icon from '../components/Icon.astro';
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 
@@ -10,609 +13,469 @@ const spCount      = allWriteups.filter(w => w.data.startingPoint).length;
 const retiredCount = allWriteups.length - spCount;
 const retiredLabel = `${retiredCount} máquina${retiredCount === 1 ? '' : 's'} retirada${retiredCount === 1 ? '' : 's'}`;
 
+// Trabajo destacado: lo primero que debe ver un reclutador.
+const FEATURED_PROJECTS = ['gestion-cvs', 'vuln-scanner'];
+const FEATURED_WRITEUPS = ['cap', 'vaccine', 'responder'];
+const featuredProjects = FEATURED_PROJECTS
+  .map(id => allProjects.find(p => p.id === id))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
+const featuredWriteups = FEATURED_WRITEUPS
+  .map(id => allWriteups.find(w => w.id === id))
+  .filter((w): w is NonNullable<typeof w> => Boolean(w));
+
 const skillCategories = [
-  {
-    titulo: 'Defensiva',
-    color: 'purple', icon: '🛡️',
-    skills: ['OWASP Top 10', 'Hardening HTTP Headers', 'CSRF Protection', 'Rate Limiting', 'XSS / SQLi Prevention', 'Input Sanitization', 'Helmet.js']
-  },
-  {
-    titulo: 'Infraestructura y Redes',
-    color: 'green', icon: '🌐',
-    skills: ['TCP/IP', 'DNS / DHCP', 'Subnetting', 'Windows', 'Linux (terminal)', 'VirtualBox / VMware', 'Wireshark / TShark']
-  },
-  {
-    titulo: 'Pentesting y Reconocimiento',
-    color: 'cyan', icon: '🔍',
-    skills: ['Nmap', 'Gobuster', 'SQLMap', 'John / Hashcat', 'Evil-WinRM', 'Netcat', 'SMB / FTP / Redis Enumeration']
-  },
-  {
-    titulo: 'Desarrollo y Automatización',
-    color: 'orange', icon: '🛠️',
-    skills: ['Python', 'Bash', 'JavaScript / Node.js', 'Express', 'MySQL', 'Git / GitHub', 'Docker (básico)']
-  },
-];
+  { titulo: 'Desarrollo seguro',            icon: 'shield',  skills: ['OWASP Top 10', 'Hardening de cabeceras HTTP', 'Protección CSRF', 'Rate limiting', 'Prevención XSS / SQLi', 'Sanitización de entradas', 'Helmet.js'] },
+  { titulo: 'Infraestructura y redes',      icon: 'network', skills: ['TCP/IP', 'DNS / DHCP', 'Subnetting', 'Windows', 'Linux (terminal)', 'VirtualBox / VMware', 'Wireshark / TShark'] },
+  { titulo: 'Pentesting y reconocimiento',  icon: 'search',  skills: ['Nmap', 'Gobuster', 'SQLMap', 'John / Hashcat', 'Evil-WinRM', 'Netcat', 'Enumeración SMB / FTP / Redis'] },
+  { titulo: 'Desarrollo y automatización',  icon: 'code',    skills: ['Python', 'Bash', 'JavaScript / Node.js', 'Express', 'MySQL', 'Git / GitHub', 'Docker (básico)'] },
+] as const;
 
 const metodologia = [
-  { fase: 'Reconocimiento', color: 'cyan', desc: 'Enumeración de puertos, servicios y tecnologías con Nmap, Gobuster y scripts propios.' },
-  { fase: 'Foothold',       color: 'green', desc: 'Acceso inicial mediante vulnerabilidades identificadas: SQLi, IDOR, credenciales débiles, archivos expuestos.' },
-  { fase: 'Explotación',    color: 'orange', desc: 'Explotación de servicios mal configurados y obtención de shells inversas.' },
-  { fase: 'Escalada',       color: 'purple', desc: 'Elevación a root/Administrator mediante abuso de permisos, binarios SUID y credenciales reutilizadas.' },
-  { fase: 'Reporte',        color: 'pink', desc: 'Documentación técnica con pasos de reproducción, evidencias y recomendaciones de mitigación.' },
+  { fase: 'Reconocimiento', desc: 'Enumeración de puertos, servicios y tecnologías con Nmap, Gobuster y scripts propios.' },
+  { fase: 'Foothold',       desc: 'Acceso inicial mediante vulnerabilidades identificadas: SQLi, IDOR, credenciales débiles, archivos expuestos.' },
+  { fase: 'Explotación',    desc: 'Explotación de servicios mal configurados y obtención de shells inversas.' },
+  { fase: 'Escalada',       desc: 'Elevación a root/Administrator mediante abuso de permisos, binarios SUID y credenciales reutilizadas.' },
+  { fase: 'Reporte',        desc: 'Documentación técnica con pasos de reproducción, evidencias y recomendaciones de mitigación.' },
 ];
 
+const formacion = [
+  { icon: 'cap',   titulo: 'Ingeniero de Sistemas e Informática', inst: 'Universidad Pontificia Bolivariana, Seccional Bucaramanga', meta: 'Graduado en mayo 2026', estado: 'Graduado', activo: false },
+  { icon: 'award', titulo: 'Bootcamp Ciberseguridad Nivel Intermedio', inst: 'MINTIC · Talento Tech', meta: '159 horas', estado: 'Completado', activo: false },
+  { icon: 'award', titulo: 'Fortinet NSE 1 · 2 · 3', inst: 'Fortinet Training Institute', meta: 'Certificación de fundamentos', estado: 'En curso', activo: true },
+] as const;
+
 const objetivos = [
-  { icon: '🎓', titulo: 'Fortinet NSE 1 · 2 · 3',              desc: 'Fundamentos de ciberseguridad',                         color: 'orange', tag: 'en progreso' },
-  { icon: '🔐', titulo: 'ISC2 Certified in Cybersecurity (CC)', desc: 'Certificación de entrada reconocida por la industria',    color: 'purple', tag: 'siguiente'   },
-  { icon: '🛡️', titulo: 'Laboratorio SOC con Wazuh',           desc: 'Detección de ataques, análisis de logs y triage de alertas', color: 'cyan', tag: 'siguiente'   },
-  { icon: '📊', titulo: 'Labs Blue Team',                       desc: 'LetsDefend / Blue Team Labs Online: análisis de incidentes', color: 'green', tag: 'pendiente' },
-];
+  { icon: 'shield', titulo: 'ISC2 Certified in Cybersecurity (CC)', desc: 'Certificación de entrada reconocida por la industria' },
+  { icon: 'pulse',  titulo: 'Laboratorio SOC con Wazuh',           desc: 'Detección de ataques, análisis de logs y triage de alertas' },
+  { icon: 'eye',    titulo: 'Labs Blue Team',                       desc: 'LetsDefend / Blue Team Labs Online: análisis de incidentes' },
+] as const;
 ---
 
 <Layout
   title="Carlos Santiago Patiño Reyes | Ciberseguridad"
   description="Portafolio de Carlos Santiago Patiño Reyes, Ingeniero de Sistemas especializado en Ciberseguridad, Ethical Hacking y CTF."
 >
-  <div class="whoami-page">
+  <div class="home">
+
+    <!-- ══ Presentación ═══════════════════════════════════════ -->
+    <header class="hero animate-fade-in-up">
+      <div class="hero-text">
+        <p class="whoami-chip font-mono" aria-hidden="true">
+          <span class="chip-prompt">$</span> whoami<span class="cursor-blink"></span>
+        </p>
+        <h1 class="hero-name">
+          Carlos Santiago <span class="neon-cyan">Patiño Reyes</span>
+        </h1>
+        <p class="hero-role">
+          Ingeniero de Sistemas. Busco mi primer rol como
+          <strong>Analista SOC / Blue Team junior</strong>.
+        </p>
+        <p class="hero-pitch">
+          Practico ataque en HackTheBox para entender cómo defender:
+          {allWriteups.length} máquinas documentadas paso a paso y {allProjects.length} herramientas
+          propias de seguridad en Python, Bash y Node.js.
+        </p>
+        <div class="hero-cta">
+          <a href="#trabajo" class="btn-primary">
+            Ver mi trabajo
+            <Icon name="arrow" size={16} />
+          </a>
+          <a href="mailto:santiago.p.0815@gmail.com" class="btn-ghost">
+            <Icon name="mail" size={16} />
+            Contactarme
+          </a>
+          <a href={`${base}/cv`} class="hero-link font-mono">
+            <Icon name="document" size={16} />
+            Ver CV
+          </a>
+        </div>
+        <ul class="hero-facts font-mono" role="list">
+          <li><span class="fact-dot" aria-hidden="true"></span>Disponible</li>
+          <li><Icon name="pin" size={15} />Bucaramanga, Colombia · remoto</li>
+          <li><Icon name="chat" size={15} />Inglés B2</li>
+        </ul>
+      </div>
+      <img
+        class="hero-photo"
+        src={`${base}/perfil.jpg`}
+        alt="Retrato de Carlos Santiago Patiño Reyes"
+        width="200" height="200"
+        decoding="async"
+        fetchpriority="high"
+      />
+    </header>
+
+    <!-- ══ Trabajo destacado ══════════════════════════════════ -->
+    <section id="trabajo" class="section" aria-labelledby="trabajo-title">
+      <div class="section-head">
+        <h2 id="trabajo-title" class="section-title"><span class="title-mark" aria-hidden="true">$</span> Trabajo destacado</h2>
+      </div>
+
+      <div class="featured-group">
+        <div class="group-head">
+          <h3 class="group-title">Proyectos</h3>
+          <a href={`${base}/projects`} class="see-all font-mono">
+            Ver los {allProjects.length} <Icon name="arrow" size={14} />
+          </a>
+        </div>
+        <div class="grid-2">
+          {featuredProjects.map(p => (
+            <ProjectCard
+              titulo={p.data.titulo}
+              descripcion={p.data.descripcion}
+              herramientas={p.data.herramientas}
+              categoria={p.data.categoria}
+              fecha={p.data.fecha}
+              estado={p.data.estado}
+              slug={p.id}
+              github={p.data.github}
+              headingLevel="h3"
+            />
+          ))}
+        </div>
+      </div>
+
+      <div class="featured-group">
+        <div class="group-head">
+          <h3 class="group-title">Writeups de HackTheBox</h3>
+          <a href={`${base}/writeups`} class="see-all font-mono">
+            Ver los {allWriteups.length} <Icon name="arrow" size={14} />
+          </a>
+        </div>
+        <div class="grid-3">
+          {featuredWriteups.map(w => (
+            <WriteupCard
+              titulo={w.data.titulo}
+              descripcion={w.data.descripcion}
+              dificultad={w.data.dificultad}
+              herramientas={w.data.herramientas}
+              plataforma={w.data.plataforma}
+              fecha={w.data.fecha}
+              slug={w.id}
+              fases={w.data.fases ?? []}
+              startingPoint={w.data.startingPoint}
+              headingLevel="h3"
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══ Perfil ═════════════════════════════════════════════ -->
     <div class="body-cols">
 
-      <!-- ══ Columna izquierda ══════════════════════════════ -->
-      <div class="col-left">
-
-        <!-- Profile header -->
-        <header class="profile-header animate-fade-in-up">
-          <div class="whoami-chip">
-            <span class="chip-prompt font-mono">$</span>
-            <span class="chip-cmd font-mono">whoami</span>
-            <span class="chip-cursor"></span>
-          </div>
-          <h1 class="profile-name">
-            <span class="name-line">Carlos Santiago</span>
-            <span class="name-line neon-cyan name-line--last">Patiño Reyes</span>
-          </h1>
-          <p class="profile-role font-mono">Ingeniero de Sistemas · Analista de Ciberseguridad Junior (SOC / Blue Team)</p>
-          <div class="profile-cta">
-            <a href={`${base}/projects`} class="btn-primary">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25m18 0A2.25 2.25 0 0018.75 3H5.25A2.25 2.25 0 003 5.25m18 0H3"/>
-              </svg>
-              Proyectos
-            </a>
-            <a href={`${base}/writeups`} class="btn-primary">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 7.5l3 2.25-3 2.25m4.5 0h3m-9 8.25h13.5A2.25 2.25 0 0021 18V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v12a2.25 2.25 0 002.25 2.25z"/>
-              </svg>
-              Writeups CTF
-            </a>
-            <a href={`${base}/cv`} class="btn-primary">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
-              </svg>
-              CV
-            </a>
-            <div class="profile-social-row">
-            <a href="mailto:santiago.p.0815@gmail.com" class="btn-primary">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/>
-              </svg>
-              Contacto
-            </a>
-            <a href="https://github.com/SantiagoP0815" target="_blank" rel="noopener noreferrer" class="btn-ghost">
-              <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-              </svg>
-              GitHub
-            </a>
-            <a href="https://linkedin.com/in/carlos-santiago-patino-reyes" target="_blank" rel="noopener noreferrer" class="btn-ghost">
-              <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-              LinkedIn
-            </a>
-          </div>
-          </div>
-        </header>
-
-        <!-- Sobre mí -->
-        <section class="whoami-section animate-fade-in-up animate-delay-100">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> sobre_mí</h2>
-          <p class="bio-text">
-            Ingeniero de Sistemas e Informática de la <strong>Universidad Pontificia Bolivariana — Seccional Bucaramanga</strong>. Busco mi primer rol como <strong>Analista SOC / Blue Team junior</strong> o en <strong>soporte TI</strong> con proyección a seguridad.
-            Entiendo cómo se ataca un sistema porque lo practico: completé el track <strong>Starting Point de HackTheBox</strong> ({spCount} máquinas){retiredCount > 0 && <> y {retiredLabel}</>}, documentando cada una con writeups técnicos. Y sé cómo defenderlo: mi proyecto de grado es una aplicación web con seguridad integrada desde el diseño (CSRF, XSS/SQLi prevention, rate limiting, cabeceras seguras).
-            Además he construido <strong>{allProjects.length} herramientas</strong> propias en Python y Bash para automatizar reconocimiento y detección de vulnerabilidades. Aprendo rápido, documento lo que hago y quiero aportar en un equipo real.
-          </p>
-          <div class="info-grid">
-            <div class="info-card card-cyber info-card--green">
-              <span class="info-card-icon" aria-hidden="true">💼</span>
-              <div class="info-card-body">
-                <span class="info-card-label font-mono">Estado</span>
-                <span class="info-card-value">DISPONIBLE</span>
-                <span class="info-card-sub font-mono">Abierto a oportunidades</span>
-              </div>
-            </div>
-            <div class="info-card card-cyber info-card--purple">
-              <span class="info-card-icon" aria-hidden="true">⚔️</span>
-              <div class="info-card-body">
-                <span class="info-card-label font-mono">CTF & Hacking</span>
-                <span class="info-card-value">{allWriteups.length} WRITEUPS</span>
-                <span class="info-card-sub font-mono">HTB · Starting Point{retiredCount > 0 && ` + ${retiredCount} retirada${retiredCount === 1 ? '' : 's'}`}</span>
-              </div>
-            </div>
-            <div class="info-card card-cyber info-card--cyan">
-              <span class="info-card-icon" aria-hidden="true">🛠️</span>
-              <div class="info-card-body">
-                <span class="info-card-label font-mono">Proyectos</span>
-                <span class="info-card-value">{allProjects.length} PUBLICADOS</span>
-                <span class="info-card-sub font-mono">Seguridad & Desarrollo</span>
-              </div>
-            </div>
-            <div class="info-card card-cyber info-card--purple">
-              <span class="info-card-icon" aria-hidden="true">🇬🇧</span>
-              <div class="info-card-body">
-                <span class="info-card-label font-mono">Inglés</span>
-                <span class="info-card-value">NIVEL B2</span>
-                <span class="info-card-sub font-mono">Lectura técnica fluida</span>
-              </div>
-            </div>
-            <div class="info-card card-cyber info-card--green">
-              <span class="info-card-icon" aria-hidden="true">📍</span>
-              <div class="info-card-body">
-                <span class="info-card-label font-mono">Ubicación</span>
-                <span class="info-card-value">Bucaramanga, Colombia</span>
-                <span class="info-card-sub font-mono">Disponible remotamente</span>
-              </div>
-            </div>
+      <div class="col-main">
+        <section class="section" aria-labelledby="sobre-title">
+          <h2 id="sobre-title" class="section-title"><span class="title-mark" aria-hidden="true">$</span> Sobre mí</h2>
+          <div class="bio">
+            <p>
+              Soy Ingeniero de Sistemas e Informática de la <strong>Universidad Pontificia Bolivariana</strong>, Seccional Bucaramanga.
+              Busco mi primer rol como <strong>Analista SOC / Blue Team junior</strong> o en <strong>soporte TI</strong> con proyección a seguridad.
+            </p>
+            <p>
+              Entiendo cómo se ataca un sistema porque lo practico: completé el track <strong>Starting Point de HackTheBox</strong>
+              ({spCount} máquinas){retiredCount > 0 && <> y {retiredLabel}</>}, documentando cada una con writeups técnicos.
+              Y sé cómo defenderlo: mi proyecto de grado es una aplicación web con seguridad integrada desde el diseño
+              (CSRF, prevención de XSS/SQLi, rate limiting, cabeceras seguras).
+            </p>
+            <p>
+              Además he construido <strong>{allProjects.length} herramientas</strong> propias en Python y Bash para automatizar
+              reconocimiento y detección de vulnerabilidades. Aprendo rápido, documento lo que hago y quiero aportar en un equipo real.
+            </p>
           </div>
         </section>
 
-        <!-- Skills -->
-        <section class="whoami-section animate-fade-in-up animate-delay-200">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> skills</h2>
-          <div class="skills-categories">
+        <section class="section" aria-labelledby="skills-title">
+          <h2 id="skills-title" class="section-title"><span class="title-mark" aria-hidden="true">$</span> Habilidades</h2>
+          <div class="skills">
             {skillCategories.map(cat => (
               <div class="skill-cat">
-                <h3 class={`skill-cat-title font-mono cat-${cat.color}`}>
-                  <span aria-hidden="true">{cat.icon}</span> {cat.titulo}
+                <h3 class="skill-cat-title">
+                  <Icon name={cat.icon} size={17} />
+                  {cat.titulo}
                 </h3>
-                <div class="skills-wrap">
-                  {cat.skills.map(s => (
-                    <span class={`tag-badge tag-${cat.color}`}>{s}</span>
-                  ))}
-                </div>
+                <ul class="skill-list" role="list">
+                  {cat.skills.map(s => <li class="skill font-mono">{s}</li>)}
+                </ul>
               </div>
             ))}
           </div>
         </section>
 
-        <!-- Metodología -->
-        <section class="whoami-section animate-fade-in-up animate-delay-300">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> metodología</h2>
-          <div class="metodologia-list">
+        <section class="section" aria-labelledby="metodo-title">
+          <h2 id="metodo-title" class="section-title"><span class="title-mark" aria-hidden="true">$</span> Cómo abordo una máquina</h2>
+          <ol class="metodo" role="list">
             {metodologia.map((m, i) => (
-              <div class="metodologia-item">
-                <span class={`metodologia-num tag-${m.color}`}>{i + 1}</span>
-                <div class="metodologia-body">
-                  <span class={`metodologia-fase font-mono cat-${m.color}`}>{m.fase}</span>
-                  <span class="metodologia-desc">{m.desc}</span>
+              <li class="metodo-item">
+                <span class="metodo-num font-mono" aria-hidden="true">{i + 1}</span>
+                <div>
+                  <span class="metodo-fase">{m.fase}</span>
+                  <span class="metodo-desc">{m.desc}</span>
                 </div>
-              </div>
+              </li>
             ))}
-          </div>
+          </ol>
         </section>
-
       </div>
 
-      <!-- ══ Columna derecha ════════════════════════════════ -->
-      <div class="col-right">
-
-        <!-- Títulos -->
-        <section class="whoami-section animate-fade-in-up animate-delay-100">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> títulos</h2>
-          <div class="card-list">
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🎓</div>
-              <div class="item-body">
-                <div class="item-name">Ingeniero de Sistemas e Informática</div>
-                <div class="item-inst font-mono">Universidad Pontificia Bolivariana</div>
-                <div class="item-meta font-mono">Seccional Bucaramanga · Graduado en mayo 2026</div>
-              </div>
-              <span class="tag-badge tag-cyan item-tag">ing. sistemas</span>
-            </div>
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">📋</div>
-              <div class="item-body">
-                <div class="item-name">Proyecto de Grado — Sistema de Gestión de CVs</div>
-                <div class="item-inst font-mono">Node.js · Express · MySQL · Seguridad Integrada</div>
-                <div class="item-meta font-mono">Helmet · CSRF · Rate Limiting · XSS/SQLi Prevention</div>
-              </div>
-              <span class="tag-badge tag-green item-tag">proyecto</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- Certificaciones -->
-        <section class="whoami-section animate-fade-in-up animate-delay-200">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> certificaciones</h2>
-          <div class="card-list">
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🏅</div>
-              <div class="item-body">
-                <div class="item-name">Bootcamp Ciberseguridad Nivel Intermedio</div>
-                <div class="item-inst font-mono">MINTIC · Talento Tech</div>
-                <div class="item-meta font-mono">159 horas · Completado</div>
-              </div>
-              <span class="tag-badge tag-green item-tag">completado</span>
-            </div>
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🎓</div>
-              <div class="item-body">
-                <div class="item-name">Fortinet NSE 1 · 2 · 3</div>
-                <div class="item-inst font-mono">Fortinet Training Institute</div>
-                <div class="item-meta font-mono">En curso · certificación gratuita de fundamentos</div>
-              </div>
-              <span class="tag-badge tag-orange item-tag">en progreso</span>
-            </div>
-          </div>
-        </section>  
-
-        <!-- Áreas de Interés -->
-        <section class="whoami-section animate-fade-in-up animate-delay-300">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> áreas_de_interés</h2>
-          <div class="card-list">
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">📡</div>
-              <div class="item-body">
-                <div class="item-name">Monitoreo y Respuesta (SOC)</div>
-                <div class="item-meta font-mono">Análisis de logs · SIEM · Triage de alertas · Detección</div>
-              </div>
-              <span class="tag-badge tag-purple item-tag">defensivo</span>
-            </div>
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🛡️</div>
-              <div class="item-body">
-                <div class="item-name">Blue Team &amp; Hardening</div>
-                <div class="item-meta font-mono">CSRF · XSS/SQLi Prevention · Rate Limiting · HTTP Headers</div>
-              </div>
-              <span class="tag-badge tag-purple item-tag">defensivo</span>
-            </div>
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🖥️</div>
-              <div class="item-body">
-                <div class="item-name">Pentesting Web</div>
-                <div class="item-meta font-mono">OWASP Top 10 · SQLi · XSS · IDOR · CSRF</div>
-              </div>
-              <span class="tag-badge tag-cyan item-tag">ofensivo</span>
-            </div>
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🔍</div>
-              <div class="item-body">
-                <div class="item-name">Análisis de Vulnerabilidades</div>
-                <div class="item-meta font-mono">Escaneo automatizado · Revisión manual · Reportes</div>
-              </div>
-              <span class="tag-badge tag-green item-tag">defensivo</span>
-            </div>
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🛠️</div>
-              <div class="item-body">
-                <div class="item-name">Desarrollo de Herramientas de Seguridad</div>
-                <div class="item-meta font-mono">Python · Bash · Automatización de tareas</div>
-              </div>
-              <span class="tag-badge tag-orange item-tag">desarrollo</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- Idiomas -->
-        <section class="whoami-section animate-fade-in-up animate-delay-400">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> idiomas</h2>
-          <div class="card-list">
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🇪🇸</div>
-              <div class="item-body">
-                <div class="item-name">Español</div>
-                <div class="item-meta font-mono">Nativo</div>
-              </div>
-              <span class="tag-badge tag-green item-tag">nativo</span>
-            </div>
-            <div class="item-card card-cyber">
-              <div class="item-icon" aria-hidden="true">🇬🇧</div>
-              <div class="item-body">
-                <div class="item-name">Inglés — B2</div>
-                <div class="item-meta font-mono">Lectura técnica fluida · Comunicación intermedia</div>
-              </div>
-              <span class="tag-badge tag-cyan item-tag">B2</span>
-            </div>
-          </div>
-        </section>
-
-        <!-- Próximos objetivos -->
-        <section class="whoami-section animate-fade-in-up animate-delay-300">
-          <h2 class="subsection-title font-mono"><span class="title-cursor">$</span> próximos_objetivos</h2>
-          <div class="card-list">
-            {objetivos.map(obj => (
-              <div class="item-card card-cyber">
-                <div class="item-icon" aria-hidden="true">{obj.icon}</div>
+      <aside class="col-side" aria-label="Formación y objetivos">
+        <section class="section" aria-labelledby="formacion-title">
+          <h2 id="formacion-title" class="section-title"><span class="title-mark" aria-hidden="true">$</span> Formación</h2>
+          <ul class="item-list" role="list">
+            {formacion.map(f => (
+              <li class="item">
+                <span class="item-icon"><Icon name={f.icon} size={20} /></span>
                 <div class="item-body">
-                  <div class="item-name">{obj.titulo}</div>
-                  <div class="item-meta font-mono">{obj.desc}</div>
+                  <span class="item-name">{f.titulo}</span>
+                  <span class="item-inst">{f.inst}</span>
+                  <span class="item-meta font-mono">{f.meta}</span>
                 </div>
-                <span class={`tag-badge tag-${obj.color} item-tag`}>{obj.tag}</span>
-              </div>
+                <span class:list={['tag-badge', f.activo ? 'tag-orange' : 'tag-green']}>{f.estado}</span>
+              </li>
             ))}
-          </div>
+          </ul>
         </section>
 
-      </div>
+        <section class="section" aria-labelledby="objetivos-title">
+          <h2 id="objetivos-title" class="section-title"><span class="title-mark" aria-hidden="true">$</span> Próximos objetivos</h2>
+          <ul class="item-list" role="list">
+            {objetivos.map(obj => (
+              <li class="item">
+                <span class="item-icon"><Icon name={obj.icon} size={20} /></span>
+                <div class="item-body">
+                  <span class="item-name">{obj.titulo}</span>
+                  <span class="item-meta">{obj.desc}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section class="cta-card" aria-labelledby="cta-title">
+          <h2 id="cta-title" class="cta-title">¿Tienes una vacante junior en SOC o soporte TI?</h2>
+          <p class="cta-text">Estoy abierto a oportunidades, en Bucaramanga o en remoto.</p>
+          <a href="mailto:santiago.p.0815@gmail.com" class="btn-primary">
+            <Icon name="mail" size={16} />
+            Escribirme
+          </a>
+        </section>
+      </aside>
+
     </div>
   </div>
 </Layout>
 
 <style>
-  /* ── Page wrapper ────────────────────────────────────────── */
-  .whoami-page {
-    padding: 3rem 3rem 5rem 2rem;
-  }
-
-  /* ── Two-column layout ───────────────────────────────────── */
-  .body-cols {
-    display: grid;
-    grid-template-columns: 1.25fr 1fr;
-    gap: 2.5rem;
-    align-items: start;
-    max-width: 74rem;
+  .home {
+    max-width: 72rem;
     margin: 0 auto;
-  }
-  .col-left,
-  .col-right {
-    min-width: 0;
-  }
-  @media (max-width: 768px) {
-    .body-cols { grid-template-columns: 1fr; gap: 0; }
+    padding: 3.5rem 2.5rem 5rem;
   }
 
-  /* ── Profile header ──────────────────────────────────────── */
-  .profile-header {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    padding-bottom: 2.25rem;
-    margin-bottom: 2.25rem;
-    position: relative;
+  /* ── Presentación ────────────────────────────────────────── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 3rem;
+    align-items: center;
+    padding-bottom: 3.5rem;
+    margin-bottom: 3.5rem;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
-  .profile-header::after {
-    content: '';
-    position: absolute; bottom: 0; left: 0; right: 0;
-    height: 1px;
-    background: linear-gradient(90deg, rgba(34,211,238,0.2), transparent 70%);
-  }
+  .hero-text { display: flex; flex-direction: column; gap: 1.1rem; min-width: 0; }
   .whoami-chip {
     display: inline-flex; align-items: center; gap: 0.4rem;
-    background: var(--color-bg-secondary);
+    width: fit-content;
+    padding: 0.2rem 0.65rem;
     border: 1px solid var(--color-border-subtle);
     border-radius: 6px;
-    padding: 0.3rem 0.75rem;
-    width: fit-content;
-  }
-  .chip-prompt {
-    font-size: 0.7rem;
-    color: var(--color-neon-green);
-  }
-  .chip-cmd {
-    font-size: 0.7rem;
+    background: var(--color-bg-secondary);
+    font-size: 0.8rem;
     color: var(--color-text-primary);
-    letter-spacing: 0.02em;
   }
-  .chip-cursor {
-    width: 6px; height: 12px;
-    background: var(--color-neon-cyan);
-    animation: cursor-blink 1s step-end infinite;
-    border-radius: 1px;
-  }
-  @keyframes cursor-blink {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0; }
-  }
-  .profile-name {
-    font-family: var(--font-sans);
-    font-size: clamp(2rem, 4.5vw, 3.1rem);
-    font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: -0.02em;
+  .chip-prompt { color: var(--color-neon-green); }
+  .hero-name {
+    font-size: clamp(2.3rem, 5vw, 3.6rem);
+    font-weight: 750;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
     color: var(--color-text-primary);
-    display: flex; flex-direction: column;
+    text-wrap: balance;
   }
-  .name-line { display: block; }
-  .name-line--last {
-    text-shadow: 0 0 20px rgba(34,211,238,0.3);
+  .hero-role {
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    max-width: 38ch;
   }
-  .profile-role {
+  .hero-role strong { color: var(--color-text-primary); font-weight: 600; }
+  .hero-pitch {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+    max-width: 58ch;
+  }
+  .hero-cta {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;
+    margin-top: 0.5rem;
+  }
+  .hero-link {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    min-height: 44px;
+    padding: 0 0.5rem;
     font-size: 0.88rem;
     color: var(--color-text-secondary);
-    letter-spacing: 0.05em;
-    border-left: 2px solid var(--color-neon-cyan);
-    padding-left: 0.75rem;
+    text-decoration: underline;
+    text-decoration-color: rgba(163,177,198,0.35);
+    text-underline-offset: 4px;
+    transition: color var(--dur-fast) var(--ease-out);
   }
-  .profile-cta {
-    display: flex; flex-wrap: wrap; gap: 0.55rem;
-    margin-top: 0.25rem;
+  @media (hover: hover) and (pointer: fine) {
+    .hero-link:hover { color: var(--color-neon-cyan); text-decoration-color: currentColor; }
   }
-  .profile-social-row {
-    display: flex; flex-wrap: wrap; gap: 0.55rem;
-    width: 100%;
-  }
-
-  /* ── Subsections ─────────────────────────────────────────── */
-  .whoami-section { margin-bottom: 2.5rem; }
-  .subsection-title {
-    font-size: 0.78rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    color: var(--color-neon-cyan);
-    margin-bottom: 1.1rem;
-    display: flex; align-items: center; gap: 0.75rem;
-  }
-  .subsection-title::after {
-    content: '';
-    flex: 1; height: 1px;
-    background: linear-gradient(90deg, rgba(34,211,238,0.25), transparent);
-  }
-  .title-cursor {
-    display: inline-block;
-    width: 0.55rem;
-    height: 0.75rem;
-    background: var(--color-neon-cyan);
-    animation: cursor-blink 1s step-end infinite;
-    border-radius: 1px;
-    flex-shrink: 0;
-  }
-
-  /* ── Bio ─────────────────────────────────────────────────── */
-  .bio-text {
-    font-size: 0.93rem;
+  .hero-facts {
+    list-style: none; padding: 0;
+    display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem;
+    margin-top: 0.4rem;
+    font-size: 0.82rem;
     color: var(--color-text-secondary);
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
-    padding: 1rem 1.25rem;
+  }
+  .hero-facts li { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .fact-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--color-neon-green);
+    margin: 0 0.15rem;
+  }
+  .hero-facts li:first-child { color: var(--color-neon-green); }
+  .hero-photo {
+    width: 200px; height: 200px;
+    border-radius: 1rem;
+    object-fit: cover;
     border: 1px solid var(--color-border-subtle);
-    border-radius: 0.5rem;
-    background: rgba(255,255,255,0.015);
-    position: relative;
+    box-shadow: 0 18px 40px -18px rgba(0,0,0,0.8);
   }
-  .bio-text::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, rgba(34,211,238,0.2), transparent 60%);
-  }
-  .bio-text strong { color: var(--color-text-primary); font-weight: 600; }
 
-  /* ── Info grid ───────────────────────────────────────────── */
-  .info-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.6rem;
+  /* ── Secciones ───────────────────────────────────────────── */
+  .section { margin-bottom: 3rem; }
+  .section-title {
+    display: flex; align-items: baseline; gap: 0.6rem;
+    font-size: 1.3rem;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    color: var(--color-text-primary);
+    margin-bottom: 1.25rem;
   }
-  .info-card {
-    flex: 0 1 200px;
-    min-width: 160px;
-    display: flex; align-items: flex-start; gap: 0.7rem;
-    padding: 0.8rem 0.9rem; border-radius: 0.7rem;
-    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-    position: relative;
-    overflow: hidden;
+  .title-mark {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    color: var(--color-neon-cyan);
   }
-  .info-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
-  .info-card:hover { transform: translateY(-2px); }
-  .info-card:hover::before { opacity: 1; }
-  .info-card--cyan   { border-color: rgba(34,211,238,0.2); }
-  .info-card--cyan::before   { background: linear-gradient(90deg, rgba(34,211,238,0.5), transparent 60%); }
-  .info-card--cyan:hover   { border-color: rgba(34,211,238,0.5); box-shadow: 0 4px 20px rgba(34,211,238,0.08); }
-  .info-card--green  { border-color: rgba(74,222,128,0.2); }
-  .info-card--green::before  { background: linear-gradient(90deg, rgba(74,222,128,0.5), transparent 60%); }
-  .info-card--green:hover  { border-color: rgba(74,222,128,0.5); box-shadow: 0 4px 20px rgba(74,222,128,0.08); }
-  .info-card--orange { border-color: rgba(251,146,60,0.2); }
-  .info-card--orange::before { background: linear-gradient(90deg, rgba(251,146,60,0.5), transparent 60%); }
-  .info-card--orange:hover { border-color: rgba(251,146,60,0.5); box-shadow: 0 4px 20px rgba(251,146,60,0.08); }
-  .info-card--purple { border-color: rgba(167,139,250,0.2); }
-  .info-card--purple::before { background: linear-gradient(90deg, rgba(167,139,250,0.5), transparent 60%); }
-  .info-card--purple:hover { border-color: rgba(167,139,250,0.5); box-shadow: 0 4px 20px rgba(167,139,250,0.08); }
-  .info-card-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
-  .info-card-body { display: flex; flex-direction: column; gap: 0.1rem; min-width: 0; }
-  .info-card-label { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--color-text-muted); }
-  .info-card-value { font-family: var(--font-sans); font-size: 0.8rem; font-weight: 600; color: var(--color-text-primary); line-height: 1.3; }
-  .info-card-sub   { font-size: 0.67rem; color: var(--color-text-muted); }
 
-  /* ── Shared card list (títulos, certs, objetivos) ────────── */
-  .card-list { display: flex; flex-direction: column; gap: 0.65rem; }
-  .item-card {
-    display: flex; align-items: center; gap: 0.85rem;
-    padding: 0.9rem 1rem; border-radius: 0.75rem;
-    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
-    position: relative;
-    overflow: hidden;
+  /* ── Trabajo destacado ───────────────────────────────────── */
+  #trabajo { scroll-margin-top: 5rem; }
+  .featured-group + .featured-group { margin-top: 2.25rem; }
+  .group-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
+    margin-bottom: 0.9rem;
   }
-  .item-card::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 2px;
-    background: var(--color-neon-cyan);
-    opacity: 0;
-    transition: opacity 0.25s;
-    border-radius: 0 2px 2px 0;
+  .group-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
   }
-  .item-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(34,211,238,0.4);
-    box-shadow: 0 4px 20px rgba(34,211,238,0.07);
+  .see-all {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    min-height: 32px;
+    font-size: 0.82rem;
+    color: var(--color-neon-cyan);
+    text-decoration: none;
   }
-  .item-card:hover::before {
-    opacity: 0.6;
+  .see-all .icon { transition: transform var(--dur-base) var(--ease-out); }
+  @media (hover: hover) and (pointer: fine) {
+    .see-all:hover .icon { transform: translateX(3px); }
   }
-  .item-icon { font-size: 1.5rem; flex-shrink: 0; }
-  .item-body { flex: 1; min-width: 0; }
-  .item-name { font-family: var(--font-sans); font-weight: 600; font-size: 0.88rem; color: var(--color-text-primary); line-height: 1.3; }
-  .item-inst { font-size: 0.74rem; color: var(--color-neon-cyan); margin-top: 0.16rem; opacity: 0.85; }
-  .item-meta { font-size: 0.68rem; color: var(--color-text-muted); margin-top: 0.1rem; }
-  .item-tag  { flex-shrink: 0; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
 
-  /* ── Skills ──────────────────────────────────────────────── */
-  .skills-wrap { display: flex; flex-wrap: wrap; gap: 0.45rem; justify-content: center; }
+  /* ── Columnas de perfil ──────────────────────────────────── */
+  .body-cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 3rem;
+    align-items: start;
+    margin-top: 1rem;
+  }
 
-  /* ── Skill categories ────────────────────────────────────── */
-  .skills-categories { display: flex; flex-direction: column; gap: 0.85rem; }
-  .skill-cat { display: flex; flex-direction: column; gap: 0.35rem; }
+  .bio { display: flex; flex-direction: column; gap: 1rem; max-width: 68ch; }
+  .bio p { font-size: 1rem; line-height: 1.75; color: var(--color-text-secondary); }
+  .bio strong { color: var(--color-text-primary); font-weight: 600; }
+
+  .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 2rem; }
   .skill-cat-title {
-    font-size: 0.66rem; font-weight: 600; letter-spacing: 0.06em;
-    display: flex; align-items: center; gap: 0.35rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.95rem; font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.6rem;
   }
-  .cat-cyan   { color: var(--color-neon-cyan); }
-  .cat-green  { color: var(--color-neon-green); }
-  .cat-orange { color: var(--color-neon-orange); }
-  .cat-purple { color: var(--color-neon-purple); }
-  .cat-pink   { color: var(--color-neon-pink); }
+  .skill-cat-title .icon { color: var(--color-neon-cyan); }
+  .skill-list { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .skill {
+    font-size: 0.78rem;
+    padding: 0.12rem 0.5rem;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.35rem;
+    color: var(--color-text-secondary);
+  }
 
-  /* ── Metodología ──────────────────────────────────────────── */
-  .metodologia-list { display: flex; flex-direction: column; gap: 0.35rem; }
-  .metodologia-item {
-    display: flex; align-items: flex-start; gap: 0.65rem;
-    padding: 0.5rem 0.6rem; border-radius: 0.5rem;
-    border: 1px solid transparent;
-    transition: border-color 0.25s, background 0.25s;
-  }
-  .metodologia-item:hover {
-    border-color: var(--color-border-subtle);
-    background: rgba(255,255,255,0.015);
-  }
-  .metodologia-num {
+  .metodo { list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.9rem; }
+  .metodo-item { display: flex; gap: 0.9rem; align-items: flex-start; }
+  .metodo-num {
     flex-shrink: 0;
-    width: 1.35rem; height: 1.35rem;
+    width: 1.75rem; height: 1.75rem;
+    display: grid; place-items: center;
     border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-mono); font-size: 0.62rem; font-weight: 700;
-    margin-top: 0.1rem;
+    border: 1px solid rgba(34,211,238,0.4);
+    color: var(--color-neon-cyan);
+    font-size: 0.8rem; font-weight: 700;
   }
-  .metodologia-body { min-width: 0; }
-  .metodologia-fase {
-    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-  .metodologia-desc {
-    display: block; font-size: 0.72rem; color: var(--color-text-muted);
-    margin-top: 0.1rem; line-height: 1.45;
-  }
+  .metodo-fase { display: block; font-weight: 600; font-size: 0.95rem; color: var(--color-text-primary); }
+  .metodo-desc { display: block; font-size: 0.9rem; line-height: 1.6; color: var(--color-text-secondary); }
 
-  /* ── Mobile ──────────────────────────────────────────────── */
-  @media (max-width: 640px) {
-    .whoami-page { padding: 1.5rem 1rem 3rem; }
-    .info-grid { grid-template-columns: 1fr 1fr; }
+  .item-list { list-style: none; padding: 0; display: flex; flex-direction: column; }
+  .item {
+    display: flex; align-items: flex-start; gap: 0.85rem;
+    padding: 0.95rem 0;
+    border-bottom: 1px solid var(--color-border-subtle);
   }
-  @media (max-width: 400px) {
-    .info-grid { grid-template-columns: 1fr; }
+  .item:first-child { padding-top: 0; }
+  .item-icon { color: var(--color-neon-cyan); margin-top: 0.1rem; }
+  .item-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.1rem; }
+  .item-name { font-weight: 600; font-size: 0.95rem; color: var(--color-text-primary); line-height: 1.35; }
+  .item-inst { font-size: 0.85rem; color: var(--color-text-secondary); }
+  .item-meta { font-size: 0.8rem; color: var(--color-text-muted); line-height: 1.5; }
+  .item .tag-badge { flex-shrink: 0; margin-top: 0.1rem; }
+
+  .cta-card {
+    padding: 1.5rem;
+    border: 1px solid rgba(34,211,238,0.35);
+    border-radius: 0.85rem;
+    background: rgba(34,211,238,0.04);
+    display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem;
+  }
+  .cta-title { font-size: 1.1rem; font-weight: 650; line-height: 1.35; color: var(--color-text-primary); text-wrap: balance; }
+  .cta-text  { font-size: 0.92rem; color: var(--color-text-secondary); margin-bottom: 0.4rem; }
+
+  /* ── Responsive ──────────────────────────────────────────── */
+  @media (max-width: 1100px) {
+    .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .body-cols { grid-template-columns: 1fr; gap: 0; }
+  }
+  @media (max-width: 720px) {
+    .home { padding: 2rem 1rem 3.5rem; }
+    .hero { grid-template-columns: 1fr; gap: 1.5rem; padding-bottom: 2.5rem; margin-bottom: 2.5rem; }
+    .hero-photo { order: -1; width: 88px; height: 88px; border-radius: 50%; }
+    .hero-role { font-size: 1.08rem; }
+    .grid-2, .grid-3, .skills { grid-template-columns: 1fr; }
+    .hero-cta .btn-primary, .hero-cta .btn-ghost { flex: 1 1 auto; }
   }
 </style>

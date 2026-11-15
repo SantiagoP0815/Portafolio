@@ -1,6 +1,7 @@
 ---
 import { getCollection, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
 import WriteupCard from '../../components/WriteupCard.astro';
 
 const diffOrder: Record<string, number> = { insane: 4, hard: 3, medium: 2, easy: 1 };
@@ -42,7 +43,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
       <div class="header-terminal font-mono">
         <span class="hl-green">~/writeups</span>
         <span class="hl-muted"> $ ls -la | sort -r</span>
-        <span class="cursor-blink"></span>
+        <span class="cursor-blink" aria-hidden="true"></span>
       </div>
       <h1 class="page-title font-mono">
         Writeups<span class="neon-green">.</span>
@@ -140,7 +141,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
           </svg>
           <input
-            type="text"
+            type="search"
             id="wu-search"
             placeholder="nmap, burpsuite, CVE..."
             class="search-input font-mono"
@@ -166,19 +167,20 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
             descripcion={w.data.descripcion}
             dificultad={w.data.dificultad}
             herramientas={w.data.herramientas}
-            categoria={w.data.categoria}
             plataforma={w.data.plataforma}
             fecha={w.data.fecha}
             slug={w.id}
             fases={w.data.fases ?? []}
+            startingPoint={w.data.startingPoint}
+            headingLevel="h2"
           />
         </div>
       ))}
     </div>
 
     <!-- Empty state -->
-    <div id="empty-writeup" class="empty-state" style="display:none">
-      <div class="empty-icon">🏴</div>
+    <div id="empty-writeup" class="empty-state" style="display:none" role="status">
+      <div class="empty-icon"><Icon name="search" size={36} /></div>
       <p class="font-mono empty-msg">No hay writeups que coincidan con los filtros.</p>
     </div>
 
@@ -255,7 +257,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     line-height: 1;
   }
   .stat-hero-label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -276,7 +278,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     gap: 0.6rem;
   }
   .diff-bar-label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     letter-spacing: 0.08em;
     width: 52px;
     text-align: right;
@@ -320,7 +322,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     gap: 0.4rem;
   }
   .filter-group-label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -333,11 +335,13 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     color: var(--color-text-muted);
     background: transparent;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: color var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), background-color var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
+  .filter-btn { min-height: 32px; }
+  .filter-btn:active { transform: scale(0.96); }
   .filter-btn:hover,
   .filter-btn-active,
   .filter-btn-plat-active {
@@ -356,6 +360,7 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
   }
   .search-input {
     width: 100%;
+    min-height: 40px;
     padding: 0.38rem 0.75rem 0.38rem 2rem;
     background: var(--color-bg-secondary);
     border: 1px solid var(--color-border-subtle);
@@ -367,22 +372,28 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     caret-color: var(--color-neon-cyan);
   }
   .search-input::placeholder { color: var(--color-text-muted); }
-  .search-input:focus { border-color: rgba(34,211,238,0.45); }
+  .search-input:focus-visible { outline: none; border-color: var(--color-neon-cyan); }
 
   /* ── Grid ───────────────────────────────────────────────────── */
+  /* Flex con justify-content: center para que la última fila incompleta
+     quede centrada (en grid quedaría pegada a la izquierda). */
   .writeups-grid {
+    --cols: 4;
+    --gap: 1.25rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 1.25rem;
+    gap: var(--gap);
   }
   .writeup-item {
-    flex: 0 1 calc(25% - 0.938rem);
-    min-width: 240px;
     display: flex;
+    min-width: 0;
+    flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols));
   }
-  .writeup-item > * { width: 100%; }
-  @media (max-width: 640px) { .writeup-item { flex: 1 1 100%; } }
+  .writeup-item > :global(*) { width: 100%; }
+  @media (max-width: 1280px) { .writeups-grid { --cols: 3; } }
+  @media (max-width: 1100px) { .writeups-grid { --cols: 2; } }
+  @media (max-width: 700px)  { .writeups-grid { --cols: 1; } }
 
   /* ── Empty state ────────────────────────────────────────────── */
   .empty-state {

@@ -1,16 +1,21 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
-  return projects.map(p => ({
-    params: { slug: p.id },
-    props: { proyecto: p },
-  }));
+  const projects = (await getCollection('projects')).sort(
+    (a: CollectionEntry<'projects'>, b: CollectionEntry<'projects'>) => b.data.fecha.getTime() - a.data.fecha.getTime()
+  );
+  return projects.map((p: CollectionEntry<'projects'>, i: number) => {
+    const n = projects[(i + 1) % projects.length];
+    return {
+      params: { slug: p.id },
+      props: { proyecto: p, next: n.id !== p.id ? { id: n.id, titulo: n.data.titulo } : null },
+    };
+  });
 }
 
-const { proyecto } = Astro.props;
+const { proyecto, next } = Astro.props;
 const { Content } = await render(proyecto);
 const { titulo, descripcion, herramientas, categoria, fecha, estado, github, demo } = proyecto.data;
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
@@ -19,7 +24,7 @@ const dateStr = fecha.toLocaleDateString('es-CO', { timeZone: 'UTC', year: 'nume
 
 const categoriaConfig: Record<string, { label: string; accentColor: string; icon: string; cls: string }> = {
   web:        { label: 'Web',        accentColor: '#22d3ee', icon: '◈', cls: 'tag-cyan' },
-  red:        { label: 'Red Team',   accentColor: '#4ade80', icon: '⚔', cls: 'tag-green' },
+  red:        { label: 'Recon',      accentColor: '#4ade80', icon: '⚔', cls: 'tag-green' },
   forense:    { label: 'Forense',    accentColor: '#a78bfa', icon: '🔬', cls: 'tag-purple' },
   malware:    { label: 'Malware',    accentColor: '#f472b6', icon: '☣', cls: 'tag-pink' },
   ctf:        { label: 'CTF',        accentColor: '#fb923c', icon: '⚑', cls: 'tag-orange' },
@@ -40,12 +45,12 @@ const est = estadoMap[estado] ?? estadoMap.completado;
   <div class="detail-wrapper" style={`--accent: ${cat.accentColor}`}>
 
     <!-- ── Breadcrumb ──────────────────────────────────────────── -->
-    <nav class="breadcrumb animate-fade-in-up" aria-label="Breadcrumb">
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
       <a href={`${base}/`} class="bc-link font-mono">~/inicio</a>
-      <span class="bc-sep">/</span>
+      <span class="bc-sep" aria-hidden="true">/</span>
       <a href={`${base}/projects`} class="bc-link font-mono">projects</a>
-      <span class="bc-sep">/</span>
-      <span class="bc-current font-mono">{proyecto.id}</span>
+      <span class="bc-sep" aria-hidden="true">/</span>
+      <span class="bc-current font-mono" aria-current="page">{proyecto.id}</span>
     </nav>
 
     <!-- ── Hero Header ────────────────────────────────────────── -->
@@ -56,18 +61,19 @@ const est = estadoMap[estado] ?? estadoMap.completado;
       <div class="header-body">
         <!-- Top badges row -->
         <div class="header-badges">
-          <span class="cat-icon">{cat.icon}</span>
+          <span class="cat-icon" aria-hidden="true">{cat.icon}</span>
           <span class={`tag-badge ${cat.cls}`}>{cat.label}</span>
           <span class="status-pill font-mono">
             <span
               class="status-dot"
               style={`background: ${est.color}; box-shadow: 0 0 6px ${est.color}`}
               class:list={[{ 'pulse-anim': est.pulse }]}
+              aria-hidden="true"
             ></span>
             {est.label}
           </span>
           <span class="date-chip font-mono">
-            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5"/>
             </svg>
             {dateStr}
@@ -76,7 +82,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
 
         <!-- Title -->
         <h1 class="detail-title font-mono">
-          <span class="title-prompt">$</span>
+          <span class="title-prompt" aria-hidden="true">$</span>
           {titulo}
         </h1>
 
@@ -87,15 +93,16 @@ const est = estadoMap[estado] ?? estadoMap.completado;
         <div class="header-actions">
           {github && (
             <a href={github} target="_blank" rel="noopener noreferrer" class="btn-primary">
-              <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24">
+              <svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
               </svg>
               Ver en GitHub
+              <span class="sr-only">(abre en otra pestaña)</span>
             </a>
           )}
           {demo && (
             <a href={demo} target="_blank" rel="noopener noreferrer" class="btn-ghost">
-              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
               </svg>
               Demo en vivo
@@ -109,18 +116,18 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     <div class="content-layout">
 
       <!-- ── Sidebar ────────────────────────────────────────── -->
-      <aside class="sidebar animate-fade-in-up">
+      <aside class="sidebar" aria-label="Datos del proyecto">
 
         <!-- Tech Stack -->
         <div class="sidebar-card">
           <div class="sidebar-card-header font-mono">
-            <span class="sidebar-card-icon">›</span>
+            <span class="sidebar-card-icon" aria-hidden="true">›</span>
             tech_stack
           </div>
           <div class="stack-list">
             {herramientas.map(tool => (
               <div class="stack-item font-mono">
-                <span class="stack-bullet" style={`color: ${cat.accentColor}`}>▸</span>
+                <span class="stack-bullet" style={`color: ${cat.accentColor}`} aria-hidden="true">▸</span>
                 {tool}
               </div>
             ))}
@@ -130,7 +137,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
         <!-- Metadata -->
         <div class="sidebar-card">
           <div class="sidebar-card-header font-mono">
-            <span class="sidebar-card-icon">›</span>
+            <span class="sidebar-card-icon" aria-hidden="true">›</span>
             metadata
           </div>
           <div class="meta-list">
@@ -155,7 +162,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
 
         <!-- Back button -->
         <a href={`${base}/projects`} class="btn-ghost back-btn">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
           </svg>
           Volver a proyectos
@@ -163,13 +170,14 @@ const est = estadoMap[estado] ?? estadoMap.completado;
       </aside>
 
       <!-- ── Main content ───────────────────────────────────── -->
-      <div class="main-content animate-fade-in-up">
+      <div class="main-col">
+      <div class="main-content">
         <!-- Content chrome bar -->
         <div class="content-chrome">
           <div class="chrome-dots">
-            <span class="chrome-dot" style="background:#ff5f57"></span>
-            <span class="chrome-dot" style="background:#ffbd2e"></span>
-            <span class="chrome-dot" style="background:#28ca41"></span>
+            <span class="chrome-dot" style="background:#ff5f57" aria-hidden="true"></span>
+            <span class="chrome-dot" style="background:#ffbd2e" aria-hidden="true"></span>
+            <span class="chrome-dot" style="background:#28ca41" aria-hidden="true"></span>
           </div>
           <span class="chrome-label font-mono">{proyecto.id}.md</span>
         </div>
@@ -177,6 +185,25 @@ const est = estadoMap[estado] ?? estadoMap.completado;
         <article class="prose-cyber content-body">
           <Content />
         </article>
+      </div>
+
+        {next && (
+          <nav class="pager" aria-label="Más proyectos">
+            <a href={`${base}/projects/${next.id}`} class="pager-link pager-next">
+              <span class="pager-dir">otro proyecto →</span>
+              <span class="pager-title">{next.titulo}</span>
+            </a>
+          </nav>
+        )}
+
+        <section class="end-cta" aria-labelledby="end-cta-title">
+          <h2 id="end-cta-title" class="end-cta-title">¿Te interesa cómo trabajo?</h2>
+          <p class="end-cta-text">Busco mi primer rol como Analista SOC / Blue Team junior.</p>
+          <div class="end-cta-actions">
+            <a href="mailto:santiago.p.0815@gmail.com" class="btn-primary">Escribirme</a>
+            <a href={`${base}/cv`} class="btn-ghost">Ver CV</a>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -202,12 +229,13 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     font-size: 0.78rem;
   }
   .bc-link {
-    color: var(--color-text-muted);
+    display: inline-flex; align-items: center; min-height: 32px;
+    color: var(--color-text-secondary);
     text-decoration: none;
     transition: color 0.2s;
   }
-  .bc-link:hover { color: var(--color-neon-cyan); }
-  .bc-sep { color: var(--color-border-subtle); }
+  @media (hover: hover) and (pointer: fine) { .bc-link:hover { color: var(--color-neon-cyan); } }
+  .bc-sep { color: var(--color-text-muted); }
   .bc-current { color: var(--accent); }
 
   /* ── Hero Header ─────────────────────────────────────────────── */
@@ -241,7 +269,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     letter-spacing: 0.08em;
     color: var(--color-text-muted);
   }
@@ -259,7 +287,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     margin-left: auto;
   }
@@ -328,7 +356,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     align-items: center;
     gap: 0.4rem;
     padding: 0.65rem 0.9rem;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -352,8 +380,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     gap: 0.5rem;
     transition: color 0.2s;
   }
-  .stack-item:hover { color: var(--color-text-primary); }
-  .stack-bullet { font-size: 0.7rem; flex-shrink: 0; }
+  .stack-bullet { font-size: 0.75rem; flex-shrink: 0; }
 
   /* Meta list */
   .meta-list {
@@ -369,7 +396,7 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     gap: 0.5rem;
   }
   .meta-key {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -408,12 +435,43 @@ const est = estadoMap[estado] ?? estadoMap.completado;
     border-radius: 50%;
   }
   .chrome-label {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     letter-spacing: 0.05em;
     margin-left: 0.4rem;
   }
+  .main-col { min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .pager-link {
+    display: flex; flex-direction: column; gap: 0.25rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .pager-link:active { transform: scale(0.99); }
+  .pager-next { text-align: right; align-items: flex-end; grid-column: 2; }
+  @media (hover: hover) and (pointer: fine) { .pager-link:hover { border-color: var(--accent); } }
+  .pager-dir { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-muted); }
+  .pager-title { font-family: var(--font-mono); font-size: 0.92rem; font-weight: 700; color: var(--color-text-primary); }
+  .end-cta {
+    padding: 1.25rem 1.4rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.875rem;
+  }
+  .end-cta-title { font-family: var(--font-mono); font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
+  .end-cta-text { font-size: 0.9rem; color: var(--color-text-secondary); margin: 0.25rem 0 0.9rem; }
+  .end-cta-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  @media (max-width: 640px) {
+    .pager { grid-template-columns: 1fr; }
+    .pager-next { grid-column: 1; text-align: left; align-items: flex-start; }
+    .content-body { padding: 1.25rem 1.1rem 1.75rem !important; }
+  }
   .content-body {
     padding: 2rem 2.25rem 2.5rem;
   }
+  .content-body > :global(:first-child) { margin-top: 0; }
 </style>

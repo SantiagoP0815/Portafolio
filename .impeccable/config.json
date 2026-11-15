@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "src/pages/writeups/[slug].astro"
+        ],
+        "createdAt": "2026-11-15T02:16:14.764Z",
+        "reason": "user asked to restore the original writeup detail design with only small polish; .detail-desc left border is part of that original identity"
+      }
+    ]
+  }
+}

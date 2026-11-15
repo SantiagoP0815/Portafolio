@@ -3,16 +3,23 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths() {
-  const writeups = await getCollection('writeups');
-  return writeups.map((w: CollectionEntry<'writeups'>) => ({
+  const writeups = (await getCollection('writeups')).sort(
+    (a: CollectionEntry<'writeups'>, b: CollectionEntry<'writeups'>) => b.data.fecha.getTime() - a.data.fecha.getTime()
+  );
+  return writeups.map((w: CollectionEntry<'writeups'>, i: number) => ({
     params: { slug: w.id },
-    props: { writeup: w },
+    props: {
+      writeup: w,
+      newer: i > 0 ? { id: writeups[i - 1].id, titulo: writeups[i - 1].data.titulo } : null,
+      older: i < writeups.length - 1 ? { id: writeups[i + 1].id, titulo: writeups[i + 1].data.titulo } : null,
+    },
   }));
 }
 
-const { writeup } = Astro.props;
+const { writeup, newer, older } = Astro.props;
 const { Content } = await render(writeup);
-const { titulo, descripcion, dificultad, herramientas, categoria, plataforma, fecha, fases } = writeup.data;
+const { titulo, descripcion, dificultad, herramientas, plataforma, fecha, fases, startingPoint, deteccion } = writeup.data;
+const track = startingPoint ? 'Starting Point' : 'Máquina retirada';
 const base = (import.meta.env.BASE_URL as string).replace(/\/$/, '');
 
 const dateStr = fecha.toLocaleDateString('es-CO', { timeZone: 'UTC', year: 'numeric', month: 'long', day: 'numeric' });
@@ -41,12 +48,12 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
   <div class="detail-wrapper" style={`--accent: ${plat.accentColor}`}>
 
     <!-- ── Breadcrumb ──────────────────────────────────────────── -->
-    <nav class="breadcrumb animate-fade-in-up" aria-label="Breadcrumb">
+    <nav class="breadcrumb" aria-label="Ruta de navegación">
       <a href={`${base}/`} class="bc-link font-mono">~/inicio</a>
-      <span class="bc-sep">/</span>
+      <span class="bc-sep" aria-hidden="true">/</span>
       <a href={`${base}/writeups`} class="bc-link font-mono">writeups</a>
-      <span class="bc-sep">/</span>
-      <span class="bc-current font-mono">{writeup.id}</span>
+      <span class="bc-sep" aria-hidden="true">/</span>
+      <span class="bc-current font-mono" aria-current="page">{writeup.id}</span>
     </nav>
 
     <!-- ── Hero Header ────────────────────────────────────────── -->
@@ -57,31 +64,31 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
         <!-- Chrome bar -->
         <div class="header-chrome">
           <div class="chrome-dots">
-            <span class="chrome-dot" style="background:#ff5f57"></span>
-            <span class="chrome-dot" style="background:#ffbd2e"></span>
-            <span class="chrome-dot" style="background:#28ca41"></span>
+            <span class="chrome-dot" style="background:#ff5f57" aria-hidden="true"></span>
+            <span class="chrome-dot" style="background:#ffbd2e" aria-hidden="true"></span>
+            <span class="chrome-dot" style="background:#28ca41" aria-hidden="true"></span>
           </div>
-          <span class="chrome-label font-mono">{plataforma} · {categoria}</span>
+          <span class="chrome-label font-mono">{plataforma} · {track}</span>
           <div class="chrome-right">
-            <span class="font-mono text-xs" style="color:var(--color-text-muted)">{dateStr}</span>
+            <time class="font-mono chrome-date" datetime={fecha.toISOString()}>{dateStr}</time>
           </div>
         </div>
 
         <!-- Meta row -->
         <div class="header-meta">
           <div class="plat-badge">
-            <span class="plat-icon" style={`color: ${plat.color}`}>{plat.icon}</span>
+            <span class="plat-icon" style={`color: ${plat.color}`} aria-hidden="true">{plat.icon}</span>
             <span class="plat-name font-mono">{plataforma}</span>
           </div>
           <span class={`tag-badge ${diff.cls}`}>
-            <span class="diff-led" style={`background:${diff.color}; box-shadow:0 0 6px ${diff.color}`}></span>
+            <span class="diff-led" style={`background:${diff.color}; box-shadow:0 0 6px ${diff.color}`} aria-hidden="true"></span>
             {diff.label}
           </span>
         </div>
 
         <!-- Title -->
         <h1 class="detail-title font-mono">
-          <span class="title-prompt">$</span>
+          <span class="title-prompt" aria-hidden="true">$</span>
           {titulo}
         </h1>
 
@@ -90,14 +97,14 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
 
         <!-- Attack chain pipeline -->
         <div class="attack-pipeline">
-          <span class="pipeline-label font-mono">attack chain</span>
+          <span class="pipeline-label font-mono">cadena de ataque</span>
           <div class="pipeline-steps">
             {phases.map((phase, i) => (
               <div class="pipeline-step">
-                <span class="step-num font-mono">{String(i + 1).padStart(2, '0')}</span>
+                <span class="step-num font-mono" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
                 <span class="step-label font-mono">{phase}</span>
                 {i < phases.length - 1 && (
-                  <svg class="step-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  <svg class="step-arrow" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
                   </svg>
                 )}
@@ -112,18 +119,18 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     <div class="content-layout">
 
       <!-- ── Sidebar ────────────────────────────────────────── -->
-      <aside class="sidebar animate-fade-in-up">
+      <aside class="sidebar" aria-label="Datos del writeup">
 
         <!-- Tools used -->
         <div class="sidebar-card">
           <div class="sidebar-card-header font-mono">
-            <span class="sidebar-card-icon">›</span>
+            <span class="sidebar-card-icon" aria-hidden="true">›</span>
             herramientas
           </div>
           <div class="tools-list">
             {herramientas.map(tool => (
               <div class="tool-item font-mono">
-                <span class="tool-hash" style={`color: ${plat.accentColor}`}>#</span>
+                <span class="tool-hash" style={`color: ${plat.accentColor}`} aria-hidden="true">#</span>
                 {tool}
               </div>
             ))}
@@ -133,7 +140,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
         <!-- Metadata -->
         <div class="sidebar-card">
           <div class="sidebar-card-header font-mono">
-            <span class="sidebar-card-icon">›</span>
+            <span class="sidebar-card-icon" aria-hidden="true">›</span>
             metadata
           </div>
           <div class="meta-list">
@@ -143,11 +150,11 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
             </div>
             <div class="meta-item">
               <span class="meta-key font-mono">dificultad</span>
-              <span class={`tag-badge ${diff.cls}`} style="font-size:0.6rem">{diff.label}</span>
+              <span class={`tag-badge ${diff.cls}`}>{diff.label}</span>
             </div>
             <div class="meta-item">
-              <span class="meta-key font-mono">categoría</span>
-              <span class="meta-val font-mono">{categoria}</span>
+              <span class="meta-key font-mono">track</span>
+              <span class="meta-val font-mono">{track}</span>
             </div>
             <div class="meta-item">
               <span class="meta-key font-mono">fecha</span>
@@ -158,7 +165,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
 
         <!-- Back button -->
         <a href={`${base}/writeups`} class="btn-ghost back-btn">
-          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"/>
           </svg>
           Volver a writeups
@@ -166,22 +173,55 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
       </aside>
 
       <!-- ── Main content ───────────────────────────────────── -->
-      <div class="main-content animate-fade-in-up">
+      <div class="main-col">
+      <div class="main-content">
         <div class="content-chrome">
           <div class="chrome-dots-inline">
-            <span class="chrome-dot-s" style="background:#ff5f57"></span>
-            <span class="chrome-dot-s" style="background:#ffbd2e"></span>
-            <span class="chrome-dot-s" style="background:#28ca41"></span>
+            <span class="chrome-dot-s" style="background:#ff5f57" aria-hidden="true"></span>
+            <span class="chrome-dot-s" style="background:#ffbd2e" aria-hidden="true"></span>
+            <span class="chrome-dot-s" style="background:#28ca41" aria-hidden="true"></span>
           </div>
           <span class="chrome-file font-mono">{writeup.id}.md</span>
           <div class="chrome-right-tag">
-            <span class={`tag-badge ${diff.cls}`} style="font-size:0.58rem">{diff.label}</span>
+            <span class={`tag-badge ${diff.cls}`}>{diff.label}</span>
           </div>
         </div>
 
         <article class="prose-cyber content-body">
           <Content />
         </article>
+      </div>
+        {deteccion && deteccion.length > 0 && (
+          <section class="detect-card" aria-labelledby="detect-title">
+            <div class="sidebar-card-header font-mono"><span class="sidebar-card-icon" aria-hidden="true">›</span><h2 id="detect-title" class="detect-title">cómo se detectaría</h2></div>
+            <ul class="detect-list">
+              {deteccion.map(d => <li>{d}</li>)}
+            </ul>
+          </section>
+        )}
+        <nav class="pager" aria-label="Más writeups">
+          {older && (
+            <a href={`${base}/writeups/${older.id}`} class="pager-link">
+              <span class="pager-dir">← anterior</span>
+              <span class="pager-title">{older.titulo}</span>
+            </a>
+          )}
+          {newer && (
+            <a href={`${base}/writeups/${newer.id}`} class="pager-link pager-next">
+              <span class="pager-dir">siguiente →</span>
+              <span class="pager-title">{newer.titulo}</span>
+            </a>
+          )}
+        </nav>
+
+        <section class="end-cta" aria-labelledby="end-cta-title">
+          <h2 id="end-cta-title" class="end-cta-title">¿Te interesa cómo trabajo?</h2>
+          <p class="end-cta-text">Busco mi primer rol como Analista SOC / Blue Team junior.</p>
+          <div class="end-cta-actions">
+            <a href="mailto:santiago.p.0815@gmail.com" class="btn-primary">Escribirme</a>
+            <a href={`${base}/cv`} class="btn-ghost">Ver CV</a>
+          </div>
+        </section>
       </div>
     </div>
 
@@ -207,12 +247,13 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     font-size: 0.78rem;
   }
   .bc-link {
-    color: var(--color-text-muted);
+    display: inline-flex; align-items: center; min-height: 32px;
+    color: var(--color-text-secondary);
     text-decoration: none;
     transition: color 0.2s;
   }
-  .bc-link:hover { color: var(--color-neon-green); }
-  .bc-sep { color: var(--color-border-subtle); }
+  @media (hover: hover) and (pointer: fine) { .bc-link:hover { color: var(--color-neon-green); } }
+  .bc-sep { color: var(--color-text-muted); }
   .bc-current { color: var(--accent); }
 
   /* ── Hero Header ─────────────────────────────────────────────── */
@@ -247,7 +288,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     border-radius: 50%;
   }
   .chrome-label {
-    font-size: 0.65rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     letter-spacing: 0.06em;
     text-transform: uppercase;
@@ -320,7 +361,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     padding: 0.85rem 1.5rem 1.5rem;
   }
   .pipeline-label {
-    font-size: 0.6rem;
+    font-size: 0.75rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -338,7 +379,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     gap: 0.35rem;
   }
   .step-num {
-    font-size: 0.58rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -390,7 +431,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     align-items: center;
     gap: 0.4rem;
     padding: 0.6rem 0.9rem;
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text-muted);
@@ -414,7 +455,6 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     gap: 0.4rem;
     transition: color 0.2s;
   }
-  .tool-item:hover { color: var(--color-text-primary); }
   .tool-hash { font-size: 0.8rem; flex-shrink: 0; font-weight: 700; }
 
   /* Meta list */
@@ -431,7 +471,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     gap: 0.5rem;
   }
   .meta-key {
-    font-size: 0.62rem;
+    font-size: 0.75rem;
     letter-spacing: 0.06em;
     color: var(--color-text-muted);
     text-transform: uppercase;
@@ -460,7 +500,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     margin-top: 0.05rem;
   }
   .disclaimer-text {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     line-height: 1.6;
   }
@@ -492,7 +532,7 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
     border-radius: 50%;
   }
   .chrome-file {
-    font-size: 0.68rem;
+    font-size: 0.75rem;
     color: var(--color-text-muted);
     letter-spacing: 0.04em;
     margin-left: 0.3rem;
@@ -500,5 +540,48 @@ const phases = fases?.length ? fases : ['Reconocimiento', 'Explotación', 'Escal
   .chrome-right-tag { margin-left: auto; }
   .content-body {
     padding: 2rem 2.25rem 2.5rem;
+    max-width: 82ch;
   }
+  .chrome-date { font-size: 0.75rem; color: var(--color-text-muted); }
+  .detect-card {
+    background: var(--color-bg-card);
+    border: 1px solid rgba(167,139,250,0.35);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+  .detect-title { font-size: inherit; font-weight: inherit; }
+  .detect-list { padding: 0.9rem 1.25rem 1rem 2.2rem; display: flex; flex-direction: column; gap: 0.4rem; color: var(--color-text-secondary); font-size: 0.92rem; line-height: 1.6; }
+  @media (max-width: 640px) { .content-body { padding: 1.25rem 1.1rem 1.75rem; } }
+  /* ── Cierre: siguiente / contacto ───────────────────────────── */
+  .main-col { min-width: 0; display: flex; flex-direction: column; gap: 1.5rem; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .pager-link {
+    display: flex; flex-direction: column; gap: 0.25rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: border-color var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  }
+  .pager-link:active { transform: scale(0.99); }
+  .pager-next { text-align: right; align-items: flex-end; grid-column: 2; }
+  @media (hover: hover) and (pointer: fine) { .pager-link:hover { border-color: var(--accent); } }
+  .pager-dir { font-family: var(--font-mono); font-size: 0.75rem; color: var(--color-text-muted); }
+  .pager-title { font-family: var(--font-mono); font-size: 0.92rem; font-weight: 700; color: var(--color-text-primary); }
+  .end-cta {
+    padding: 1.25rem 1.4rem;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 0.875rem;
+  }
+  .end-cta-title { font-family: var(--font-mono); font-size: 1rem; font-weight: 700; color: var(--color-text-primary); }
+  .end-cta-text { font-size: 0.9rem; color: var(--color-text-secondary); margin: 0.25rem 0 0.9rem; }
+  .end-cta-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  @media (max-width: 640px) {
+    .pager { grid-template-columns: 1fr; }
+    .pager-next { grid-column: 1; text-align: left; align-items: flex-start; }
+  }
+
+  .content-body > :global(:first-child) { margin-top: 0; }
 </style>
