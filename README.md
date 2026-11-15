@@ -19,7 +19,7 @@ Portafolio personal de **Carlos Santiago Patiño Reyes** — Ingeniero de Sistem
 │   ├── layouts/       # Layout.astro (shell común)
 │   ├── pages/         # Rutas: index, /cv, /projects, /writeups, [slug], 404
 │   └── styles/        # global.css (tema cyberpunk + utilidades)
-├── public/            # favicon.svg, og-image.png, perfil.jpg
+├── public/            # favicon.svg, og-image.jpg (vista previa al compartir), perfil.jpg
 └── astro.config.mjs   # Config: site, base, Tailwind, sitemap
 ```
 
