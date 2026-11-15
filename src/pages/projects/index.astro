@@ -19,6 +19,15 @@ const statCompletados = projectsList.filter((p: CollectionEntry<'projects'>) => 
 const statEnProgreso  = projectsList.filter((p: CollectionEntry<'projects'>) => p.data.estado === 'en-progreso').length;
 const statDestacados  = projectsList.filter((p: CollectionEntry<'projects'>) => p.data.destacado).length;
 const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'projects'>) => p.data.herramientas))];
+
+// Color de cada filtro (el mismo que usan las tarjetas)
+const catColor: Record<string, string> = {
+  web: 'var(--color-neon-cyan)', red: 'var(--color-neon-green)', forense: 'var(--color-neon-purple)',
+  malware: 'var(--color-neon-pink)', ctf: 'var(--color-neon-orange)', desarrollo: 'var(--color-neon-yellow)',
+};
+const estColor: Record<string, string> = {
+  completado: 'var(--color-neon-green)', 'en-progreso': 'var(--color-neon-orange)', archivado: 'var(--color-text-muted)',
+};
 ---
 
 <Layout
@@ -83,7 +92,9 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
               data-cat={c}
               aria-pressed={c === 'todas' ? 'true' : 'false'}
               id={`cat-${c}`}
+              style={catColor[c] ? `--fc: ${catColor[c]}` : undefined}
             >
+              {catColor[c] && <span class="filter-dot" aria-hidden="true"></span>}
               {catLabel[c] ?? c}
             </button>
           ))}
@@ -100,7 +111,9 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
               data-est={e}
               aria-pressed={e === 'todos' ? 'true' : 'false'}
               id={`est-${e}`}
+              style={estColor[e] ? `--fc: ${estColor[e]}` : undefined}
             >
+              {estColor[e] && <span class="filter-dot" aria-hidden="true"></span>}
               {e}
             </button>
           ))}
@@ -263,6 +276,10 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     gap: 0.35rem;
   }
   .filter-btn {
+    --fc: var(--color-neon-cyan);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     padding: 0.3rem 0.75rem;
     border-radius: 9999px;
     border: 1px solid var(--color-border-subtle);
@@ -274,14 +291,41 @@ const allTools        = [...new Set(projectsList.flatMap((p: CollectionEntry<'pr
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .filter-btn { min-height: 32px; }
+  /* 40px con ratón; 44px con el dedo (área táctil mínima recomendada) */
+  .filter-btn { min-height: 40px; }
+  @media (pointer: coarse) { .filter-btn { min-height: 44px; } }
   .filter-btn:active { transform: scale(0.96); }
-  .filter-btn:hover,
+  /* Punto indicador: cada filtro lleva el color de lo que filtra */
+  .filter-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--fc);
+    opacity: 0.6;
+    transition: opacity var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
   .filter-btn-active,
   .filter-btn-est-active {
-    border-color: var(--color-neon-cyan);
-    color: var(--color-neon-cyan);
-    background: rgba(34,211,238,0.07);
+    border-color: var(--fc);
+    color: var(--fc);
+    background: color-mix(in srgb, var(--fc) 8%, transparent);
+  }
+  .filter-btn-active .filter-dot,
+  .filter-btn-est-active .filter-dot {
+    opacity: 1;
+    box-shadow: 0 0 6px var(--fc);
+  }
+  /* Hover solo con ratón: en pantallas táctiles se queda "pegado" y parece activo */
+  @media (hover: hover) and (pointer: fine) {
+    .filter-btn:hover {
+      border-color: var(--fc);
+      color: var(--fc);
+      background: color-mix(in srgb, var(--fc) 8%, transparent);
+    }
+    .filter-btn:hover .filter-dot {
+      opacity: 1;
+      box-shadow: 0 0 6px var(--fc);
+    }
   }
   .search-group { flex: 1; min-width: 180px; }
   .search-wrap { position: relative; }

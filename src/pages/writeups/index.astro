@@ -30,6 +30,13 @@ const pctEasy   = total ? Math.round((diffCount.easy   / total) * 100) : 0;
 const pctMedium = total ? Math.round((diffCount.medium / total) * 100) : 0;
 const pctHard   = total ? Math.round((diffCount.hard   / total) * 100) : 0;
 const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
+
+// Color de cada filtro (el mismo que usan las tarjetas)
+const diffColor: Record<string, string> = {
+  easy: 'var(--color-neon-green)', medium: 'var(--color-neon-orange)',
+  hard: 'var(--color-neon-pink)',  insane: 'var(--color-neon-purple)',
+};
+const platColor: Record<string, string> = { HackTheBox: '#9fef00', TryHackMe: '#ff3f3f', VulnHub: 'var(--color-neon-orange)' };
 ---
 
 <Layout
@@ -109,7 +116,9 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
               data-diff={d}
               aria-pressed={d === 'todos' ? 'true' : 'false'}
               id={`diff-${d}`}
+              style={diffColor[d] ? `--fc: ${diffColor[d]}` : undefined}
             >
+              {diffColor[d] && <span class="filter-dot" aria-hidden="true"></span>}
               {d}
             </button>
           ))}
@@ -126,7 +135,9 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
               data-plat={p}
               aria-pressed={p === 'todas' ? 'true' : 'false'}
               id={`plat-${p.replace(/\s/g, '-')}`}
+              style={platColor[p] ? `--fc: ${platColor[p]}` : undefined}
             >
+              {platColor[p] && <span class="filter-dot" aria-hidden="true"></span>}
               {p}
             </button>
           ))}
@@ -329,6 +340,10 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
   }
   .filter-bar { display: flex; flex-wrap: wrap; gap: 0.35rem; }
   .filter-btn {
+    --fc: var(--color-neon-cyan);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     padding: 0.3rem 0.75rem;
     border-radius: 9999px;
     border: 1px solid var(--color-border-subtle);
@@ -340,14 +355,41 @@ const pctInsane = total ? Math.round((diffCount.insane / total) * 100) : 0;
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  .filter-btn { min-height: 32px; }
+  /* 40px con ratón; 44px con el dedo (área táctil mínima recomendada) */
+  .filter-btn { min-height: 40px; }
+  @media (pointer: coarse) { .filter-btn { min-height: 44px; } }
   .filter-btn:active { transform: scale(0.96); }
-  .filter-btn:hover,
+  /* Punto indicador: cada filtro lleva el color de lo que filtra */
+  .filter-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background: var(--fc);
+    opacity: 0.6;
+    transition: opacity var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+  }
   .filter-btn-active,
   .filter-btn-plat-active {
-    border-color: var(--color-neon-cyan);
-    color: var(--color-neon-cyan);
-    background: rgba(34,211,238,0.07);
+    border-color: var(--fc);
+    color: var(--fc);
+    background: color-mix(in srgb, var(--fc) 8%, transparent);
+  }
+  .filter-btn-active .filter-dot,
+  .filter-btn-plat-active .filter-dot {
+    opacity: 1;
+    box-shadow: 0 0 6px var(--fc);
+  }
+  /* Hover solo con ratón: en pantallas táctiles se queda "pegado" y parece activo */
+  @media (hover: hover) and (pointer: fine) {
+    .filter-btn:hover {
+      border-color: var(--fc);
+      color: var(--fc);
+      background: color-mix(in srgb, var(--fc) 8%, transparent);
+    }
+    .filter-btn:hover .filter-dot {
+      opacity: 1;
+      box-shadow: 0 0 6px var(--fc);
+    }
   }
   .search-group { flex: 1; min-width: 180px; }
   .search-wrap { position: relative; }

@@ -30,3 +30,4 @@ pnpm-debug.log*
 # repos de proyectos clonados localmente (cada uno tiene su propio git)
 proyectos/
 .playwright-mcp/
+.impeccable/

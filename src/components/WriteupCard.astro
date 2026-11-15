@@ -43,7 +43,7 @@ const phases = fases.length ? fases : ['Explotación'];
 const MAX_TOOLS_DISPLAY = 5;
 ---
 
-<article class="wcard">
+<article class="wcard" style={`--accent: ${diff.dot}`}>
   <!-- Terminal window chrome -->
   <div class="wcard-chrome">
     <span class="chrome-dot" style="background:#ff5f57" aria-hidden="true"></span>
@@ -124,22 +124,32 @@ const MAX_TOOLS_DISPLAY = 5;
   .wcard::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--color-neon-cyan), transparent);
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
     opacity: 0;
     transition: opacity 0.25s ease;
   }
   /* Elevación solo con ratón: en pantallas táctiles el hover se queda "pegado" */
   @media (hover: hover) and (pointer: fine) {
     .wcard:hover {
-      border-color: rgba(34, 211, 238, 0.45);
-      box-shadow: 0 6px 32px rgba(34, 211, 238, 0.09);
+      border-color: var(--accent);
+      box-shadow: 0 8px 40px color-mix(in srgb, var(--accent) 12%, transparent);
       transform: translateY(-3px);
     }
-    .wcard:hover::before { opacity: 1; }
-    .wcard:hover .wcard-cta { background: var(--color-neon-cyan); color: var(--color-bg-primary); }
+    .wcard:hover::before { opacity: 0.6; }
+    .wcard:hover .wcard-cta {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--color-bg-primary);
+      box-shadow: 0 0 14px color-mix(in srgb, var(--accent) 35%, transparent);
+    }
   }
   .wcard:active { transform: translateY(0) scale(0.99); }
-  .wcard:has(.wcard-cta:focus-visible) { border-color: rgba(34, 211, 238, 0.6); }
+  .wcard:has(.wcard-cta:focus-visible) { border-color: var(--accent); }
+  /* Con teclado el botón se rellena igual que con el ratón */
+  .wcard-cta:focus-visible {
+    background: var(--accent);
+    color: var(--color-bg-primary);
+  }
 
   /* ── Chrome bar ─────────────────────────────────────────────── */
   .wcard-chrome {
@@ -296,6 +306,8 @@ const MAX_TOOLS_DISPLAY = 5;
     width: 100%;
     justify-content: center;
     font-size: 0.8rem;
+    border-color: var(--accent);
+    color: var(--accent);
   }
   /* Toda la tarjeta lleva al writeup: el enlace se estira sobre ella */
   .wcard-cta::after { content: ''; position: absolute; inset: 0; z-index: 1; }
