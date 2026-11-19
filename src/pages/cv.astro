@@ -44,7 +44,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
           <p class="cv-title font-mono">Ingeniero de Sistemas e Informática · Analista de Ciberseguridad Junior (SOC / Blue Team)</p>
           <div class="cv-contact font-mono">
-            <span>Bucaramanga, Colombia</span>
+            <span>Páramo, Santander · Disponible para reubicación</span>
             <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="mailto:santiago.p.0815@gmail.com">santiago.p.0815@gmail.com</a>
             <span class="cv-contact-sep" aria-hidden="true">|</span>
@@ -62,8 +62,33 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Resumen Profesional</h2>
         <p class="cv-text">
-          Ingeniero de Sistemas e Informática orientado a ciberseguridad defensiva, con base en redes, sistemas operativos y soporte TI. Práctica ofensiva documentada en HackTheBox ({spCount} máquinas de Starting Point y {retiredEs}), un proyecto de grado con seguridad integrada desde el diseño y herramientas propias en Python y Bash. Busco mi primer rol como Analista SOC / Blue Team junior o en soporte TI con proyección a seguridad.
+          Ingeniero de Sistemas e Informática orientado a ciberseguridad defensiva, con base en redes, sistemas operativos y soporte TI. Desarrollé e implementé un sistema POS en red local que está en uso en un restaurante, además de su sitio web. Práctica ofensiva documentada en HackTheBox ({spCount} máquinas de Starting Point y {retiredEs}), un proyecto de grado con seguridad integrada desde el diseño y herramientas propias en Python y Bash. Busco mi primer rol como Analista SOC / Blue Team junior o en soporte TI con proyección a seguridad.
         </p>
+      </section>
+
+      <!-- Experiencia -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Experiencia</h2>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Desarrollo e implementación de soluciones TI — La Petaca Club Campestre</span>
+            <span class="cv-item-date font-mono">2026 – Actualidad</span>
+          </div>
+          <div class="cv-item-sub font-mono">Páramo, Santander · Proyecto independiente</div>
+          <div class="cv-item-desc">
+            <strong>Sistema POS en red local</strong>, en uso desde noviembre de 2026: los meseros toman pedidos en el celular y la caja trabaja en un PC por WiFi, sin depender de internet. Impresión ESC/POS en cocina (red) y caja (USB) con cola y reintentos, roles de usuario, cierre de caja, auditoría, respaldos y pruebas automatizadas. Node.js, TypeScript, Fastify, SQLite y React.
+          </div>
+          <div class="cv-item-desc">
+            <strong>Sitio web oficial</strong>, publicado y en uso: enfoque móvil, SEO local con JSON-LD y menú digital con código QR. Astro.
+          </div>
+        </div>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Mesero — La Petaca Club Campestre</span>
+            <span class="cv-item-date font-mono">Actualidad</span>
+          </div>
+          <div class="cv-item-sub font-mono">Páramo, Santander · Atención directa al cliente</div>
+        </div>
       </section>
 
       <!-- Educación -->
@@ -184,7 +209,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Desarrollo y Automatización</h3>
-            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (básico)</p>
+            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/TypeScript, Node.js, Express, Fastify, React, MySQL, SQLite, Git/GitHub, Docker (básico)</p>
           </div>
         </div>
       </section>
@@ -201,7 +226,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
 
       <!-- Disponibilidad -->
       <section class="cv-section cv-availability cv-print-hide">
-        <p class="cv-text"><strong>Disponibilidad:</strong> Inmediata · Roles junior en SOC, Blue Team o soporte TI · Presencial (Bucaramanga) o remoto.</p>
+        <p class="cv-text"><strong>Disponibilidad:</strong> Inmediata · Roles junior en SOC, Blue Team o soporte TI · Presencial con disponibilidad para reubicarme, o remoto.</p>
       </section>
 
     </div>
@@ -215,7 +240,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           <h1 class="cv-name">Carlos Santiago Patiño Reyes</h1>
           <p class="cv-title font-mono">Systems Engineer · Junior Cybersecurity Analyst (SOC / Blue Team)</p>
           <div class="cv-contact font-mono">
-            <span>Bucaramanga, Colombia</span>
+            <span>Páramo, Santander, Colombia · Open to relocation</span>
             <span class="cv-contact-sep" aria-hidden="true">|</span>
             <a class="cv-contact-link" href="mailto:santiago.p.0815@gmail.com">santiago.p.0815@gmail.com</a>
             <span class="cv-contact-sep" aria-hidden="true">|</span>
@@ -233,8 +258,33 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
       <section class="cv-section">
         <h2 class="cv-section-title font-mono">Professional Summary</h2>
         <p class="cv-text">
-          Systems and Informatics Engineer focused on defensive cybersecurity, with a foundation in networking, operating systems, and IT support. Documented offensive practice on HackTheBox ({spCount} Starting Point machines plus {retiredEn}), a degree project with security built in by design, and my own Python and Bash tools. Seeking my first role as a junior SOC / Blue Team analyst or in IT support with a path into security.
+          Systems and Informatics Engineer focused on defensive cybersecurity, with a foundation in networking, operating systems, and IT support. I built and deployed a local-network POS system that is in use at a restaurant, along with its website. Documented offensive practice on HackTheBox ({spCount} Starting Point machines plus {retiredEn}), a degree project with security built in by design, and my own Python and Bash tools. Seeking my first role as a junior SOC / Blue Team analyst or in IT support with a path into security.
         </p>
+      </section>
+
+      <!-- Experience -->
+      <section class="cv-section">
+        <h2 class="cv-section-title font-mono">Experience</h2>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">IT Solutions Development &amp; Deployment — La Petaca Club Campestre</span>
+            <span class="cv-item-date font-mono">2026 – Present</span>
+          </div>
+          <div class="cv-item-sub font-mono">Páramo, Santander · Independent project</div>
+          <div class="cv-item-desc">
+            <strong>Local-network POS system</strong>, in use since November 2026: waiters take orders on their phones and the cashier works on a PC over Wi-Fi, with no internet dependency. ESC/POS printing in the kitchen (network) and at the register (USB) with queueing and retries, user roles, cash closing, audit log, backups, and automated tests. Node.js, TypeScript, Fastify, SQLite, and React.
+          </div>
+          <div class="cv-item-desc">
+            <strong>Official website</strong>, published and in use: mobile-first, local SEO with JSON-LD, and a QR-code digital menu. Astro.
+          </div>
+        </div>
+        <div class="cv-item">
+          <div class="cv-item-header">
+            <span class="cv-item-title">Waiter — La Petaca Club Campestre</span>
+            <span class="cv-item-date font-mono">Present</span>
+          </div>
+          <div class="cv-item-sub font-mono">Páramo, Santander · Direct customer service</div>
+        </div>
       </section>
 
       <!-- Education -->
@@ -355,7 +405,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
           </div>
           <div class="cv-skill-group">
             <h3 class="cv-skill-cat font-mono">Development &amp; Automation</h3>
-            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/Node.js, Express, MySQL, Git/GitHub, Docker (basic)</p>
+            <p class="cv-text cv-text--sm">Python, Bash, JavaScript/TypeScript, Node.js, Express, Fastify, React, MySQL, SQLite, Git/GitHub, Docker (basic)</p>
           </div>
         </div>
       </section>
@@ -372,7 +422,7 @@ const retiredEn = `${retiredCount} ${retiredCount === 1 ? 'retired machine' : 'r
 
       <!-- Availability -->
       <section class="cv-section cv-availability cv-print-hide">
-        <p class="cv-text"><strong>Availability:</strong> Immediate · Junior SOC, Blue Team or IT support roles · On-site (Bucaramanga) or remote.</p>
+        <p class="cv-text"><strong>Availability:</strong> Immediate · Junior SOC, Blue Team or IT support roles · On-site (open to relocation) or remote.</p>
       </section>
 
     </div>

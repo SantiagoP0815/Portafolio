@@ -14,7 +14,7 @@ const retiredCount = allWriteups.length - spCount;
 const retiredLabel = `${retiredCount} máquina${retiredCount === 1 ? '' : 's'} retirada${retiredCount === 1 ? '' : 's'}`;
 
 // Trabajo destacado: lo primero que debe ver un reclutador.
-const FEATURED_PROJECTS = ['gestion-cvs', 'vuln-scanner'];
+const FEATURED_PROJECTS = ['lapetaca-pos', 'gestion-cvs'];
 const FEATURED_WRITEUPS = ['cap', 'vaccine', 'responder'];
 const featuredProjects = FEATURED_PROJECTS
   .map(id => allProjects.find(p => p.id === id))

@@ -4,7 +4,7 @@ descripcion: "Herramienta CLI en Python para descubrimiento de contenido web: br
 fecha: 2026-05-29
 herramientas: ["Python", "requests", "BeautifulSoup", "argparse", "threading"]
 categoria: web
-destacado: true
+destacado: false
 github: "https://github.com/SantiagoP0815/content-discovery"
 estado: completado
 ---

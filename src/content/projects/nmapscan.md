@@ -4,7 +4,7 @@ descripcion: "Script Bash que automatiza el reconocimiento de red con Nmap: desc
 fecha: 2026-06-07
 herramientas: ["Bash", "Nmap"]
 categoria: red
-destacado: true
+destacado: false
 github: "https://github.com/SantiagoP0815/NmapScan"
 estado: completado
 ---
